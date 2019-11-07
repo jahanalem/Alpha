@@ -1,0 +1,15 @@
+﻿@model Alpha.ViewModels.SendCommentViewModel
+
+
+
+<h5 class="card-header">Leave a Comment:</h5>
+<div class="card-body">
+    <form method="post" asp-controller="Comment" asp-action="SavebyPageLoad" enctype="multipart/form-data">
+        <div class="form-group">
+            <textarea id="des" asp-for="Dsc" class="form-control" rows="3"></textarea>
+            <input type="hidden" id="ArticleId" asp-for="ArticleId" />
+            <input type="hidden" id="ParentId" asp-for="ArticleId" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
