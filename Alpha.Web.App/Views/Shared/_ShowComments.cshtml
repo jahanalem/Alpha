@@ -1,0 +1,35 @@
+﻿@using Alpha.ViewModels
+
+@model Alpha.ViewModels.RecursionComment
+
+@if (Model.Comments.Any(c => c.ParentId == Model.ParentId))
+{
+    @foreach (var childComment in Model.Comments.Where(c => c.ParentId == Model.ParentId))
+    {
+        <div class="media mt-3 w-100">
+            <a class="pr-0" href="#">
+                <img class="mr-3" src="~/images/comment1.png" alt="x">
+            </a>
+            <div class="media-body w-100">
+                <h5 class="mt-0 mb-1" id="commentNode_@childComment.Id">User</h5>
+                <div id="collapse_@childComment.Id" class="">
+
+
+                    <div id="cardId_@childComment.Id" class="card">
+                        <p>@childComment.Description</p>
+                    </div>
+                    <div class="comment-meta" id="commentId_@childComment.Id">
+                        <span><input id='@string.Format("deleteC_{0}_{1}", childComment.Id, childComment.ArticleId)' type='submit' class='submitLink' value='delete' /></span>
+                        <span><input id='@string.Format("editC_{0}_{1}", childComment.Id, childComment.ArticleId)' type='submit' class='submitLink' value='edit' /></span>
+                        <span>
+                            <a id="@string.Format("replyC_{0}_{1}", childComment.Id, childComment.ArticleId)" class="" role="button" data-toggle="collapse" href="#replyComment_@childComment.Id" aria-expanded="false" aria-controls="collapseExample">reply</a>
+                        </span>
+                        <div id="replyComment_@childComment.Id" class="collapse"></div>
+                    </div>
+
+                    @await Html.PartialAsync("_ShowComments", new RecursionComment { Comments = Model.Comments, ParentId = childComment.Id })
+                </div>
+            </div>
+        </div>
+    }
+}

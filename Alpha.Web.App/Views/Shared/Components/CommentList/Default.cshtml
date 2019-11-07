@@ -1,0 +1,14 @@
+﻿@using Alpha.Models
+@using Microsoft.AspNetCore.Mvc.Razor
+@using Alpha.ViewModels
+
+@model List<Comment>
+
+<div class="media mb-4">
+    <div class="media-body">
+        @Html.Partial("_ShowComments", new RecursionComment { Comments = Model, ParentId = null })
+        @*@Html.Raw(TreeStructure.ShowComments(Model))*@
+    </div>
+</div>
+
+

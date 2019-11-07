@@ -1,0 +1,88 @@
+﻿@model Alpha.ViewModels.ArticleViewModel
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Create</h2>
+
+<h4>Article</h4>
+<hr />
+<div class="row">
+    <div class="col-12">
+        <form asp-controller="Article" asp-action="Insert" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Article.Title" class="control-label"></label>
+                <input asp-for="Article.Title" class="form-control" />
+                <span asp-validation-for="Article.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Article.Summary" class="control-label"></label>
+                <textarea asp-for="Article.Summary" class="form-control"></textarea>
+                <span asp-validation-for="Article.Summary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Article.Description" class="control-label"></label>
+                <textarea asp-for="Article.Description" class="form-control"></textarea>
+                <span asp-validation-for="Article.Description" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Article.IsActive" /> @Html.DisplayNameFor(model => model.Article.IsActive)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Article.IsActiveNewComment" /> @Html.DisplayNameFor(model => model.Article.IsActiveNewComment)
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <ul>
+                    @{
+                        if (Model.Tags.Any())
+                        {
+                            for (int i = 0; i < Model.Tags.Count(); i++)
+                            {
+                                <li>
+                                    <input type="checkbox" asp-for="@Model.Tags[i].IsActive" />
+                                    <label asp-for="@Model.Tags[i].IsActive">@Model.Tags[i].Title</label>
+                                    <input type="hidden" asp-for="@Model.Tags[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Tags[i].Title" />
+                                    <input type="hidden" asp-for="@Model.Tags[i].Size" />
+                                    <input type="hidden" asp-for="@Model.Tags[i].Description" />
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li><p>There is no Tag.If you want to assign a tag to the article, please create your tag and then do it!</p></li>
+                        }
+                    }
+                </ul>
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@*@section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@
