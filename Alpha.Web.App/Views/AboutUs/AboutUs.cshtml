@@ -1,0 +1,9 @@
+﻿@model IEnumerable<AboutUs>
+@foreach (var p in Model)
+{
+    <div>
+        <h3>@p.Id</h3>
+        <p>@p.Description</p>
+        <h4>@p.IsActive.ToString()</h4>
+    </div>
+}

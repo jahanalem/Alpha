@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Alpha.DataAccess\Alpha.DataAccess.csproj" />
+    <ProjectReference Include="..\Alpha.Models\Alpha.Models.csproj" />
+    <ProjectReference Include="..\Alpha.ViewModels\Alpha.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
