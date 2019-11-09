@@ -47,30 +47,13 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[ValidateAntiForgeryToken]
-        [HttpPost("insert")]
-        public async Task<IActionResult> Insert(ArticleViewModel articleViewModel)
+        [HttpPost]
+        public async Task<IActionResult> Create(ArticleViewModel articleViewModel)
         {
             if (ModelState.IsValid)
             {
-                //using (_context)
-                //{
-                //    using (var transaction = _context.Database.BeginTransactionAsync())
-                //    {
-                        
-                //        var articleId = _articleService.AddOrUpdate(articleViewModel.Article);
-                //        foreach (var tag in articleViewModel.Tags.Where(t => t.IsActive == true))
-                //        {
-                //            var at = new ArticleTag()
-                //            {
-                //                ArticleId = articleId,
-                //                TagId = tag.Id
-                //            };
-                //            _articleTagService.AddOrUpdate(at);
-                //        }
-                //        await transaction.Result.CommitAsync();
-                //    }
-                //}
                 await _articleService.InsertAsync(articleViewModel);
+                
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -81,6 +64,92 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                     .ToArray();
             }
             return RedirectToAction("Index", "Article", new { area = "Admin" });
+        }
+
+        // GET: Article/Edit/5
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var article = _articleService.GetAll().SingleOrDefault(m => m.Id == id);
+            if (article == null)
+            {
+                return NotFound();
+            }
+            return View(article);
+        }
+
+        // POST: Article/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Article article)
+        {
+            if (id != article.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _articleService.Update(article);
+                    await _articleService.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ArticleExists(article.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(article);
+        }
+
+        // GET: Article/Delete/5
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var article = _articleService.GetAll().SingleOrDefault(m => m.Id == id);
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            return View(article);
+        }
+
+        // POST: Article/Delete/5
+        //[ValidateAntiForgeryToken]
+        [HttpPost, ActionName("DeleteConfirmed/{id}")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var article = _articleService.GetAll().SingleOrDefault(m => m.Id == id);
+            _articleService.Delete(article);
+            await _articleService.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ArticleExists(int id)
+        {
+            return _articleService.GetAll().Any(e => e.Id == id);
         }
     }
 }
