@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Alpha.DataAccess.Interfaces;
 using Alpha.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Alpha.DataAccess.UnitOfWork
 {
@@ -12,6 +13,8 @@ namespace Alpha.DataAccess.UnitOfWork
         int Commit();
         Task<int> CommitAsync();
         void DisposeAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync();
+        IDbContextTransaction BeginTransaction();
 
         IAboutUsRepository AboutUs { get; }
         IArticleRepository Article { get; }

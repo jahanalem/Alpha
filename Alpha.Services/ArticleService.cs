@@ -12,6 +12,7 @@ using Alpha.DataAccess.UnitOfWork;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels.Helper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Alpha.Services
 {
@@ -107,7 +108,7 @@ namespace Alpha.Services
         /// <returns>It returns Id from new Article. If operation was not successfully it returns -1.</returns>
         public virtual async Task<int> InsertAsync(ArticleViewModel viewModel)
         {
-            using (var transaction = _unitOfWork.Context.Database.BeginTransactionAsync())
+            using (var transaction = _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {

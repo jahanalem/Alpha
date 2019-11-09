@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Alpha.DataAccess.Interfaces;
 using Alpha.Models;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Alpha.DataAccess.UnitOfWork
 {
@@ -171,8 +172,15 @@ namespace Alpha.DataAccess.UnitOfWork
         public int Commit() => Context.SaveChanges();
 
         public async Task<int> CommitAsync() => await Context.SaveChangesAsync();
-        
 
+        public Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return Context.Database.BeginTransactionAsync();
+        }
+        public IDbContextTransaction BeginTransaction()
+        {
+            return Context.Database.BeginTransaction();
+        }
         private IRepository<TEntity> GetRepository<TEntity>() where TEntity : Entity
         {
             // Checks if the Dictionary Key contains the Model class
