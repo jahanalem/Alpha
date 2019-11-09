@@ -32,7 +32,7 @@ namespace Alpha.Services
             _unitOfWork = uow;
         }
 
-        
+
         public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int articlePage, int pageSize)
         {
             var articleList = new List<ArticleViewModel>();
@@ -100,23 +100,37 @@ namespace Alpha.Services
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns>It returns Id from new Article. If operation was not successfully it returns -1.</returns>
         public virtual async Task<int> InsertAsync(ArticleViewModel viewModel)
         {
-            using (_unitOfWork)
+            using (var transaction = _unitOfWork.Context.Database.BeginTransactionAsync())
             {
-                var articleId = _unitOfWork.Article.AddOrUpdate(viewModel.Article);
-                if (viewModel.Tags != null)
-                    foreach (var tag in viewModel.Tags.Where(t => t.IsActive == true))
-                    {
-                        var at = new ArticleTag()
+                try
+                {
+                    var articleId = _unitOfWork.Article.AddOrUpdate(viewModel.Article);
+                    if (viewModel.Tags != null)
+                        foreach (var tag in viewModel.Tags.Where(t => t.IsActive == true))
                         {
-                            ArticleId = articleId,
-                            TagId = tag.Id
-                        };
-                        _unitOfWork.ArticleTag.AddOrUpdate(at);
-                    }
+                            var at = new ArticleTag()
+                            {
+                                ArticleId = articleId,
+                                TagId = tag.Id
+                            };
+                            _unitOfWork.ArticleTag.AddOrUpdate(at);
+                        }
 
-                return await _unitOfWork.CommitAsync();
+                    await transaction.Result.CommitAsync();
+                    return articleId;
+                }
+                catch (Exception e)
+                {
+                    await transaction.Result.RollbackAsync();
+                    return -1;
+                }
             }
         }
     }
