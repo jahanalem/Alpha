@@ -31,7 +31,6 @@ namespace Alpha.DataAccess
                 throw new ArgumentNullException("entity");
             }
             EntityEntry<TEntity> obj = entities.Remove(entity);
-            //SaveChangeAsync();
             return obj.Entity.Id;
         }
 
@@ -39,7 +38,6 @@ namespace Alpha.DataAccess
         {
             var x = FindByIdAsync(id).Result;
             Delete(x);
-            //SaveChangeAsync();
         }
 
         public virtual async Task<bool> ExistsAsync(object primaryKey)
@@ -119,7 +117,6 @@ namespace Alpha.DataAccess
             entity.ModifiedDate = DateTime.UtcNow;
             context.Entry(entity).State = EntityState.Modified;
             entities.Update(entity);
-            //SaveChangeAsync();
         }
 
         public virtual void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
@@ -135,13 +132,12 @@ namespace Alpha.DataAccess
                     entry.Property(prop).IsModified = true;
                 }
             }
-            //SaveChangeAsync();
         }
 
         public virtual int AddOrUpdate(TEntity entity)
         {
             context.Entry(entity).State = entities.AddOrUpdate(entity);
-            //SaveChangeAsync();
+            context.SaveChanges();
             return context.Entry(entity).Entity.Id;
         }
         public virtual Task<int> SaveChangesAsync()
