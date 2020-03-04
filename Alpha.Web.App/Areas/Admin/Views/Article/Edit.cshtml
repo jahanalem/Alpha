@@ -51,15 +51,15 @@
                     @{
                         if (Model.Tags.Any())
                         {
-                            for (int i = 0; i < Model.Tags.Count(); i++)
+                            for (int i = 0; i < Model.AllOfTags.Count(); i++)
                             {
                                 <li>
-                                    <input type="checkbox" asp-for="@Model.Tags[i].IsActive" />
-                                    <label asp-for="@Model.Tags[i].IsActive">@Model.Tags[i].Title</label>
-                                    <input type="hidden" asp-for="@Model.Tags[i].Id" />
-                                    <input type="hidden" asp-for="@Model.Tags[i].Title" />
-                                    <input type="hidden" asp-for="@Model.Tags[i].Size" />
-                                    <input type="hidden" asp-for="@Model.Tags[i].Description" />
+                                    <input type="checkbox" asp-for="@Model.AllOfTags[i].IsActive" />
+                                    <label asp-for="@Model.Tags[i].IsActive">@Model.AllOfTags[i].Title</label>
+                                    <input type="hidden" asp-for="@Model.AllOfTags[i].Id" />
+                                    <input type="hidden" asp-for="@Model.AllOfTags[i].Title" />
+                                    <input type="hidden" asp-for="@Model.AllOfTags[i].Size" />
+                                    <input type="hidden" asp-for="@Model.AllOfTags[i].Description" />
                                 </li>
                             }
                         }
