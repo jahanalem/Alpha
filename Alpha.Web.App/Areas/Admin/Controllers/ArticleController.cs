@@ -79,8 +79,24 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var article = await _articleService.GetArticleById(id);
-            article.AllOfTags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
+            ArticleViewModel article = await _articleService.GetArticleById(id);
+            var allTags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
+            for (int t = 0; t < allTags.Count; t++)
+            {
+                allTags[t].IsActive = false;
+            }
+            foreach (var tag in article.Tags)
+            {
+                for (int t = 0; t < allTags.Count; t++)
+                {
+                    if (allTags[t].Id == tag.Id)
+                    {
+                        allTags[t].IsActive = true;
+                    }
+                }
+            }
+
+            article.AllOfTags = allTags;
             if (article == null)
             {
                 return NotFound();
