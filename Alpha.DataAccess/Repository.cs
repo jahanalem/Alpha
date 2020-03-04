@@ -79,7 +79,7 @@ namespace Alpha.DataAccess
 
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return entities.AsEnumerable();
+            return entities.AsQueryable().AsEnumerable();
         }
 
         public IAsyncEnumerable<TEntity> GetAllAsyncEnumerable()
