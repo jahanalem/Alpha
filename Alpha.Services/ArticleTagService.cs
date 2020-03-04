@@ -20,7 +20,7 @@ namespace Alpha.Services
 
         public virtual List<Tag> GetTagsByArticleId(int articleId)
         {
-            List<Tag> tags =  _articleTagRepository.GetAll().Where(a => a.ArticleId == 1).Select(b => b.Tag).Distinct().ToList();
+            List<Tag> tags =  _articleTagRepository.GetAll().AsQueryable().Where(a => a.ArticleId == articleId).Select(b => b.Tag).Distinct().ToList();
             return tags;
         }
     }
