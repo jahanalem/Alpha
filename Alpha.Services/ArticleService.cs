@@ -21,15 +21,16 @@ namespace Alpha.Services
         private IArticleRepository _articleRepository;
         private IArticleTagRepository _articleTagRepository;
         private IArticleTagService _articleTagService;
-
+        private ITagRepository _tagRepository;
         private IUnitOfWork _unitOfWork;
 
-        public ArticleService(IUnitOfWork uow, IArticleRepository articleRepository, IArticleTagRepository articleTagRepository)
+        public ArticleService(IUnitOfWork uow, IArticleRepository articleRepository, IArticleTagRepository articleTagRepository, ITagRepository tagRepository)
             : base(articleRepository)
         {
             _articleRepository = articleRepository;
             _articleTagRepository = articleTagRepository;
             _articleTagService = new ArticleTagService(_articleTagRepository);
+            _tagRepository = tagRepository;
             _unitOfWork = uow;
         }
 
@@ -82,11 +83,12 @@ namespace Alpha.Services
             return _articleTagService.GetTagsByArticleId(articleId);
         }
 
-        public virtual async Task<ArticleViewModel> CreateInstanceOfArticleViewModel(int articleId)
+        public virtual async Task<ArticleViewModel> GetArticleById(int articleId)
         {
             var vm = new ArticleViewModel();
             vm.Article = await FindByIdAsync(articleId);
             vm.Tags = GetTagsByArticleId(articleId);
+            //vm.AllOfTags = _tagRepository.GetAll().Where(c => c.IsActive == true).ToList();
             return vm;
         }
 
@@ -96,7 +98,7 @@ namespace Alpha.Services
             List<int> articleIds = _articleTagService.GetAll().Select(c => c.ArticleId).Distinct().ToList();
             foreach (var id in articleIds)
             {
-                result.Add(await CreateInstanceOfArticleViewModel(id));
+                result.Add(await GetArticleById(id));
             }
             return result;
         }

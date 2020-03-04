@@ -7,5 +7,6 @@ namespace Alpha.ViewModels
     {
         public Article Article { get; set; }
         public List<Tag> Tags { get; set; }
+        public List<Tag> AllOfTags { get; set; }
     }
 }

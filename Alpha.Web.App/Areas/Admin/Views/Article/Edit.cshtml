@@ -1,75 +1,79 @@
-﻿@model Alpha.Models.Article
+﻿@model Alpha.ViewModels.ArticleViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "View";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2>Edit</h2>
+<h2>Create</h2>
 
 <h4>Article</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="col-12">
+        <form asp-controller="Article" asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
+                <label asp-for="Article.Title" class="control-label"></label>
+                <input asp-for="Article.Title" class="form-control" />
+                <span asp-validation-for="Article.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Article.Summary" class="control-label"></label>
+                <textarea asp-for="Article.Summary" class="form-control"></textarea>
+                <span asp-validation-for="Article.Summary" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Summary" class="control-label"></label>
-                <textarea asp-for="Summary" class="form-control"></textarea>
-                <span asp-validation-for="Summary" class="text-danger"></span>
+                <label asp-for="Article.Description" class="control-label"></label>
+                <textarea asp-for="Article.Description" class="form-control"></textarea>
+                <span asp-validation-for="Article.Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" ></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RateCounter" class="control-label"></label>
-                <input asp-for="RateCounter" class="form-control" />
-                <span asp-validation-for="RateCounter" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LikeCounter" class="control-label"></label>
-                <input asp-for="LikeCounter" class="form-control" />
-                <span asp-validation-for="LikeCounter" class="text-danger"></span>
-            </div>
+
+
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                        <input asp-for="Article.IsActive" /> @Html.DisplayNameFor(model => model.Article.IsActive)
                     </label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="IsActiveNewComment" /> @Html.DisplayNameFor(model => model.IsActiveNewComment)
+                        <input asp-for="Article.IsActiveNewComment" /> @Html.DisplayNameFor(model => model.Article.IsActiveNewComment)
                     </label>
                 </div>
             </div>
-            <input type="hidden" asp-for="Id" />
+
             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" readonly="readonly" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                <ul>
+                    @{
+                        if (Model.Tags.Any())
+                        {
+                            for (int i = 0; i < Model.Tags.Count(); i++)
+                            {
+                                <li>
+                                    <input type="checkbox" asp-for="@Model.Tags[i].IsActive" />
+                                    <label asp-for="@Model.Tags[i].IsActive">@Model.Tags[i].Title</label>
+                                    <input type="hidden" asp-for="@Model.Tags[i].Id" />
+                                    <input type="hidden" asp-for="@Model.Tags[i].Title" />
+                                    <input type="hidden" asp-for="@Model.Tags[i].Size" />
+                                    <input type="hidden" asp-for="@Model.Tags[i].Description" />
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li><p>There is no Tag.If you want to assign a tag to the article, please create your tag and then do it!</p></li>
+                        }
+                    }
+                </ul>
             </div>
+
+
             <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" readonly="readonly" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </form>
     </div>
@@ -80,5 +84,5 @@
 </div>
 
 @*@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@
