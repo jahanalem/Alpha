@@ -13,7 +13,7 @@ namespace Alpha.Services.Interfaces
         //    IArticleRepository articleRepository, IArticleTagRepository articleTagRepository);
         List<Tag> GetTagsByArticleId(int articleId);
         Task<List<ArticleViewModel>> GetAllOfArticleViewModel();
-        Task<ArticleViewModel> CreateInstanceOfArticleViewModel(int articleId);
+        Task<ArticleViewModel> GetArticleById(int articleId);
 
         Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int articlePage, int pageSize);
 

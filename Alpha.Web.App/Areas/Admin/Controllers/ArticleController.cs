@@ -20,8 +20,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         private readonly ITagService _tagService;
 
         public static int PageSize = 3;
-        public ArticleController(IArticleService articleService, 
-            IArticleTagService articleTagService, 
+        public ArticleController(IArticleService articleService,
+            IArticleTagService articleTagService,
             ITagService tagService
             )
         {
@@ -31,7 +31,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var model =await _articleService.GetAllAsync();//.GetAllOfArticleViewModel();
+            var model = await _articleService.GetAllAsync();//.GetAllOfArticleViewModel();
             return View(model);
         }
 
@@ -39,8 +39,12 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         [HttpGet]//[HttpGet("Create")]
         public IActionResult Create()
         {
-            var result = _tagService.FindAllTags(c => c.IsActive == true);
-            return View(result);
+            var tags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
+            var articleViewModel = new ArticleViewModel()
+            {
+                AllOfTags = tags
+            };
+            return View(articleViewModel);
         }
 
         // POST: Article/Create
@@ -53,7 +57,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 await _articleService.InsertAsync(articleViewModel);
-                
+
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -68,14 +72,15 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         // GET: Article/Edit/5
         [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var article = _articleService.GetAll().SingleOrDefault(m => m.Id == id);
+            var article = await _articleService.GetArticleById(id);
+            article.AllOfTags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
             if (article == null)
             {
                 return NotFound();
