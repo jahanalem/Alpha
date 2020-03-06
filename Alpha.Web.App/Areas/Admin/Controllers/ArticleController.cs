@@ -42,7 +42,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             var tags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
             var articleViewModel = new ArticleViewModel()
             {
-                AllOfTags = tags
+                AllTags = tags
             };
             return View(articleViewModel);
         }
@@ -80,23 +80,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             }
 
             ArticleViewModel article = await _articleService.GetArticleById(id);
-            var allTags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
-            for (int t = 0; t < allTags.Count; t++)
-            {
-                allTags[t].IsActive = false;
-            }
-            foreach (var tag in article.Tags)
-            {
-                for (int t = 0; t < allTags.Count; t++)
-                {
-                    if (allTags[t].Id == tag.Id)
-                    {
-                        allTags[t].IsActive = true;
-                    }
-                }
-            }
+            
 
-            article.AllOfTags = allTags;
+            article.AllTags = _articleService.SpecifyRelatedTagsInTheGeneralSet(article.Tags);
             if (article == null)
             {
                 return NotFound();

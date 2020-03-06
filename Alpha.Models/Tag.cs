@@ -15,6 +15,9 @@ namespace Alpha.Models
         [StringLength(256)]
         public virtual string Description { get; set; }
 
+        /// <summary>
+        /// If IsActive is "true", it means, the tag is available for assigning to an article
+        /// </summary>
         public virtual bool IsActive { get; set; }
 
         public virtual ISet<ArticleTag> ArticleTags { get; set; }
