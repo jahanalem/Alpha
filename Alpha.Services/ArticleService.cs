@@ -92,6 +92,30 @@ namespace Alpha.Services
             return vm;
         }
 
+        /// <summary>
+        /// IsActive property is "true" in general set
+        /// </summary>
+        /// <param name="tagList">return related tags along with the general set tags</param>
+        /// <returns></returns>
+        public virtual List<Tag> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList)
+        {
+            List<Tag> allAvailableTags = _tagRepository.GetAll().Where(c => c.IsActive == true).ToList();
+            for (int t = 0; t < allAvailableTags.Count; t++)
+            {
+                allAvailableTags[t].IsActive = false;
+            }
+            foreach (var tag in tagList)
+            {
+                for (int t = 0; t < allAvailableTags.Count; t++)
+                {
+                    if (allAvailableTags[t].Id == tag.Id)
+                    {
+                        allAvailableTags[t].IsActive = true;
+                    }
+                }
+            }
+            return allAvailableTags;
+        }
         public virtual async Task<List<ArticleViewModel>> GetAllOfArticleViewModel()
         {
             var result = new List<ArticleViewModel>();

@@ -18,5 +18,6 @@ namespace Alpha.Services.Interfaces
         Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int articlePage, int pageSize);
 
         Task<int> InsertAsync(ArticleViewModel viewModel);
+        List<Tag> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList);
     }
 }
