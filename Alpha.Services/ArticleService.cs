@@ -34,7 +34,6 @@ namespace Alpha.Services
             _unitOfWork = uow;
         }
 
-
         public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int articlePage, int pageSize)
         {
             var articleList = new List<ArticleViewModel>();
@@ -116,6 +115,7 @@ namespace Alpha.Services
             }
             return allAvailableTags;
         }
+
         public virtual async Task<List<ArticleViewModel>> GetAllOfArticleViewModel()
         {
             var result = new List<ArticleViewModel>();
@@ -139,8 +139,8 @@ namespace Alpha.Services
                 try
                 {
                     var articleId = _unitOfWork.Article.AddOrUpdate(viewModel.Article);
-                    if (viewModel.Tags != null)
-                        foreach (var tag in viewModel.Tags.Where(t => t.IsActive == true))
+                    if (viewModel.AllTags != null)
+                        foreach (var tag in viewModel.AllTags.Where(t => t.IsActive == true))
                         {
                             var at = new ArticleTag()
                             {

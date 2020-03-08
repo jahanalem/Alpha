@@ -17,7 +17,7 @@ namespace Alpha.Models
         /// </summary>
         [Required]
         [StringLength(256)]
-        public virtual String Title { get; set; }
+        public virtual string Title { get; set; }
 
         /// <summary>
         /// Summary = خلاصه
