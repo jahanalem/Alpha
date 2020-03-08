@@ -40,6 +40,10 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         public IActionResult Create()
         {
             var tags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
+            for (int i = 0; i < tags.Count; i++)
+            {
+                tags[i].IsActive = false;
+            }
             var articleViewModel = new ArticleViewModel()
             {
                 AllTags = tags
@@ -95,23 +99,18 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Article article)
+        public async Task<IActionResult> Edit(Alpha.ViewModels.ArticleViewModel obj)
         {
-            if (id != article.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _articleService.Update(article);
+                    await _articleService.InsertAsync(obj);
                     await _articleService.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ArticleExists(article.Id))
+                    if (!ArticleExists(obj.Id))
                     {
                         return NotFound();
                     }
@@ -122,7 +121,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(article);
+            return View(obj);
         }
 
         // GET: Article/Delete/5
