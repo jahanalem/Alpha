@@ -31,6 +31,7 @@
                     @Html.DisplayNameFor(model => model.IsActiveNewComment)
                 </th>
                 <th>
+                    
                     @Html.DisplayNameFor(model => model.CreatedDate)
                 </th>
                 <th>
@@ -60,7 +61,9 @@
                         @Html.DisplayFor(modelItem => item.IsActiveNewComment)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CreatedDate)
+                        @*@Html.DisplayFor(modelItem => item.CreatedDate)*@
+                        
+                        <LocalDate utc="@item.CreatedDate.Value"></LocalDate>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ModifiedDate)
