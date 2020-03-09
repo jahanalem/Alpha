@@ -27,7 +27,7 @@ $(document).on("click", "input[id^='editC_']", function (event) {
     var targetId = "#cardId_" + commentId;
     var copyOfComment = $(targetId);
     var test = copyOfComment.clone().appendTo(jQuery.validator.format("#collapse_{0}", commentId)).addClass("hidden");
-    
+
     var text = $(targetId)[0].innerText;
     $(targetId).replaceWith(jQuery.validator.format("<textarea id='textarea_{0}_{1}'>", commentId, articleId) + text + "</textarea>");
     var copyOfEditButton = $("#" + clickedId);
@@ -196,3 +196,5 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
     });
 
 });
+
+

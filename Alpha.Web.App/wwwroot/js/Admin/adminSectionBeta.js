@@ -1,4 +1,10 @@
-﻿tinymce.init({ selector: 'textarea' });
+﻿function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+    return newDate;
+}
+
+
+tinymce.init({ selector: 'textarea' });
 
 
 $(document).ready(function () {
@@ -79,3 +85,17 @@ function Delete(Id) {
     });
 }
 
+
+
+$(document).ready(function () {
+
+    var key = $(".mytime").each(function (i, obj) {
+        var element = $(this); // <div> or <span> element. 
+        var utc = element.attr("utc"); // "2018-12-28T02:36:13.6774675Z"
+        var d = new Date(utc);
+        
+        var l = convertUTCDateToLocalDate(d).toLocaleString();//d.toLocaleString(); // Runs client side, so will be client's local time!
+        element.text(l);
+
+    });
+});
