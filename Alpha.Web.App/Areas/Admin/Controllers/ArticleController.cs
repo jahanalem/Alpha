@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess;
@@ -84,7 +85,12 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             }
 
             ArticleViewModel article = await _articleService.GetArticleById(id);
-            
+
+            //DateTime timeUtc = article.Article.ModifiedDate.Value;
+            //if (timeUtc != null)
+            //{
+            //    DateTime x = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, TimeZoneInfo.Local);
+            //}
 
             article.AllTags = _articleService.SpecifyRelatedTagsInTheGeneralSet(article.Tags);
             if (article == null)
@@ -144,7 +150,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         // POST: Article/Delete/5
         //[ValidateAntiForgeryToken]
-        [HttpPost, ActionName("DeleteConfirmed/{id}")]
+        [HttpPost]//, ActionName("DeleteConfirmed/{id}")
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var article = _articleService.GetAll().SingleOrDefault(m => m.Id == id);
