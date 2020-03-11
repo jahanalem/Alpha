@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess;
@@ -49,6 +50,11 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             {
                 AllTags = tags
             };
+            //StringLengthAttribute strLenAttr = typeof(Article).GetProperty("Summary")?.GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+            //if (strLenAttr != null)
+            //{
+            //    int maxLen = strLenAttr.MaximumLength;
+            //}
             return View(articleViewModel);
         }
 
@@ -85,12 +91,6 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             }
 
             ArticleViewModel article = await _articleService.GetArticleById(id);
-
-            //DateTime timeUtc = article.Article.ModifiedDate.Value;
-            //if (timeUtc != null)
-            //{
-            //    DateTime x = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, TimeZoneInfo.Local);
-            //}
 
             article.AllTags = _articleService.SpecifyRelatedTagsInTheGeneralSet(article.Tags);
             if (article == null)
