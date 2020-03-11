@@ -14,8 +14,8 @@ namespace Alpha.Web.App.AppTagHelpers
             output.TagName = "span";// Replaces <LocalDate> with <span> tag
             output.Attributes.SetAttribute("class", "mytime");
             output.Attributes.Add("utc", Utc.ToString("o"));
-            //output.Content.SetContent(xxx);
-            //String.Format("<span class=\"mytime\" utc =\"{0}\"></span>", DateTimeUtc.ToString("o"));
+            // DateTime x = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, TimeZoneInfo.Local);
+            // output.Content.SetContent(xxx);
             base.Process(context, output);
         }
 
