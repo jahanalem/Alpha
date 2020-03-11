@@ -36,21 +36,26 @@ namespace Alpha.Models
         /// RateCounter: رتبه
         /// </summary>
         [Range(0, 10)]
+        [Display(Name = "Rating")]
         public virtual decimal? RateCounter { get; set; } = 0;
+
 
         /// <summary>
         /// LikeCounter: شمارنده لایک 
         /// </summary>
+        [Display(Name = "Like")]
         public virtual int? LikeCounter { get; set; }
 
         /// <summary>
         /// IsActive: فعال؟
         /// </summary>
+        [Display(Name = "Active")]
         public virtual bool IsActive { get; set; }
 
         /// <summary>
         /// IsActiveNewComment: آیا امکان گذاشتن نظر جدید وجود دارد؟
         /// </summary>
+        [Display(Name = "New Comment")]
         public virtual bool IsActiveNewComment { get; set; }
 
         /// <summary>
