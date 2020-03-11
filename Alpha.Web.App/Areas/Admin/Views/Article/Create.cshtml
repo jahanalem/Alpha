@@ -1,4 +1,6 @@
-﻿@model Alpha.ViewModels.ArticleViewModel
+﻿@using Alpha.Infrastructure
+@using Alpha.Models
+@model Alpha.ViewModels.ArticleViewModel
 
 @{
     ViewData["Title"] = "View";
@@ -21,12 +23,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Article.Summary" class="control-label"></label>
-                <textarea asp-for="Article.Summary" class="form-control"></textarea>
+                <textarea asp-for="Article.Summary" class="form-control" id="summaryId" maxlength="255"></textarea>
                 <span asp-validation-for="Article.Summary" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Article.Description" class="control-label"></label>
-                <textarea asp-for="Article.Description" class="form-control"></textarea>
+                <textarea asp-for="Article.Description" class="form-control" id="descId" maxlength="100000"></textarea>
                 <span asp-validation-for="Article.Description" class="text-danger"></span>
             </div>
 

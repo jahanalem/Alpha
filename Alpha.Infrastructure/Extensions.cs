@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.RegularExpressions;
+using Alpha.Models;
 
 namespace Alpha.Infrastructure
 {
@@ -43,6 +46,18 @@ namespace Alpha.Infrastructure
                 return DateTime.MinValue;
             }
             return convertedDate;
+        }
+
+        public static int GetMaxLengthOfProperty<T>(this string nameOfProperty)
+        {
+            int maxLen = 1;
+            StringLengthAttribute strLenAttr = typeof(T).GetProperty(nameOfProperty)?.GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
+            if (strLenAttr != null)
+            {
+                maxLen = strLenAttr.MaximumLength;
+            }
+
+            return maxLen;
         }
     }
 }
