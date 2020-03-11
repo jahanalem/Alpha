@@ -35,11 +35,11 @@ namespace Alpha.Web.App.Controllers
         }
 
         [HttpGet]
-        [Route("FilterByTagAsync/{tagId}/{articlePage}")]
-        [Route("FilterByTagAsync/{tagId}")] // Matches GET Article/FilterByTag/2
-        [Route("FilterByTagAsync/{articlePage}")]
+        //[Route("FilterByTagAsync/{tagId}/{articlePage}")]
+        //[Route("FilterByTagAsync/{tagId}")] // Matches GET Article/FilterByTag/2
+        //[Route("FilterByTagAsync/{articlePage}")]
         //[ActionName("Introduction-To-AspNet")]
-        public async Task<IActionResult> FilterByTagAsync(int? tagId = null, int articlePage = 1)
+        public async Task<IActionResult> ShowArticles(int? tagId = null, int articlePage = 1)
         {
             Task<ArticleTagListViewModel> result = _articleService.FilterByTagAsync(tagId, articlePage, PageSize);
             return View(await result);
