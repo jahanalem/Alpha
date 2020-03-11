@@ -9,7 +9,11 @@ namespace Alpha.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public virtual TId Id { get; set; }
+
+        [Display(Name = "Created Date")]
         public virtual DateTime? CreatedDate { get; set; }
+
+        [Display(Name = "Modified Date")]
         public virtual DateTime? ModifiedDate { get; set; }
     }
 }

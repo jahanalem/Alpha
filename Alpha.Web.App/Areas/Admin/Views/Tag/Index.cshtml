@@ -52,10 +52,10 @@
                     @Html.DisplayFor(modelItem => item.IsActive)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                    <LocalDate utc="@item.CreatedDate"></LocalDate>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ModifiedDate)
+                    <LocalDate utc="@item.ModifiedDate"></LocalDate>
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

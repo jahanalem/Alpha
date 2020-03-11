@@ -38,7 +38,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         }
 
         // GET: Article/Create
-        [HttpGet]//[HttpGet("Create")]
+        [HttpGet]
         public IActionResult Create()
         {
             var tags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
@@ -59,10 +59,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         }
 
         // POST: Article/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ArticleViewModel articleViewModel)
         {
             if (ModelState.IsValid)
@@ -101,8 +99,6 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         }
 
         // POST: Article/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Alpha.ViewModels.ArticleViewModel obj)
@@ -149,8 +145,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         }
 
         // POST: Article/Delete/5
-        //[ValidateAntiForgeryToken]
         [HttpPost]//, ActionName("DeleteConfirmed/{id}")
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var article = _articleService.GetAll().SingleOrDefault(m => m.Id == id);

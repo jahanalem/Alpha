@@ -14,11 +14,12 @@
 <div class="row">
     <div class="col-12">
         <form asp-controller="Article" asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
                 <label asp-for="Article.Title" class="control-label"></label>
-                <input asp-for="Article.Title" class="form-control" />
+                <input asp-for="Article.Title" class="form-control"/>
                 <span asp-validation-for="Article.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -36,14 +37,14 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="Article.IsActive" /> @Html.DisplayNameFor(model => model.Article.IsActive)
+                        <input asp-for="Article.IsActive"/> @Html.DisplayNameFor(model => model.Article.IsActive)
                     </label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="Article.IsActiveNewComment" /> @Html.DisplayNameFor(model => model.Article.IsActiveNewComment)
+                        <input asp-for="Article.IsActiveNewComment"/> @Html.DisplayNameFor(model => model.Article.IsActiveNewComment)
                     </label>
                 </div>
             </div>
@@ -56,18 +57,19 @@
                             for (int i = 0; i < Model.AllTags.Count(); i++)
                             {
                                 <li>
-                                    <input type="checkbox" asp-for="@Model.AllTags[i].IsActive" />
+                                    <input type="checkbox" asp-for="@Model.AllTags[i].IsActive"/>
                                     <label asp-for="@Model.Tags[i].IsActive">@Model.AllTags[i].Title</label>
-                                    <input type="hidden" asp-for="@Model.AllTags[i].Id" />
-                                    <input type="hidden" asp-for="@Model.AllTags[i].Title" />
-                                    <input type="hidden" asp-for="@Model.AllTags[i].Size" />
-                                    <input type="hidden" asp-for="@Model.AllTags[i].Description" />
+                                    <input type="hidden" asp-for="@Model.AllTags[i].Id"/>
+                                    <input type="hidden" asp-for="@Model.AllTags[i].Title"/>
+                                    <input type="hidden" asp-for="@Model.AllTags[i].Size"/>
+                                    <input type="hidden" asp-for="@Model.AllTags[i].Description"/>
                                 </li>
                             }
                         }
                         else
                         {
-                            <li><p>There is no Tag.If you want to assign a tag to the article, please create your tag and then do it!</p></li>
+                            <li>
+                                <p>There is no Tag.If you want to assign a tag to the article, please create your tag and then do it!</p></li>
                         }
                     }
                 </ul>
@@ -75,7 +77,7 @@
 
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default"/>
             </div>
         </form>
     </div>
