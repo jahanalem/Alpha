@@ -22,13 +22,13 @@
             @Html.DisplayNameFor(model => model.Summary)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Summary)
+            <textarea asp-for="Summary" class="form-control" id="summaryId" maxlength="255"></textarea>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            <textarea asp-for="Description" class="form-control" id="descId" maxlength="100000"></textarea>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.RateCounter)
@@ -67,8 +67,9 @@
             @Html.DisplayFor(model => model.ModifiedDate)
         </dd>
     </dl>
-    
+
     <form asp-action="DeleteConfirmed">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
