@@ -129,7 +129,6 @@ namespace Alpha.Web.App
                 endpoints.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller}/{action}/{id?}");
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{id?}");
-                //endpoints.MapControllerRoute(name: "list", pattern: "{controller}/{action}/{tagId?}/{articlePage?}");
                 //endpoints.MapAreaControllerRoute("areasDefault","Admin", "{controller=Home}/{action=Index}/{id?}");
             });
             //SeedData.EnsurePopulated(app);

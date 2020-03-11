@@ -3,4 +3,4 @@
 @using Microsoft.EntityFrameworkCore
 @model Alpha.ViewModels.ArticleTagListViewModel
 
-@Html.Partial("_ArticleList", Model)
+@await Html.PartialAsync("_ArticleList", Model)
