@@ -3,9 +3,12 @@ using Alpha.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Alpha.Web.App.Controllers
 {
+    // https://stackoverflow.com/questions/13225315/pass-data-to-layout-that-are-common-to-all-pages
+    // https://stackoverflow.com/questions/5453327/how-to-set-viewbag-properties-for-all-views-without-using-a-base-class-for-contr/21130867#21130867
     public class BaseController : Controller
     {
         public CurrentUser CurrentUser;
@@ -20,6 +23,11 @@ namespace Alpha.Web.App.Controllers
             _httpContextAccessor = httpContextAccessor;
             //ViewBag.ArticlePage = ArticlePage;
             //ViewBag.CurrentUser = CurrentUserInfo;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
         }
 
         //public int ArticlePage

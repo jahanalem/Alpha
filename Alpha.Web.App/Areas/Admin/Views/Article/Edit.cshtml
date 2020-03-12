@@ -16,6 +16,8 @@
         {
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Article.Id" />
+            <input type="hidden" asp-for="Article.CreatedDate" />
+            <input type="hidden" asp-for="Article.ModifiedDate" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Article.Title" class="control-label"></label>
