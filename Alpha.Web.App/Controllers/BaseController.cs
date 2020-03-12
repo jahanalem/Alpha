@@ -18,27 +18,28 @@ namespace Alpha.Web.App.Controllers
         public BaseController(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            ViewBag.ArticlePage = ArticlePage;
+            //ViewBag.ArticlePage = ArticlePage;
             //ViewBag.CurrentUser = CurrentUserInfo;
         }
-        public int ArticlePage
-        {
-            get
-            {
-                var result = 1;
-                if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
-                {
-                    string queryString = (_httpContextAccessor.HttpContext.Request.Query["articlePage"]);
-                    if (queryString != null)
-                    {
-                        Int32.TryParse(queryString, out result);
-                    }
-                    ViewBag.ArticlePage = result;
-                }
 
-                return result;
-            }
-        }
+        //public int ArticlePage
+        //{
+        //    get
+        //    {
+        //        var result = 1;
+        //        if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
+        //        {
+        //            string queryString = (_httpContextAccessor.HttpContext.Request.Query["articlePage"]);
+        //            if (queryString != null)
+        //            {
+        //                Int32.TryParse(queryString, out result);
+        //            }
+        //            ViewBag.ArticlePage = result;
+        //        }
+
+        //        return result;
+        //    }
+        //}
 
         //public CurrentUser CurrentUserInfo
         //{

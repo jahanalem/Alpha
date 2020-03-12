@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Alpha.Web.App.Controllers
 {
     [Authorize(Roles = "Admins")]
-    public class RoleAdminController : Controller
+    public class RoleAdminController : BaseController
     {
         private RoleManager<Role> _roleManager;
         private UserManager<User> _userManager;
@@ -126,7 +126,6 @@ namespace Alpha.Web.App.Controllers
                 return await Edit(model.RoleId);
             }
         }
-
 
         private void AddErrorsFromResult(IdentityResult result)
         {
