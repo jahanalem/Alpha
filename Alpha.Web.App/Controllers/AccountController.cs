@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Alpha.Web.App.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private UserManager<User> userManager;
         private SignInManager<User> signInManager;
@@ -38,6 +38,8 @@ namespace Alpha.Web.App.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result =
                         await signInManager.PasswordSignInAsync(
                             user, details.Password, false, false);
+                    //ViewBag.CurrentUser = user;
+                    ViewData["CurrentUser"] = user;
                     if (result.Succeeded)
                     {
                         return Redirect(returnUrl ?? "/");
@@ -54,6 +56,7 @@ namespace Alpha.Web.App.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
+            ViewBag.CurrentUser = null;
             return RedirectToAction("Index", "Home");
         }
 

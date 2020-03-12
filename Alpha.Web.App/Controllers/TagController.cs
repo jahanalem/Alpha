@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Alpha.Web.App.Controllers
 {
-    public class TagController : Controller
+    public class TagController : BaseController
     {
         //private readonly ApplicationDbContext _context;
         private readonly ITagRepository _tagRepository;

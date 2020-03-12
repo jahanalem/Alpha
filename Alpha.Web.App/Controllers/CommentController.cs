@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Alpha.Web.App.Controllers
 {
     //[Route("[controller]")]
-    public class CommentController : Controller
+    public class CommentController : BaseController
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommentRepository _commentRepository;
