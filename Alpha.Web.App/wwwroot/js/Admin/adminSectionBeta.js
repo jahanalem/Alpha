@@ -38,13 +38,13 @@ tinymce.init({
     },
     paste_preprocess: function (plugin, args) {
         var editor = tinymce.get(tinymce.activeEditor.id);
-        var len = editor.contentDocument.body.innerText.length;
-        var text = $(args.content).text();
-        if (len + text.length > editor.settings.max_chars) {
+        var len = editor.contentDocument.body.innerHTML.length;
+        var textLen = args.content.length;// $(args.content).text();
+        if (len + textLen > editor.settings.max_chars) {
             alert('Pasting this exceeds the maximum allowed number of ' + editor.settings.max_chars + ' characters.');
             args.content = '';
         } else {
-            tinymce_updateCharCounter(editor, len + text.length);
+            //tinymce_updateCharCounter(editor, len + text.length);
         }
     }
 });

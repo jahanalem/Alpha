@@ -3,18 +3,20 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Alpha.Models.Identity;
 using Alpha.ViewModels;
+using Alpha.Web.App.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Alpha.Web.App.Controllers
+namespace Alpha.Web.App.Areas.Admin.Controllers
 {
+    [Area(AreaConstants.AdminArea)]
     [Authorize(Roles = "Admins")]
-    public class RoleAdminController : BaseController
+    public class RoleController : BaseController
     {
         private RoleManager<Role> _roleManager;
         private UserManager<User> _userManager;
-        public RoleAdminController(RoleManager<Role> roleMgr, UserManager<User> userMrg)
+        public RoleController(RoleManager<Role> roleMgr, UserManager<User> userMrg)
         {
             _roleManager = roleMgr;
             _userManager = userMrg;
