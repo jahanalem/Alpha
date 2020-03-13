@@ -33,6 +33,11 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\lib\font-awesome\css\" />
+    <Folder Include="wwwroot\lib\font-awesome\fonts\" />
+    <Folder Include="wwwroot\lib\font-awesome\js\" />
+    <Folder Include="wwwroot\lib\font-awesome\sprites\" />
+    <Folder Include="wwwroot\lib\font-awesome\webfonts\" />
   </ItemGroup>
 
 </Project>

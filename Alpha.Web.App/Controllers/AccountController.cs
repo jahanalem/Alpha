@@ -17,6 +17,7 @@ namespace Alpha.Web.App.Controllers
             userManager = userMgr;
             signInManager = signinMgr;
         }
+
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
@@ -62,6 +63,18 @@ namespace Alpha.Web.App.Controllers
 
         [AllowAnonymous]
         public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult Signup()
+        {
+            return View();
+        }
+
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Signup(SignupUserViewModel signupObject)
         {
             return View();
         }
