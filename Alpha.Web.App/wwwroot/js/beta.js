@@ -198,3 +198,16 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
 });
 
 
+
+
+function togglePasswordVisibility() {
+    var x = document.getElementById("Password");
+    var y = document.getElementById("ConfirmPassword");
+    if (x.type === "password") {
+        x.type = "text";
+        y.type = "text;";
+    } else {
+        x.type = "password";
+        y.type = "password";
+    }
+}
