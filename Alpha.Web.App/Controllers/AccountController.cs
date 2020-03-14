@@ -18,6 +18,24 @@ namespace Alpha.Web.App.Controllers
             signInManager = signinMgr;
         }
 
+        #region Sign up
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult Signup()
+        {
+            return View();
+        }
+
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Signup(SignupUserViewModel signupObject)
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region Login
+
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
@@ -53,6 +71,10 @@ namespace Alpha.Web.App.Controllers
             return View(details);
         }
 
+        #endregion
+
+        #region Logout
+
         [Authorize]
         public async Task<IActionResult> Logout()
         {
@@ -61,23 +83,9 @@ namespace Alpha.Web.App.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [AllowAnonymous]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
+        #endregion
 
-        [HttpGet, AllowAnonymous]
-        public IActionResult Signup()
-        {
-            return View();
-        }
-
-        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Signup(SignupUserViewModel signupObject)
-        {
-            return View();
-        }
+        #region Forgot Password
 
         [HttpGet, AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -87,6 +95,14 @@ namespace Alpha.Web.App.Controllers
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordUserViewModel forgotPasswordObject)
+        {
+            return View();
+        }
+
+        #endregion
+
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
         {
             return View();
         }
