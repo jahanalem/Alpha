@@ -49,7 +49,7 @@
                         <a class="nav-link" href="#">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
+                        <a asp-controller="ContactUs" asp-action="ContactUsForm" class="nav-link">Contact</a>
                     </li>
                     @if (ViewBag.CurrentUser !=null && ((CurrentUser)ViewBag.CurrentUser).IsAuthenticated) { 
                             <li class="nav-item">
