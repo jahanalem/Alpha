@@ -32,17 +32,17 @@
                         <input asp-for="LastName" placeholder="last name" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <input asp-for="UserName" placeholder="user name" class="form-control" />
+                        <input asp-for="UserName" placeholder="user name" class="form-control" required />
                     </div>
                     <div class="form-group">
-                        
-                        <input asp-for="Email" class="form-control" placeholder="Email or login" type="email">
+                        <input asp-for="Email" class="form-control" placeholder="Email or login" type="email" required />
                     </div> <!-- form-group// -->
                     <div class="form-group">
-                        <input asp-for="Password" class="form-control" placeholder="password" type="password">
+                        <input asp-for="Password" class="form-control" placeholder="password" type="password" minlength="4" maxlength="8" required />
                     </div> <!-- form-group// -->
                     <div class="form-group">
-                        <input asp-for="ConfirmPassword" class="form-control" placeholder="confirm password" type="password">
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="confirm password" type="password" minlength="4" maxlength="8" required />
+                        <input type="checkbox" onclick="togglePasswordVisibility()">Show Password
                     </div> <!-- form-group// -->
                     <div class="row">
                         <div class="col-md-12">

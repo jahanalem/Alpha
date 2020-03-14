@@ -78,5 +78,17 @@ namespace Alpha.Web.App.Controllers
         {
             return View();
         }
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordUserViewModel forgotPasswordObject)
+        {
+            return View();
+        }
     }
 }
