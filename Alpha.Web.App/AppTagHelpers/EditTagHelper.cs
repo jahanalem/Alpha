@@ -71,4 +71,27 @@ namespace Alpha.Web.App.AppTagHelpers
             base.Process(context, output);
         }
     }
+    /*
+     <div class="row">
+    <form asp-action="Edit" method="post">
+        @{
+            var propertyNames = (List<string>)ViewData["PropertyList"];
+            var props = (List<PropertyInfo>)ViewData["props"];
+            @*foreach (PropertyInfo item in props)
+                {
+                    <edit asp-for="@item"></edit>
+                }*@
+            foreach (var item in propertyNames)
+            {
+                <edit asp-for="@item"></edit>
+            }
+        }
+        <div class="container-fluid align-content-lg-center">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+     */
 }

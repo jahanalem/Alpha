@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Alpha.Infrastructure;
 using Alpha.Models.Identity;
@@ -13,11 +15,21 @@ namespace Alpha.Services
     {
         private ModelStateDictionary _modelState;
         private UserManager<User> _userManager;
-
-        public UserService(ModelStateDictionary modelState, UserManager<User> userManager)
+        private IUserValidator<User> _userValidator;
+        private IPasswordValidator<User> _passwordValidator;
+        private IPasswordHasher<User> _passwordHasher;
+        public UserService(ModelStateDictionary modelState,
+                            UserManager<User> userManager,
+                            IUserValidator<User> userValid,
+                            IPasswordValidator<User> passValid,
+                            IPasswordHasher<User> passwordHash)
         {
             _modelState = modelState;
             _userManager = userManager;
+            _userValidator = userValid;
+            _passwordValidator = passValid;
+            _passwordHasher = passwordHash;
+
         }
         public bool CreateUser(User userToCreate)
         {
@@ -29,25 +41,64 @@ namespace Alpha.Services
             return result.Succeeded;
         }
 
-        public async Task<IdentityResult> EditUser(UserEditViewModel userViewModel)
+        private void AddErrorsFromResult(IdentityResult result)
         {
-            IdentityResult result = new IdentityResult();
-            User user = _userManager.FindByIdAsync(userViewModel.Id.ToString()).Result;
-            if (user != null && ValidateUser(userViewModel))
+            foreach (IdentityError error in result.Errors)
             {
-                user.IsActive = userViewModel.IsActive;
-                user.UserName = userViewModel.UserName.Trim();
-                user.Email = userViewModel.Email.Trim();
-                user.PhoneNumber = userViewModel.PhoneNumber.Trim();
-                user.BirthDate = userViewModel.BirthDate;
-                user.FirstName = userViewModel.FirstName.Trim();
-                user.LastName = userViewModel.LastName.Trim();
-                user.PhotoFileName = userViewModel.PhotoFileName.Trim();
-                user.IsEmailPublic = userViewModel.IsEmailPublic;
-                user.Location = userViewModel.Location.Trim();
-                result = await _userManager.UpdateAsync(user);
+                _modelState.AddModelError("", error.Description);
             }
-            return result;
+        }
+        public async Task<IdentityResult> EditUser(User userObj)
+        {
+            IList<IdentityError> errors = new List<IdentityError>();
+            User user = await _userManager.FindByIdAsync(userObj.Id.ToString());
+            if (user != null)
+            {
+                user.Email = userObj.Email;
+                IdentityResult validEmail = await _userValidator.ValidateAsync(_userManager, user);
+                if (!validEmail.Succeeded)
+                {
+                    errors.Add(validEmail.Errors);
+                    //AddErrorsFromResult(validEmail);
+                }
+                IdentityResult validPass = null;
+                if (!string.IsNullOrEmpty(userObj.Password))
+                {
+                    validPass = await _passwordValidator.ValidateAsync(_userManager, user, userObj.Password);
+                    if (validPass.Succeeded)
+                    {
+                        user.PasswordHash = _passwordHasher.HashPassword(user, userObj.Password);
+                    }
+                    else
+                    {
+                        errors.Add(validPass.Errors);
+                        //AddErrorsFromResult(validPass);
+                    }
+                    if ((validEmail.Succeeded && validPass == null) || (validEmail.Succeeded && userObj.Password != string.Empty && validPass.Succeeded))
+                    {
+                        var result = await _userManager.UpdateAsync(user);
+                        if (!result.Succeeded)
+                        {
+                            errors.Add(result.Errors);
+                            //AddErrorsFromResult(result);
+                        }
+                    }
+                }
+                {
+                    //user.IsActive = userViewModel.IsActive;
+                    //user.UserName = userViewModel.UserName.Trim();
+                    //user.Email = userViewModel.Email.Trim();
+                    //user.PhoneNumber = userViewModel.PhoneNumber.Trim();
+                    //user.BirthDate = userViewModel.BirthDate;
+                    //user.FirstName = userViewModel.FirstName.Trim();
+                    //user.LastName = userViewModel.LastName.Trim();
+                    //user.PhotoFileName = userViewModel.PhotoFileName.Trim();
+                    //user.IsEmailPublic = userViewModel.IsEmailPublic;
+                    //user.Location = userViewModel.Location.Trim();
+                    //result = await _userManager.UpdateAsync(user);
+                }
+            }
+            return errors.Count == 0 ? IdentityResult.Success : IdentityResult.Failed(errors.ToArray());
         }
         public IEnumerable<User> ListUsers()
         {

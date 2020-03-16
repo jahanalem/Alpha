@@ -12,29 +12,23 @@
 <h2>Edit</h2>
 
 <div class="bg-primary m-1 p-1"><h4>Edit User</h4></div>
-
 <div asp-validation-summary="All" class="text-danger"></div>
-
-
-
 <div class="row">
     <form asp-action="Edit" method="post">
-        @{
-            var propertyNames = (List<string>)ViewData["PropertyList"];
-            var props = (List<PropertyInfo>)ViewData["props"];
-            @*foreach (PropertyInfo item in props)
-                {
-                    <edit asp-for="@item"></edit>
-                }*@
-            foreach (var item in propertyNames)
-            {
-                <edit asp-for="@item"></edit>
-            }
-        }
-        <div class="container-fluid align-content-lg-center">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        <div class="form-group">
+            <label asp-for="Id"></label>
+            <input asp-for="Id" class="form-control" disabled />
         </div>
-        
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input name="password" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+
