@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices.ComTypes;
+using System.Threading.Tasks;
 using Alpha.Models.Identity;
 using Alpha.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -27,9 +28,32 @@ namespace Alpha.Web.App.Controllers
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Signup(SignupUserViewModel signupObject)
+        public async Task<IActionResult> Signup(SignupUserViewModel signupObj)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                Alpha.Models.Identity.User user = new User()
+                {
+                    FirstName = signupObj.FirstName,
+                    LastName = signupObj.LastName,
+                    UserName = signupObj.UserName,
+                    Email = signupObj.Email,
+                    IpAddress = GetClientIpAddress()
+                };
+                IdentityResult result = await userManager.CreateAsync(user, signupObj.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                else
+                {
+                    foreach (IdentityError error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            return View(signupObj);
         }
 
         #endregion
