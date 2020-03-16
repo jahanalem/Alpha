@@ -27,6 +27,7 @@ namespace Alpha.Web.App.Controllers
 
         public ViewResult Index() => View(userManager.Users);
 
+
         public ViewResult Create() => View();
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserViewModel model)

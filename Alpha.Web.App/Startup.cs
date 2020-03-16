@@ -41,6 +41,8 @@ namespace Alpha.Web.App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 
@@ -77,7 +79,7 @@ namespace Alpha.Web.App
                 //opts.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz";
             }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             services.AddTransient<IPasswordValidator<User>, CustomPasswordValidator>();
-            //services.AddTransient<IUserValidator<User>, CustomUserValidator>();
+            services.AddTransient<IUserValidator<User>, CustomUserValidator>();
 
             // https://stackoverflow.com/questions/55666826/where-did-imvcbuilder-addjsonoptions-go-in-net-core-3-0
             services.AddControllers().AddNewtonsoftJson(options =>
@@ -85,7 +87,7 @@ namespace Alpha.Web.App
 
 
             //?? services.AddSingleton<RazorTemplateEngine, CustomTemplateEngine>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
         }
 
