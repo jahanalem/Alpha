@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 
 namespace Alpha.Models.Identity
@@ -39,6 +40,7 @@ namespace Alpha.Models.Identity
         public bool IsActive { get; set; } = true;
 
         [NotMapped]
+        [StringLength(maximumLength: 8, MinimumLength = 4, ErrorMessage = "The password must be between 4 and 8 character in length.")]
         public string Password { get; set; }
 
         public virtual ICollection<CommentLike> CommentLikes { get; set; }
