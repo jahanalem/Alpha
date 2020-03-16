@@ -1,4 +1,4 @@
-﻿ @using Alpha.Infrastructure 
+﻿@using Alpha.Infrastructure
 @using Microsoft.AspNetCore.Http
 <!DOCTYPE html>
 <html>
@@ -51,14 +51,17 @@
                     <li class="nav-item">
                         <a asp-controller="ContactUs" asp-action="ContactUsForm" class="nav-link">Contact</a>
                     </li>
-                    @if (ViewBag.CurrentUser !=null && ((CurrentUser)ViewBag.CurrentUser).IsAuthenticated) { 
-                            <li class="nav-item">
-                                <a asp-controller="Account" asp-action="Logout" class="nav-link">LogOut</a>
-                            </li>
-                    }else{
-                    <li class="nav-item">
-                        <a asp-controller="Account" asp-action="Login" class="nav-link">Login</a>
-                    </li>
+                    @if (ViewBag.CurrentUser != null && ((CurrentUser)ViewBag.CurrentUser).IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="Account" asp-action="Logout" class="nav-link">LogOut</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="Account" asp-action="Login" class="nav-link">Login</a>
+                        </li>
                     }
 
                 </ul>
@@ -85,10 +88,11 @@
     </footer>
 
     <!-- Bootstrap core JavaScript -->
-    
+
     <script src="~/lib/jQuery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+    @*<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>*@
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
     <script src="~/js/beta.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
