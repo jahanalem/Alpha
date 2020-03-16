@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
@@ -36,6 +37,9 @@ namespace Alpha.Models.Identity
         public string IpAddress { set; get; }
 
         public bool IsActive { get; set; } = true;
+
+        [NotMapped]
+        public string Password { get; set; }
 
         public virtual ICollection<CommentLike> CommentLikes { get; set; }
         //public virtual ISet<CommentReply> CommentReplies { get; set; }

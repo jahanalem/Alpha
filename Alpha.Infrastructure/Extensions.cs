@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Alpha.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Alpha.Infrastructure
 {
@@ -58,6 +60,15 @@ namespace Alpha.Infrastructure
             }
 
             return maxLen;
+        }
+
+        public static IList<IdentityError> Add(this IList<IdentityError> errorList, IEnumerable<IdentityError> identityErrors)
+        {
+            foreach (var validEmailError in identityErrors)
+            {
+                errorList.Add(validEmailError);
+            }
+            return errorList;
         }
     }
 }
