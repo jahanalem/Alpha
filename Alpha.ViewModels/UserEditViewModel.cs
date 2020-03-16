@@ -11,6 +11,7 @@ namespace Alpha.ViewModels
 
         [EmailAddress]
         public virtual string Email { get; set; }
+        public virtual string Password { get; set; }
         public virtual string PhoneNumber { get; set; }
 
         public virtual DateTimeOffset? BirthDate { get; set; }
