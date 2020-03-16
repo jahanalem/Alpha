@@ -9,7 +9,7 @@ namespace Alpha.Services
     public interface IUserService
     {
         bool CreateUser(User userToCreate);
-        Task<IdentityResult> EditUser(UserEditViewModel userViewModel);
+        Task<IdentityResult> EditUser(User userObj);
         Task<IdentityResult> DeleteAsync(string id);
         IEnumerable<User> ListUsers();
     }

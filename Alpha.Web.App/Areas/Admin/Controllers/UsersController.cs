@@ -45,7 +45,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             _passwordHasher = passwordHash;
             _roleManager = roleMgr;
             _applicationDbContext = dbContext;
-            _userService = new UserService(this.ModelState, _userManager);
+            _userService = new UserService(this.ModelState, _userManager, _userValidator, _passwordValidator, _passwordHasher);
         }
         public IActionResult Index()
         {
@@ -117,8 +117,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            List<string> propertyNames = DynamicOperation.GetNamesOfProperties(typeof(UserEditViewModel));
-            ViewData["PropertyList"] = propertyNames;
+            //List<string> propertyNames = DynamicOperation.GetNamesOfProperties(typeof(UserEditViewModel));
+            //ViewData["PropertyList"] = propertyNames;
             if (string.IsNullOrEmpty(id))
             {
                 return RedirectToAction("Index", "Users");
@@ -128,16 +128,19 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserEditViewModel userViewModel)
+        public async Task<IActionResult> Edit(User userObj)
         {
-            IdentityResult consequence = await _userService.EditUser(userViewModel);
-            if (consequence.Succeeded)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Edit", new { id = userViewModel.Id });
-            }
-            else
-            {
-                AddErrorsFromResult(consequence);
+                IdentityResult consequence = await _userService.EditUser(userObj);
+                if (consequence.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    AddErrorsFromResult(consequence);
+                }
             }
             return View();
         }
