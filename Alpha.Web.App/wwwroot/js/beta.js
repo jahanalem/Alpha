@@ -211,3 +211,5 @@ function togglePasswordVisibility() {
         y.type = "password";
     }
 }
+
+$('#signupForm').validate(); //https://johnnycode.com/2014/03/27/using-jquery-validate-plugin-html5-data-attribute-rules/

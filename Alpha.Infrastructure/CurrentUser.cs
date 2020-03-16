@@ -13,5 +13,7 @@
 
         //HttpContext.User.IsInRole("Admins")
         public bool IsInRoleOfAdmins { get; set; }
+
+        public string UserIp { get; set; }
     }
 }

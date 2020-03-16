@@ -49,7 +49,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var users = _userManager.Users;
+            return View(users);
         }
 
         public IActionResult LoadData()
@@ -152,7 +153,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
             if (result.Result.Succeeded)
             {
-                return Json(data: true);
+                return RedirectToAction("Index");
             }
             return Json(data: false);
         }

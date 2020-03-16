@@ -33,6 +33,8 @@ namespace Alpha.Models.Identity
 
         public string Location { set; get; }
 
+        public string IpAddress { set; get; }
+
         public bool IsActive { get; set; } = true;
 
         public virtual ICollection<CommentLike> CommentLikes { get; set; }

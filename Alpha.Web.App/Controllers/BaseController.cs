@@ -12,18 +12,19 @@ namespace Alpha.Web.App.Controllers
     public class BaseController : Controller
     {
         public CurrentUser CurrentUser;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        //private readonly IHttpContextAccessor _httpContextAccessor;
         public BaseController() : base()
         {
             //ViewBag.CurrentUser = CurrentUserInfo;
         }
 
-        public BaseController(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-            //ViewBag.ArticlePage = ArticlePage;
-            //ViewBag.CurrentUser = CurrentUserInfo;
-        }
+        //public BaseController(IHttpContextAccessor httpContextAccessor)
+        //{
+        //    _httpContextAccessor = httpContextAccessor;
+
+        //    //ViewBag.ArticlePage = ArticlePage;
+        //    //ViewBag.CurrentUser = CurrentUserInfo;
+        //}
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -73,12 +74,22 @@ namespace Alpha.Web.App.Controllers
                 AuthenticationType = HttpContext.User.Identity.AuthenticationType,
                 UserName = HttpContext.User.Identity.Name,
                 IsInRoleOfUsers = HttpContext.User.IsInRole("Users"),
-                IsInRoleOfAdmins = HttpContext.User.IsInRole("Admins")
+                IsInRoleOfAdmins = HttpContext.User.IsInRole("Admins"),
+                UserIp = GetClientIpAddress()
             };
             ViewBag.CurrentUser = cUser;
             return cUser;
         }
 
+        protected string GetClientIpAddress()
+        {
+            string ip = string.Empty;
+            if (HttpContext != null &&
+                HttpContext.Connection != null &&
+                HttpContext.Connection.RemoteIpAddress != null)
+                ip = HttpContext.Connection.RemoteIpAddress.ToString();
+            return ip;
+        }
         protected void AddErrorsFromResult(IdentityResult result)
         {
             foreach (IdentityError error in result.Errors)
