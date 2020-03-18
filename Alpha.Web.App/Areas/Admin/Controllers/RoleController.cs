@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using Alpha.Models.Identity;
 using Alpha.ViewModels;
@@ -11,20 +12,23 @@ using Microsoft.AspNetCore.Mvc;
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {
     [Area(AreaConstants.AdminArea)]
-    [Authorize(Roles = "Admins")]
+    //[Authorize(Roles = "Admins")]
     public class RoleController : BaseController
     {
         private RoleManager<Role> _roleManager;
         private UserManager<User> _userManager;
-        public RoleController(RoleManager<Role> roleMgr, UserManager<User> userMrg)
+        public RoleController(RoleManager<Role> roleMgr, UserManager<User> userMgr)
         {
             _roleManager = roleMgr;
-            _userManager = userMrg;
+            _userManager = userMgr;
         }
         public ViewResult Index()
         {
             return View(_roleManager.Roles);
         }
+
+        #region Create
+
         public IActionResult Create() => View();
 
         [HttpPost]
@@ -44,6 +48,10 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             }
             return View(name);
         }
+
+        #endregion
+
+        #region Delete
 
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
@@ -68,12 +76,16 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             return View("Index", _roleManager.Roles);
         }
 
+        #endregion
+
+        #region Edit
+
         public async Task<IActionResult> Edit(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
             List<User> members = new List<User>();
             List<User> nonMembers = new List<User>();
-            foreach (User user in _userManager.Users)
+            foreach (User user in _userManager.Users.ToList())// .ToList() https://stackoverflow.com/a/6064422/1817640  or in connectionstring:  MultipleActiveResultSets=true
             {
                 var list = await _userManager.IsInRoleAsync(user, role.Name) ? members : nonMembers;
                 list.Add(user);
@@ -128,6 +140,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 return await Edit(model.RoleId);
             }
         }
+
+        #endregion
 
         private void AddErrorsFromResult(IdentityResult result)
         {
