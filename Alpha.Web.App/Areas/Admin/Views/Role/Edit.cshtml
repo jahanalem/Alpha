@@ -36,7 +36,7 @@
     </table>
     <h6 class="bg-info p-1 text-white">Remove From @Model.Role.Name</h6>
     <table class="table table-bordered table-sm">
-        @if (Model.Members.Count() == 0)
+        @if (!Model.Members.Any())
         {
             <tr><td colspan="2">No Users Are Members</td></tr>
         }
