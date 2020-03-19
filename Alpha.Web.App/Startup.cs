@@ -85,7 +85,11 @@ namespace Alpha.Web.App
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-
+            services.AddAuthentication().AddGoogle(opts =>
+            {
+                opts.ClientId = "56074703213-u4qak3nim2ejjvdd23euf68e724qn4a7.apps.googleusercontent.com";
+                opts.ClientSecret = "NDEmt2-XKC30D09lvll4XrW6";
+            });
             //?? services.AddSingleton<RazorTemplateEngine, CustomTemplateEngine>();
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
