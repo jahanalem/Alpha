@@ -89,6 +89,10 @@ namespace Alpha.Web.App
             {
                 opts.ClientId = "56074703213-u4qak3nim2ejjvdd23euf68e724qn4a7.apps.googleusercontent.com";
                 opts.ClientSecret = "NDEmt2-XKC30D09lvll4XrW6";
+            }).AddFacebook(opts =>
+            {
+                opts.AppId = "520361115549717";
+                opts.AppSecret = "32fb5d66afb9042b900c69a5c65d5474";
             });
             //?? services.AddSingleton<RazorTemplateEngine, CustomTemplateEngine>();
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

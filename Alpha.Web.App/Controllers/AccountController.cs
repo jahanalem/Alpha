@@ -175,6 +175,66 @@ namespace Alpha.Web.App.Controllers
 
         #endregion
 
+        #region Facebook Login
+
+        [AllowAnonymous]
+        public IActionResult FacebookLogin(string returnUrl)
+        {
+            string redirectUrl = Url.Action("FacebookResponse", "Account", new { ReturnUrl = returnUrl });
+            var properties = signInManager.ConfigureExternalAuthenticationProperties("Facebook", redirectUrl);
+            return new ChallengeResult("Facebook", properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> FacebookResponse(string returnUrl = "/")
+        {
+            ExternalLoginInfo info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            
+            var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+            if (result.Succeeded)
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                User user = new User
+                {
+                    Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                    IsActive = true
+                };
+
+                var email = info.Principal.FindFirst(ClaimTypes.Email).Value;
+                var alreadyUser = await userManager.FindByEmailAsync(email);
+                if (alreadyUser != null)
+                {
+                    // The user has already registered through filling out the sign up form.
+                    // It means the user can login but without using third-party authentication.
+                    TempData["SpecialMessage"] =
+                        $"There is already {email} in the database. You can login with it through entering password.";
+                    return RedirectToAction("Login");
+                }
+
+                IdentityResult identResult = await userManager.CreateAsync(user);
+                if (identResult.Succeeded)
+                {
+                    identResult = await userManager.AddLoginAsync(user, info);
+                    if (identResult.Succeeded)
+                    {
+                        await signInManager.SignInAsync(user, false);
+                        return Redirect(returnUrl);
+                    }
+                }
+                return AccessDenied();
+            }
+        }
+
+        #endregion
+
         [AllowAnonymous]
         public IActionResult AccessDenied()
         {
