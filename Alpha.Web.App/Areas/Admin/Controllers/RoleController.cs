@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Alpha.Models.Identity;
 using Alpha.ViewModels;
+using Alpha.Web.App.Constants;
 using Alpha.Web.App.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,8 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {
+    [Authorize(Policy = PolicyTypes.SuperAdmin)]
     [Area(AreaConstants.AdminArea)]
-    //[Authorize(Roles = "Admins")]
     public class RoleController : BaseController
     {
         private RoleManager<Role> _roleManager;
@@ -47,33 +48,6 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 }
             }
             return View(name);
-        }
-
-        #endregion
-
-        #region Delete
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(string id)
-        {
-            var role = await _roleManager.FindByIdAsync(id);
-            if (role != null)
-            {
-                IdentityResult result = await _roleManager.DeleteAsync(role);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    AddErrorsFromResult(result);
-                }
-            }
-            else
-            {
-                ModelState.AddModelError("", "No role found");
-            }
-            return View("Index", _roleManager.Roles);
         }
 
         #endregion
@@ -143,6 +117,33 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         #endregion
 
+        #region Delete
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role != null)
+            {
+                IdentityResult result = await _roleManager.DeleteAsync(role);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    AddErrorsFromResult(result);
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "No role found");
+            }
+            return View("Index", _roleManager.Roles);
+        }
+
+        #endregion
+        
         private void AddErrorsFromResult(IdentityResult result)
         {
             foreach (IdentityError error in result.Errors)

@@ -101,10 +101,10 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Page</a>
                             </li>
-                            @if (ViewBag.CurrentUser != null && ((CurrentUser)ViewBag.CurrentUser).IsAuthenticated)
+                            @if (User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item">
-                                    <a asp-controller="Account" asp-action="Logout" class="nav-link">LogOut</a>
+                                    <a asp-controller="Account" asp-action="Logout" asp-area="" class="nav-link">LogOut</a>
                                 </li>
                             }
                             else
