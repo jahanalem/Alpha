@@ -53,7 +53,7 @@
                     <li class="nav-item">
                         <a asp-controller="ContactUs" asp-action="ContactUsForm" class="nav-link">Contact</a>
                     </li>
-                    @if (ViewBag.CurrentUser != null && ((CurrentUser)ViewBag.CurrentUser).IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
                             <a asp-controller="Account" asp-action="Logout" class="nav-link">LogOut</a>
