@@ -9,13 +9,17 @@ using Alpha.DataAccess.UnitOfWork;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using Alpha.Web.App.Constants;
+using Alpha.Web.App.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {
+    [Authorize(Policy = PolicyTypes.SuperAdmin)]
     [Area(AreaConstants.AdminArea)]
-    public class ArticleController : Controller
+    public class ArticleController : BaseController
     {
         private readonly IArticleService _articleService;
         private readonly IArticleTagService _articleTagService;
@@ -37,7 +41,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             return View(model);
         }
 
-        // GET: Article/Create
+        #region Create
+
+        // GET: Admin/Article/Create
         [HttpGet]
         public IActionResult Create()
         {
@@ -58,7 +64,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             return View(articleViewModel);
         }
 
-        // POST: Article/Create
+        // POST: Admin/Article/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ArticleViewModel articleViewModel)
@@ -78,6 +84,10 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             }
             return RedirectToAction("Index", "Article", new { area = "Admin" });
         }
+
+        #endregion
+
+        #region Edit
 
         // GET: Article/Edit/5
         [HttpGet]
@@ -126,7 +136,11 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             return View(obj);
         }
 
-        // GET: Article/Delete/5
+        #endregion
+
+        #region Delete
+
+        // GET: Admin/Article/Delete/5
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -144,7 +158,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             return View(article);
         }
 
-        // POST: Article/Delete/5
+        // POST: Admin/Article/Delete/5
         [HttpPost]//, ActionName("DeleteConfirmed/{id}")
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -154,6 +168,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             await _articleService.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
 
         private bool ArticleExists(int id)
         {

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Alpha.Models.Identity;
 using Alpha.ViewModels;
+using Alpha.Web.App.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -87,6 +88,10 @@ namespace Alpha.Web.App.Controllers
                     ViewData["CurrentUser"] = user;
                     if (result.Succeeded)
                     {
+                        if (await userManager.IsInRoleAsync(user, NameOfRole.Admins))
+                        {
+                            returnUrl = "/Admin/Article/";
+                        }
                         return Redirect(returnUrl ?? "/");
                     }
                 }
@@ -126,8 +131,6 @@ namespace Alpha.Web.App.Controllers
         }
 
         #endregion
-
-
 
         #region Google Login
 
@@ -193,7 +196,7 @@ namespace Alpha.Web.App.Controllers
             {
                 return RedirectToAction(nameof(Login));
             }
-            
+
             var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
             if (result.Succeeded)
             {

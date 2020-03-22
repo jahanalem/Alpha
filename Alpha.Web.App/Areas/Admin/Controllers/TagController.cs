@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Alpha.Services;
 using System.Threading.Tasks;
 using Alpha.Models;
-using Alpha.Services;
 using Alpha.Services.Interfaces;
+using Alpha.Web.App.Constants;
+using Alpha.Web.App.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {
+    [Authorize(Policy = PolicyTypes.SuperAdmin)]
     [Area(AreaConstants.AdminArea)]
-    public class TagController : Controller
+    public class TagController : BaseController
     {
         private readonly ITagService _tagService;
         public TagController(ITagService tagService)
@@ -25,6 +29,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             return View(tagList);
         }
 
+        #region Create
+        
         // GET: Tag/Create
         public IActionResult Create()
         {
@@ -47,7 +53,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             return View(tag);
         }
 
-
+        #endregion
 
         #region Edit Tag
 

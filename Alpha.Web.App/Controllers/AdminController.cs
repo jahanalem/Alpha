@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Alpha.Models.Identity;
 using Alpha.ViewModels;
+using Alpha.Web.App.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Alpha.Web.App.Controllers
 {
-    [Authorize(Roles = "Admins")]
+    [Authorize(Policy = PolicyTypes.SuperAdmin)]
     public class AdminController : BaseController
     {
         private UserManager<User> userManager;
@@ -26,8 +27,7 @@ namespace Alpha.Web.App.Controllers
         }
 
         public ViewResult Index() => View(userManager.Users);
-
-
+        
         public ViewResult Create() => View();
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserViewModel model)
