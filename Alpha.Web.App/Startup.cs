@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.StaticFiles;
+using Alpha.Web.App.Constants;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Alpha.Web.App.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -85,6 +86,11 @@ namespace Alpha.Web.App
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
+            services.AddAuthorization(opts =>
+            {
+                opts.AddPolicy(PolicyTypes.OrdinaryUsers, policy => policy.RequireRole("Users"));
+                opts.AddPolicy(PolicyTypes.SuperAdmin, policy => policy.RequireRole("Admins", "Users"));
+            });
             services.AddAuthentication().AddGoogle(opts =>
             {
                 opts.ClientId = "56074703213-u4qak3nim2ejjvdd23euf68e724qn4a7.apps.googleusercontent.com";
@@ -94,6 +100,11 @@ namespace Alpha.Web.App
                 opts.AppId = "520361115549717";
                 opts.AppSecret = "32fb5d66afb9042b900c69a5c65d5474";
             });
+            //    .AddTwitter(opts =>
+            //{
+            //    opts.ConsumerKey = "";
+            //    opts.ConsumerSecret = "";
+            //});
             //?? services.AddSingleton<RazorTemplateEngine, CustomTemplateEngine>();
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
@@ -102,7 +113,7 @@ namespace Alpha.Web.App
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
-            //app.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseAuthentication();
 

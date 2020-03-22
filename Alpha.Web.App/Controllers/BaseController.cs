@@ -17,55 +17,12 @@ namespace Alpha.Web.App.Controllers
         {
             //ViewBag.CurrentUser = CurrentUserInfo;
         }
-
-        //public BaseController(IHttpContextAccessor httpContextAccessor)
-        //{
-        //    _httpContextAccessor = httpContextAccessor;
-
-        //    //ViewBag.ArticlePage = ArticlePage;
-        //    //ViewBag.CurrentUser = CurrentUserInfo;
-        //}
-
+        
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
         }
-
-        //public int ArticlePage
-        //{
-        //    get
-        //    {
-        //        var result = 1;
-        //        if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
-        //        {
-        //            string queryString = (_httpContextAccessor.HttpContext.Request.Query["articlePage"]);
-        //            if (queryString != null)
-        //            {
-        //                Int32.TryParse(queryString, out result);
-        //            }
-        //            ViewBag.ArticlePage = result;
-        //        }
-
-        //        return result;
-        //    }
-        //}
-
-        //public CurrentUser CurrentUserInfo
-        //{
-        //    get
-        //    {
-        //        if (HttpContext != null)
-        //            return new CurrentUser
-        //            {
-        //                IsAuthenticated = HttpContext != null && HttpContext.User.Identity.IsAuthenticated,
-        //                AuthenticationType = HttpContext.User.Identity.AuthenticationType,
-        //                UserName = HttpContext.User.Identity.Name,
-        //                IsInRoleOfUsers = HttpContext.User.IsInRole("Users"),
-        //                IsInRoleOfAdmins = HttpContext.User.IsInRole("Admins")
-        //            };
-        //        return new CurrentUser();
-        //    }
-        //}
+        
         protected CurrentUser GetCurrentUserInfo()
         {
             CurrentUser cUser = new CurrentUser
