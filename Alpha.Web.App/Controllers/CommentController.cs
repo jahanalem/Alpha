@@ -6,13 +6,14 @@ using Alpha.DataAccess.Interfaces;
 using Alpha.Infrastructure;
 using Alpha.Models;
 using Alpha.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Alpha.Web.App.Controllers
 {
-    //[Route("[controller]")]
+    [Authorize]
     public class CommentController : BaseController
     {
         private readonly ApplicationDbContext _context;
