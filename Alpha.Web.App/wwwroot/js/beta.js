@@ -222,3 +222,15 @@ function togglePasswordVisibility() {
 }
 
 $('#signupForm').validate(); //https://johnnycode.com/2014/03/27/using-jquery-validate-plugin-html5-data-attribute-rules/
+
+
+$(document).ready(function () {
+    var lnk0 = decodeURIComponent(location.pathname);
+    $('a[href="' + lnk0 + '"]').parents('li').addClass('active');
+
+    $("#navbarResponsive ul").on('click', 'li', function (e) {
+        $("#navbarResponsive ul li.active").removeClass('active');
+    });
+    var lnk = decodeURIComponent(location.pathname);
+    $('a[href="' + lnk + '"]').parents('li').addClass('active');
+});
