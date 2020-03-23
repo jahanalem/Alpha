@@ -88,7 +88,7 @@ namespace Alpha.Web.App.Controllers
                     ViewData["CurrentUser"] = user;
                     if (result.Succeeded)
                     {
-                        if (await userManager.IsInRoleAsync(user, NameOfRole.Admins))
+                        if (await userManager.IsInRoleAsync(user, RoleTypes.Admins))
                         {
                             returnUrl = "/Admin/Article/";
                         }
