@@ -85,11 +85,11 @@ $(document).ready(function (e) {
             "datatype": "json"
         },
         "columnDefs":
-        [{
-            "targets": [0],
-            "visible": false,
-            "searchable": false
-        }],
+            [{
+                "targets": [0],
+                "visible": false,
+                "searchable": false
+            }],
         "columns": [
             { "data": "Id", "name": "Id", "autoWidth": true },
             { "data": "UserName", "name": "UserName", "autoWidth": true },
@@ -99,8 +99,8 @@ $(document).ready(function (e) {
                 "render": function (data, type, full, meta) { return '<a class="btn btn-info" href="/Admin/Users/Edit/' + full.Id + '">Edit</a>'; }
             },
             {
-                data: null, render: function(data, type, row) {
-                     return "<a href='#' class='btn btn-danger' onclick=DeleteData('" + row.Id + "'); >Delete</a>";
+                data: null, render: function (data, type, row) {
+                    return "<a href='#' class='btn btn-danger' onclick=DeleteData('" + row.Id + "'); >Delete</a>";
                 }
             }
         ]
@@ -142,9 +142,23 @@ $(document).ready(function () {
         var element = $(this); // <div> or <span> element. 
         var utc = element.attr("utc"); // "2018-12-28T02:36:13.6774675Z"
         var d = new Date(utc);
-        
+
         var l = convertUTCDateToLocalDate(d).toLocaleString();//d.toLocaleString(); // Runs client side, so will be client's local time!
         element.text(l);
 
     });
 });
+
+$(document).ready(function () {
+    $("#sidebar ul").on('click', 'li', function (e) {
+        //var url = window.location.href;
+        //e.preventDefault();
+        $("#sidebar ul li.active").removeClass('active');
+        //$(this).addClass('active');
+        //return this.href = url;
+        //$(this).show();
+    });
+    var lnk = decodeURIComponent(location.pathname);
+    $('a[href="' + lnk + '"]').parents('li').addClass('active');
+});
+

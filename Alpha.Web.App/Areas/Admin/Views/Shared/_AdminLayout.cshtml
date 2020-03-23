@@ -1,11 +1,13 @@
-﻿@using Alpha.Infrastructure
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@using Alpha.Infrastructure
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title -www.alpha.com</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,9 +22,7 @@
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
-    <!-- Font Awesome JS -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
 
     @*@Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")*@
@@ -31,29 +31,27 @@
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3>Bootstrap sidebar</h3>
+                <h3>Alpha Dashboard </h3>
             </div>
             <ul class="list-unstyled components">
-                Dummy Heading
-                <li class="active">
-                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-                    <ul class="collapse list-unstyled" id="homeSubmenu">
-                        <li>
-                            <a href="\Home\">Home</a>
-                        </li>
-                        <li>
-                            <a href="#">Home 01</a>
-                        </li>
-                        <li>
-                            <a href="#">Home 01</a>
-                        </li>
-                    </ul>
+                Management
+                <li>
+                    <a asp-controller="Article" asp-action="Index" asp-area="Admin" class="nav-link">Article</a>
                 </li>
                 <li>
-                    <a href="\Admin\Article\">Article</a>
+                    <a asp-controller="ContactUs" asp-action="Index" asp-area="Admin" class="nav-link">Contact Us</a>
                 </li>
                 <li>
-                    <a href="\Admin\Article\Create">Article Create</a>
+                    <a asp-controller="AboutUs" asp-action="Index" asp-area="Admin" class="nav-link">About Us</a>
+                </li>
+                <li>
+                    <a asp-controller="Users" asp-action="Index" asp-area="Admin" class="nav-link">Users</a>
+                </li>
+                <li>
+                    <a asp-controller="Tag" asp-action="Index" asp-area="Admin" class="nav-link">Tags</a>
+                </li>
+                <li>
+                    <a asp-controller="Role" asp-action="Index" asp-area="Admin" class="nav-link">Roles</a>
                 </li>
                 <li>
                     <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
@@ -68,12 +66,6 @@
                             <a href="#">Page 3</a>
                         </li>
                     </ul>
-                </li>
-                <li>
-                    <a href="#">Portfolio</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
                 </li>
             </ul>
         </nav>
@@ -93,13 +85,7 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
                             <li class="nav-item active">
-                                <a class="nav-link" href="#">Language</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Page</a>
+                                <a asp-controller="Home" asp-action="Index" asp-area="" class="nav-link">Home</a>
                             </li>
                             @if (User.Identity.IsAuthenticated)
                             {
@@ -122,7 +108,6 @@
             </div>
             <div id="contentLoader">
                 @RenderBody()
-
             </div>
 
         </div>
@@ -137,6 +122,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <!-- jQuery Custom Scroller CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 
     <script src="~/js/tinymce/js/tinymce/tinymce.min.js"></script>
     <script src="~/js/Admin/adminSectionBeta.js"></script>

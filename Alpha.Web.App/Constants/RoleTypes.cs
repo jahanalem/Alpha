@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Constants
 {
-    public static class NameOfRole
+    public static class RoleTypes
     {
         public const string Users = "Users";
         public const string Admins = "Admins";
