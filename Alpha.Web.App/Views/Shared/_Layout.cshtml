@@ -1,5 +1,9 @@
 ﻿@using Alpha.Infrastructure
+@using Alpha.Web.App.Constants
 @using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Authorization
+
+
 <!DOCTYPE html>
 <html>
 
@@ -38,26 +42,32 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" asp-controller="Home" asp-action="Index">
                             Home
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a asp-controller="AboutUs" asp-action="AboutUs" asp-area="" class="nav-link">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a asp-controller="ContactUs" asp-action="ContactUsForm" class="nav-link">Contact</a>
+                        <a asp-controller="ContactUs" asp-action="ContactUsForm" asp-area="" class="nav-link">Contact</a>
                     </li>
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
                             <a asp-controller="Account" asp-action="Logout" class="nav-link">LogOut</a>
                         </li>
+                        @if ((await AuthorizationService.AuthorizeAsync(User, PolicyTypes.SuperAdmin)).Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Home" asp-action="Index" asp-area="Admin" class="nav-link">Dashboard</a>
+                            </li>
+                        }
                     }
                     else
                     {

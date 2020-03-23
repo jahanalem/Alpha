@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<Alpha.Models.Article>
 
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Articles";
 }
 
-<h2>Index</h2>
+<h2>Articles</h2>
 @if (Model.Any())
 {
     <p>
@@ -31,7 +30,7 @@
                     @Html.DisplayNameFor(model => model.IsActiveNewComment)
                 </th>
                 <th>
-                    
+
                     @Html.DisplayNameFor(model => model.CreatedDate)
                 </th>
                 <th>
