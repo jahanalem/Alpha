@@ -1,5 +1,5 @@
-﻿using Alpha.Web.App.Constants;
-using Alpha.Web.App.Controllers;
+﻿using Alpha.Web.App.Controllers;
+using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

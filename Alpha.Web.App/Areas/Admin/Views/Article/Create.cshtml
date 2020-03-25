@@ -18,17 +18,17 @@
 
             <div class="form-group">
                 <label asp-for="Article.Title" class="control-label"></label>
-                <input asp-for="Article.Title" class="form-control"/>
+                <input required asp-for="Article.Title" class="form-control"/>
                 <span asp-validation-for="Article.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Article.Summary" class="control-label"></label>
-                <textarea asp-for="Article.Summary" class="form-control" id="summaryId" maxlength="255"></textarea>
+                <textarea required asp-for="Article.Summary" class="form-control" id="summaryId" maxlength="255"></textarea>
                 <span asp-validation-for="Article.Summary" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Article.Description" class="control-label"></label>
-                <textarea asp-for="Article.Description" class="form-control" id="descId" maxlength="100000"></textarea>
+                <textarea required asp-for="Article.Description" class="form-control" id="descId" maxlength="100000"></textarea>
                 <span asp-validation-for="Article.Description" class="text-danger"></span>
             </div>
 
@@ -36,14 +36,14 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="Article.IsActive"/> @Html.DisplayNameFor(model => model.Article.IsActive)
+                        <input asp-for="Article.IsActive" checked="checked"/> @Html.DisplayNameFor(model => model.Article.IsActive)
                     </label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="Article.IsActiveNewComment"/> @Html.DisplayNameFor(model => model.Article.IsActiveNewComment)
+                        <input asp-for="Article.IsActiveNewComment" checked="checked"/> @Html.DisplayNameFor(model => model.Article.IsActiveNewComment)
                     </label>
                 </div>
             </div>

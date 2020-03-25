@@ -9,8 +9,8 @@ using Alpha.DataAccess.UnitOfWork;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
-using Alpha.Web.App.Constants;
 using Alpha.Web.App.Controllers;
+using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +37,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var model = await _articleService.GetAllAsync();//.GetAllOfArticleViewModel();
+            var model = (await _articleService.GetAllAsync()).OrderByDescending(k => k.CreatedDate);//.GetAllOfArticleViewModel();
             return View(model);
         }
 

@@ -222,8 +222,9 @@ function togglePasswordVisibility() {
 }
 
 $('#signupForm').validate(); //https://johnnycode.com/2014/03/27/using-jquery-validate-plugin-html5-data-attribute-rules/
+//$('#contact-form').validate();
 
-
+// Make Highlight Active Item In Menu
 $(document).ready(function () {
     var lnk0 = decodeURIComponent(location.pathname);
     $('a[href="' + lnk0 + '"]').parents('li').addClass('active');
@@ -233,4 +234,59 @@ $(document).ready(function () {
     });
     var lnk = decodeURIComponent(location.pathname);
     $('a[href="' + lnk + '"]').parents('li').addClass('active');
+});
+
+
+// CONTACT FORM
+$(document).ready(function () {
+
+    $(function () {
+        $("#contact-form").submit(function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            if (!$form.valid()) return false;
+
+            var formAction = $(this).attr("action");
+
+            var firstName = $("#form_name").val();
+            var lastName = $("#form_lastname").val();
+            var email = $("#form_email").val();
+            var description = $("#form_message").val();
+
+            var formData = new FormData();
+            formData.append("FirstName", firstName);
+            formData.append("LastName", lastName);
+            formData.append("Email", email);
+            formData.append("Description", description);
+
+            $.ajax({
+                type: 'post',
+                url: formAction,
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (result) {
+                console.log(result);
+                if (result.status === "success") {
+                    var messageAlert = 'alert-' + result.type;
+                    var messageText = result.message;
+
+                    var alertBox = '<div class="alert ' +
+                        messageAlert +
+                        ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                        messageText +
+                        '</div>';
+
+                    if (messageAlert && messageText) {
+                        // inject the alert to .messages div in our form
+                        $('#contact-form').find('.messages').html(alertBox);
+                        // empty the form
+                        $('#contact-form')[0].reset();
+                    }
+                } else {
+                    alert(result.message);
+                }
+            });
+        });
+    });
 });
