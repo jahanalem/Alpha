@@ -5,52 +5,110 @@
     ViewData["Title"] = "ContactUsForm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style type="text/css">
+    h1 {
+        margin-bottom: 40px;
+    }
+
+    label {
+        color: #333;
+    }
+
+    .btn-send {
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-bottom: 20px;
+    }
+
+    .help-block.with-errors {
+        color: #ff5050;
+        margin-top: 5px;
+    }
+</style>
 
 <div class="row">
 
-    <aside class="col-sm-2">
-    </aside> <!-- col.// -->
+    <div class="col-xl-8 offset-xl-2 py-5">
 
-    <aside class="col-sm-8">
-        <div class="card  mb-2 mt-2">
-            <article class="card-body">
-                <h4 class="card-title mb-4 mt-1">Contact us</h4>
+        <h1>
+            Contact form Tutorial from
+            <a href="http://bootstrapious.com">Bootstrapious.com</a>
+        </h1>
 
-                <hr>
-                <div class="text-danger" asp-validation-summary="All"></div>
-                <form asp-controller="ContactUs" asp-action="ContactUsForm" method="post">
-                    @Html.AntiForgeryToken()
-                    <div class="form-group">
-                        <input asp-for="@Model.ContactUs.FirstName" placeholder="First name" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="@Model.ContactUs.LastName" placeholder="Last name" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <input asp-for="@Model.ContactUs.Email" class="form-control" placeholder="Email" type="email" required />
-                    </div> <!-- form-group// -->
-                    <div class="form-group">
-                        <input asp-for="@Model.ContactUs.Title" placeholder="Title" class="form-control" required />
-                    </div>
+        <p class="lead">This is a demo for our tutorial dedicated to crafting working Bootstrap contact form with PHP and AJAX background.</p>
 
-                    <div class="form-group">
-                        <textarea asp-for="@Model.ContactUs.Description" class="form-control" rows="5" placeholder="Comment"></textarea>
-                    </div> <!-- form-group// -->
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-block"> Send </button>
-                            </div> <!-- form-group// -->
+        <form id="contact-form" asp-controller="ContactUs" asp-action="ContactUsForm" method="post">
+
+            <div class="messages"></div>
+
+            <div class="controls">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="form_name">Firstname *</label>
+                            <input id="form_name"  asp-for="@Model.FirstName" type="text" name="name" 
+                                   class="form-control" placeholder="Please enter your firstname *" 
+                                   data-rule-required="true" data-error="Firstname is required.">
+                            <div class="help-block with-errors"></div>
                         </div>
-                    </div> <!-- .row// -->
-                </form>
-            </article>
-        </div> <!-- card.// -->
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="form_lastname">Lastname *</label>
+                            <input id="form_lastname"  asp-for="@Model.LastName" type="text" name="surname"
+                                   class="form-control" placeholder="Please enter your lastname *"
+                                   data-rule-required="true" data-error="Lastname is required.">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="form_email">Email *</label>
+                            <input id="form_email" asp-for="@Model.Email" type="email" name="email" 
+                                   class="form-control" placeholder="Please enter your email *" 
+                                   data-rule-required="true" data-error="Valid email is required.">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="form_message">Message *</label>
+                            <textarea id="form_message"  asp-for="@Model.Description" name="message" 
+                                      class="form-control" placeholder="Message for me *" rows="4" 
+                                      data-rule-required="true" data-error="Please, leave us a message."></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="submit" class="btn btn-success btn-send" value="Send message">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-muted">
+                            <strong>*</strong> These fields are required. Contact form template by
+                            <a href="https://bootstrapious.com/p/how-to-build-a-working-bootstrap-contact-form" target="_blank">Bootstrapious</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-    </aside> <!-- col.// -->
+        </form>
 
-    <aside class="col-sm-2">
-    </aside>
+    </div>
+    <!-- /.8 -->
 
 </div>
+<!-- /.row-->

@@ -20,6 +20,7 @@ tinymce.init({
     setup: function (ed) {
         var allowedKeys = [8, 37, 38, 39, 40, 46]; // backspace, delete and cursor keys
         ed.on('keydown', function (e) {
+            tinymce.triggerSave();
             if (allowedKeys.indexOf(e.keyCode) != -1) return true;
             if (tinymce_getContentLength() + 1 > this.settings.max_chars) {
                 e.preventDefault();
@@ -53,7 +54,16 @@ tinymce.init({
 
 //tinymce.init({ selector: '#summaryId', max_chars:"4" });
 
-tinymce.init({ selector: '#descId' });
+tinymce.init(
+    {
+        selector: '#descId',
+        setup: function (editor) {
+            editor.on('change', function () {
+                tinymce.triggerSave();
+            });
+        }
+    }
+);
 
 
 $(document).ready(function () {
