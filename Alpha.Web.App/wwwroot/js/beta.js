@@ -6,7 +6,10 @@
     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 }
 
-
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
 
 $('[data-toggle="collapse"]').on('click', function () {
     var $this = $(this),
@@ -243,12 +246,20 @@ $(document).ready(function () {
     "change keydown keyup".split(" ").forEach(function (e) {
         form.addEventListener(e, () => {
             document.getElementById("submitContactForm").disabled = !form.checkValidity();
+            var valid = $("#contact-form").validate().checkForm();
+            if (valid && validateEmail($("#Email").val())) {
+                $('#submitContactForm').prop('disabled', false);
+                $('#submitContactForm').removeClass('isDisabled');
+            } else {
+                $('#submitContactForm').prop('disabled', 'disabled');
+                $('#submitContactForm').addClass('isDisabled');
+            }
         });
     });
 
     $('#contact-form').validate({
         validClass: "success",
-        errorClass: "invalid",
+        errorClass: "danger",
 
         //...your validation rules come here,
         invalidHandler: function (event, validator) {
