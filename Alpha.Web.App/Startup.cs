@@ -15,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.StaticFiles;
-using Alpha.Web.App.Constants;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Alpha.Web.App.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -24,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess.UnitOfWork;
+using Alpha.Web.App.Resources.Constants;
 using Newtonsoft.Json;
 
 

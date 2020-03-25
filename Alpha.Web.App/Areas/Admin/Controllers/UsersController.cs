@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.Models.Identity;
 using Alpha.Services;
-using Alpha.Web.App.Constants;
 using Alpha.Web.App.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +13,7 @@ using System.Linq.Dynamic.Core;
 using Alpha.Infrastructure;
 using Alpha.ViewModels;
 using Alpha.Web.App.Areas.Admin.Models.ViewModels;
+using Alpha.Web.App.Resources.Constants;
 
 
 namespace Alpha.Web.App.Areas.Admin.Controllers

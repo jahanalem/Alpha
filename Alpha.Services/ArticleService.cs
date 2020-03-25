@@ -41,12 +41,12 @@ namespace Alpha.Services
             List<int> articleIdList = new List<int>();
             if (tagId != null)
             {
-                articleIdList = _articleTagRepository.FindAll(t => t.TagId == tagId).Skip((articlePage - 1) * pageSize).Take(pageSize).Select(p => p.ArticleId).ToList();
+                articleIdList = _articleTagRepository.FindAll(t => t.TagId == tagId).OrderByDescending(k => k.CreatedDate).Skip((articlePage - 1) * pageSize).Take(pageSize).Select(p => p.ArticleId).ToList();
                 totalItems = _articleTagRepository.FindAll(p => p.TagId == tagId).Count();
             }
             else
             {
-                articleIdList = _articleRepository.GetAll().Skip((articlePage - 1) * pageSize).Take(pageSize).Select(p => p.Id).ToList();
+                articleIdList = _articleRepository.GetAll().OrderByDescending(k => k.CreatedDate).Skip((articlePage - 1) * pageSize).Take(pageSize).Select(p => p.Id).ToList();
                 totalItems = _articleRepository.GetAll().Count();
             }
 
