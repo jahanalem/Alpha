@@ -42,25 +42,24 @@
         <form id="contact-form" asp-controller="ContactUs" asp-action="ContactUsForm" method="post">
 
             <div class="messages"></div>
-
             <div class="controls">
 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_name">Firstname *</label>
-                            <input id="form_name"  asp-for="@Model.FirstName" type="text" name="name" 
-                                   class="form-control" placeholder="Please enter your firstname *" 
-                                   data-rule-required="true" data-error="Firstname is required.">
+                            <input asp-for="@Model.FirstName" type="text" name="name"
+                                   class="form-control" placeholder="Please enter your firstname *"
+                                   required data-error="Firstname is required.">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_lastname">Lastname *</label>
-                            <input id="form_lastname"  asp-for="@Model.LastName" type="text" name="surname"
+                            <input asp-for="@Model.LastName" type="text" name="surname"
                                    class="form-control" placeholder="Please enter your lastname *"
-                                   data-rule-required="true" data-error="Lastname is required.">
+                                   required data-error="Lastname is required.">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -69,15 +68,15 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_email">Email *</label>
-                            <input id="form_email" asp-for="@Model.Email" type="email" name="email" 
-                                   class="form-control" placeholder="Please enter your email *" 
-                                   data-rule-required="true" data-error="Valid email is required.">
+                            <input asp-for="@Model.Email" type="email" name="email"
+                                   class="form-control" placeholder="Please enter your email *"
+                                   required data-error="Valid email is required.">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -85,14 +84,14 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="form_message">Message *</label>
-                            <textarea id="form_message"  asp-for="@Model.Description" name="message" 
-                                      class="form-control" placeholder="Message for me *" rows="4" 
-                                      data-rule-required="true" data-error="Please, leave us a message."></textarea>
+                            <textarea asp-for="@Model.Description" name="message"
+                                      class="form-control" placeholder="Message for me *" rows="4"
+                                      required data-error="Please, leave us a message."></textarea>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <input type="submit" class="btn btn-success btn-send" value="Send message">
+                        <input id="submitContactForm" type="submit" class="btn btn-success btn-send" value="Send message">
                     </div>
                 </div>
                 <div class="row">
