@@ -236,22 +236,51 @@ $(document).ready(function () {
     $('a[href="' + lnk + '"]').parents('li').addClass('active');
 });
 
-
 // CONTACT FORM
 $(document).ready(function () {
+    document.getElementById("submitContactForm").disabled = true;
+    var form = document.getElementById("contact-form");
+    "change keydown keyup".split(" ").forEach(function (e) {
+        form.addEventListener(e, () => {
+            document.getElementById("submitContactForm").disabled = !form.checkValidity();
+        });
+    });
 
-    $(function () {
-        $("#contact-form").submit(function (e) {
-            e.preventDefault();
-            var $form = $(this);
-            if (!$form.valid()) return false;
+    $('#contact-form').validate({
+        validClass: "success",
+        errorClass: "invalid",
 
-            var formAction = $(this).attr("action");
+        //...your validation rules come here,
+        invalidHandler: function (event, validator) {
+            // 'this' refers to the form
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                var messageText = errors == 1
+                    ? 'You missed 1 field. It has been highlighted'
+                    : 'You missed ' + errors + ' fields. They have been highlighted';
+                var alertBox = '<div class="alert alert-danger ' +
+                    ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                    messageText +
+                    '</div>';
+                $("div.messages").html(alertBox);
+                $("div.messages").show();
+            } else {
+                $("div.messages").hide();
+            }
+        },
 
-            var firstName = $("#form_name").val();
-            var lastName = $("#form_lastname").val();
-            var email = $("#form_email").val();
-            var description = $("#form_message").val();
+        submitHandler: function (form) {
+            //e.preventDefault();
+            //var $form = $(this);
+            //if (!$form.valid()) return false;
+            form.submitContactForm.disabled = true;
+
+            //var formAction = $(this).attr("action");
+
+            var firstName = $("#FirstName").val();
+            var lastName = $("#LastName").val();
+            var email = $("#Email").val();
+            var description = $("#Description").val();
 
             var formData = new FormData();
             formData.append("FirstName", firstName);
@@ -260,8 +289,8 @@ $(document).ready(function () {
             formData.append("Description", description);
 
             $.ajax({
-                type: 'post',
-                url: formAction,
+                type: form.method,
+                url: form.action,
                 data: formData,
                 processData: false,
                 contentType: false
@@ -287,6 +316,6 @@ $(document).ready(function () {
                     alert(result.message);
                 }
             });
-        });
+        }
     });
 });
