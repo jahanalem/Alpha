@@ -48,7 +48,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_name">Firstname *</label>
-                            <input asp-for="@Model.FirstName" type="text" name="name"
+                            <input asp-for="@Model.FirstName" type="text" name="FirstName"
                                    class="form-control" placeholder="Please enter your firstname *"
                                    required data-error="Firstname is required.">
                             <div class="help-block with-errors"></div>
@@ -57,7 +57,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_lastname">Lastname *</label>
-                            <input asp-for="@Model.LastName" type="text" name="surname"
+                            <input asp-for="@Model.LastName" type="text" name="LastName"
                                    class="form-control" placeholder="Please enter your lastname *"
                                    required data-error="Lastname is required.">
                             <div class="help-block with-errors"></div>
@@ -68,7 +68,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_email">Email *</label>
-                            <input asp-for="@Model.Email" type="email" name="email"
+                            <input asp-for="@Model.Email" type="email" name="Email"
                                    class="form-control" placeholder="Please enter your email *"
                                    required data-error="Valid email is required.">
                             <div class="help-block with-errors"></div>
@@ -84,7 +84,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="form_message">Message *</label>
-                            <textarea asp-for="@Model.Description" name="message"
+                            <textarea asp-for="@Model.Description" name="Description"
                                       class="form-control" placeholder="Message for me *" rows="4"
                                       required data-error="Please, leave us a message."></textarea>
                             <div class="help-block with-errors"></div>
