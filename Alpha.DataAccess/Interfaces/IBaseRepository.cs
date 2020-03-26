@@ -9,7 +9,7 @@ namespace Alpha.DataAccess.Interfaces
 {
     public interface IBaseRepository<TEntity, TId> where TEntity : Entity
     {
-        int InsertAsync(TEntity entity);
+        Task<int> InsertAsync(TEntity entity);
 
         int Delete(TEntity entity);
         void Delete(TId id);
