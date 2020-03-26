@@ -22,7 +22,7 @@ namespace Alpha.Services.Interfaces
         IEnumerable<TEntity> GetAll();
 
         Task<List<TEntity>> GetAllAsync();
-        int InsertAsync(TEntity entity);
+        Task<int> InsertAsync(TEntity entity);
         Task<TEntity> SingleAsync(object primaryKey);
         TEntity SingleOrDefault(object primaryKey);
         void Update(TEntity entity);
