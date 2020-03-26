@@ -15,10 +15,7 @@ namespace Alpha.Web.App.Controllers
     {
         private readonly IArticleService _articleService;
         public static int PageSize = 3;
-        public ArticleController(IArticleService articleService,
-            IArticleTagRepository articleTagRepository,
-            ITagRepository tagRepository,
-            ApplicationDbContext context)
+        public ArticleController(IArticleService articleService)
         {
             //_context = context;
             _articleService = articleService;

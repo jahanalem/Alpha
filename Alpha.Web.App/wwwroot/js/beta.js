@@ -291,12 +291,14 @@ $(document).ready(function () {
             var firstName = $("#FirstName").val();
             var lastName = $("#LastName").val();
             var email = $("#Email").val();
+            var title = $("#Title").val();
             var description = $("#Description").val();
 
             var formData = new FormData();
             formData.append("FirstName", firstName);
             formData.append("LastName", lastName);
             formData.append("Email", email);
+            formData.append("Title", title);
             formData.append("Description", description);
 
             $.ajax({
