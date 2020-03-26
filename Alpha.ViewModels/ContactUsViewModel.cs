@@ -11,7 +11,7 @@ namespace Alpha.ViewModels
         public virtual string LastName { get; set; }
         public virtual string Email { get; set; }
         public virtual string Description { get; set; }
-
+        public virtual string Title { get; set; }
         //public ContactUs ContactUs { get; set; }
     }
 }

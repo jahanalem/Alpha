@@ -65,6 +65,9 @@ namespace Alpha.Web.App
             services.AddTransient<ICommentRepository, CommentRepository>();
             services.AddTransient<ICommentService, CommentService>();
 
+            services.AddTransient<IContactUsRepository, ContactUsRepository>();
+            services.AddTransient<IContactUsService, ContactUsService>();
+
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<ApplicationDbContext, ApplicationDbContext>();

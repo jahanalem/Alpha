@@ -32,11 +32,11 @@
     <div class="col-xl-8 offset-xl-2 py-5">
 
         <h1>
-            Contact form Tutorial from
-            <a href="http://bootstrapious.com">Bootstrapious.com</a>
+            Contact Us
+            <a href="http://alpha.com">alpha.com</a>
         </h1>
 
-        <p class="lead">This is a demo for our tutorial dedicated to crafting working Bootstrap contact form with PHP and AJAX background.</p>
+        <p class="lead">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et</p>
 
 
         <form id="contact-form" asp-controller="ContactUs" asp-action="ContactUsForm" method="post">
@@ -47,10 +47,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="form_name">Firstname *</label>
+                            <label for="form_name">Firstname</label>
                             <input asp-for="@Model.FirstName" type="text" name="FirstName"
-                                   class="form-control" placeholder="Please enter your firstname *"
-                                   required data-error="Firstname is required.">
+                                maxlength="25" class="form-control" placeholder="Please enter your firstname">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -58,8 +57,7 @@
                         <div class="form-group">
                             <label for="form_lastname">Lastname *</label>
                             <input asp-for="@Model.LastName" type="text" name="LastName"
-                                   class="form-control" placeholder="Please enter your lastname *"
-                                   required data-error="Lastname is required.">
+                                  maxlength="25" class="form-control" placeholder="Please enter your lastname">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -83,10 +81,19 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label> Title*</label>
+                            <input asp-for="@Model.Title" type="text" name="Title" required maxlength="50" class="form-control" placeholder="title *" />
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label for="form_message">Message *</label>
                             <textarea asp-for="@Model.Description" name="Description"
                                       class="form-control" placeholder="Message for me *" rows="4"
-                                      required data-error="Please, leave us a message."></textarea>
+                                      required maxlength="1024" data-error="Please, leave us a message."></textarea>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>

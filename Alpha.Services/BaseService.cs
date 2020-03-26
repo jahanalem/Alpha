@@ -67,9 +67,9 @@ namespace Alpha.Services
             return _repository.GetAllAsyncEnumerable();
         }
 
-        public virtual int InsertAsync(TEntity entity)
+        public virtual async Task<int> InsertAsync(TEntity entity)
         {
-            return _repository.InsertAsync(entity);
+            return await _repository.InsertAsync(entity);
         }
 
         public virtual async Task<TEntity> SingleAsync(object primaryKey)

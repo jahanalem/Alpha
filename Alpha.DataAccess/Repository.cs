@@ -91,11 +91,11 @@ namespace Alpha.DataAccess
         {
             return await entities.AsQueryable().ToListAsync();
         }
-        public virtual int InsertAsync(TEntity entity)
+        public virtual async Task<int> InsertAsync(TEntity entity)
         {
             if (!entity.CreatedDate.HasValue)
                 entity.CreatedDate = DateTime.UtcNow;
-            dynamic obj = entities.AddAsync(entity);
+            dynamic obj = await entities.AddAsync(entity);
             //SaveChangeAsync();
             return obj.Id;
         }
