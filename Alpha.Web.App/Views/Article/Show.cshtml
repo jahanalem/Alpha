@@ -40,7 +40,7 @@
             </div>
             <!-- Comments Form -->
             <div class="card my-4">
-                @Html.Partial("_SendComment", new Alpha.ViewModels.SendCommentViewModel
+                @Html.PartialAsync("_SendComment", new Alpha.ViewModels.SendCommentViewModel
                 { Dsc = string.Empty, ArticleId = Model.Id, ParentId = null })
             </div>
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Alpha.Models;
+using Alpha.ViewModels.Helper;
 
 namespace Alpha.ViewModels
 {
@@ -12,6 +13,5 @@ namespace Alpha.ViewModels
         public virtual string Email { get; set; }
         public virtual string Description { get; set; }
         public virtual string Title { get; set; }
-        //public ContactUs ContactUs { get; set; }
     }
 }
