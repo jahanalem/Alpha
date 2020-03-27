@@ -93,7 +93,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
+            if (id <= 0)
             {
                 return NotFound();
             }
@@ -101,10 +101,6 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             ArticleViewModel article = await _articleService.GetArticleById(id);
 
             article.AllTags = _articleService.SpecifyRelatedTagsInTheGeneralSet(article.Tags);
-            if (article == null)
-            {
-                return NotFound();
-            }
             return View(article);
         }
 
@@ -149,7 +145,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var article = _articleService.GetAll().SingleOrDefault(m => m.Id == id);
+            var article = await _articleService.FindByIdAsync(id.Value);
             if (article == null)
             {
                 return NotFound();

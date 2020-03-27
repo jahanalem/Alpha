@@ -38,9 +38,6 @@ namespace Alpha.ViewModels.Helper
         /// <summary>
         /// returns total pages that is possible based on TotalItems and ItemsPerPage
         /// </summary>
-        public virtual int TotalPages
-        {
-            get { return (int)Math.Ceiling((decimal)TotalItems / ItemsPerPage); }
-        }
+        public virtual int TotalPages => (int)Math.Ceiling((decimal)TotalItems / ItemsPerPage);
     }
 }

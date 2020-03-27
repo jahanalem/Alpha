@@ -85,7 +85,7 @@ namespace Alpha.Web.App.Controllers
                 cmmt.Description = obj.Dsc;
                 cmmt.ModifiedDate = DateTime.UtcNow;
 
-                var id = _commentRepository.AddOrUpdate(cmmt);
+                var id =await _commentRepository.AddOrUpdateAsync(cmmt);
                 if (Request.IsAjaxRequest())
                 {
                     return Json(id);
@@ -127,7 +127,7 @@ namespace Alpha.Web.App.Controllers
         [HttpPost]
         //[Route("Test/{des}")]
         //[ValidateAntiForgeryToken]
-        public JsonResult Save(SendCommentViewModel obj)
+        public async Task<JsonResult> Save(SendCommentViewModel obj)
         {
             if (ModelState.IsValid)
             {
@@ -137,7 +137,7 @@ namespace Alpha.Web.App.Controllers
                     ArticleId = obj.ArticleId,
                     ParentId = obj.ParentId
                 };
-                var id = _commentRepository.AddOrUpdate(comment);
+                var id =await _commentRepository.AddOrUpdateAsync(comment);
                 if (Request.IsAjaxRequest())
                 {
                     return Json(id);
@@ -147,7 +147,7 @@ namespace Alpha.Web.App.Controllers
             //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
         }
         [HttpPost]
-        public ActionResult SavebyPageLoad(SendCommentViewModel obj)
+        public async Task<ActionResult> SavebyPageLoad(SendCommentViewModel obj)
         {
             if (ModelState.IsValid)
             {
@@ -157,7 +157,7 @@ namespace Alpha.Web.App.Controllers
                     ArticleId = obj.ArticleId,
                     ParentId = obj.ParentId
                 };
-                var id = _commentRepository.AddOrUpdate(comment);
+                var id =await _commentRepository.AddOrUpdateAsync(comment);
             }
             return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });
         }
