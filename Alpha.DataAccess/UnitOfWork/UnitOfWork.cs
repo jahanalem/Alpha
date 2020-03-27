@@ -162,10 +162,10 @@ namespace Alpha.DataAccess.UnitOfWork
             Context.Dispose();
             GC.SuppressFinalize(this); //https://stackoverflow.com/questions/151051/when-should-i-use-gc-suppressfinalize
         }
-        
-        public void DisposeAsync()
+
+        public async void DisposeAsync()
         {
-            Context.DisposeAsync();
+            await Context.DisposeAsync();
             GC.SuppressFinalize(this);
         }
 
@@ -173,9 +173,9 @@ namespace Alpha.DataAccess.UnitOfWork
 
         public async Task<int> CommitAsync() => await Context.SaveChangesAsync();
 
-        public Task<IDbContextTransaction> BeginTransactionAsync()
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
-            return Context.Database.BeginTransactionAsync();
+            return await Context.Database.BeginTransactionAsync();
         }
         public IDbContextTransaction BeginTransaction()
         {

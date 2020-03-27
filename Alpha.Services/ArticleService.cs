@@ -3,6 +3,7 @@ using Alpha.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,10 @@ namespace Alpha.Services
             List<int> articleIdList = new List<int>();
             if (tagId != null)
             {
-                articleIdList = _articleTagRepository.FindAll(t => t.TagId == tagId).OrderByDescending(k => k.CreatedDate).Skip((articlePage - 1) * pageSize).Take(pageSize).Select(p => p.ArticleId).ToList();
+                articleIdList = _articleTagRepository.FindAll(t => t.TagId == tagId)
+                    .OrderByDescending(k => k.CreatedDate)
+                    .Skip((articlePage - 1) * pageSize).Take(pageSize)
+                    .Select(p => p.ArticleId).ToList();
                 totalItems = _articleTagRepository.FindAll(p => p.TagId == tagId).Count();
             }
             else
@@ -138,7 +142,7 @@ namespace Alpha.Services
             {
                 try
                 {
-                    var articleId = _unitOfWork.Article.AddOrUpdate(viewModel.Article);
+                    var articleId = await _unitOfWork.Article.AddOrUpdateAsync(viewModel.Article);
                     if (viewModel.AllTags != null)
                         foreach (var tag in viewModel.AllTags.Where(t => t.IsActive == true))
                         {
@@ -147,13 +151,13 @@ namespace Alpha.Services
                                 ArticleId = articleId,
                                 TagId = tag.Id
                             };
-                            _unitOfWork.ArticleTag.AddOrUpdate(at);
+                            await _unitOfWork.ArticleTag.AddOrUpdateAsync(at);
                         }
 
                     await transaction.Result.CommitAsync();
                     return articleId;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     await transaction.Result.RollbackAsync();
                     return -1;

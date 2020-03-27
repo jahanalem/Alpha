@@ -14,20 +14,20 @@ namespace Alpha.Services.Interfaces
         void Delete(int id);
         Task<bool> ExistsAsync(object primaryKey);
         IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties);
+        IQueryable<TEntity> FindAll(int? itemsPerPage = null, int? pageNumber = null, params Expression<Func<TEntity, object>>[] includeProperties);
 
         IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties);
 
-        Task<TEntity> FindByIdAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties);
+        Task<TEntity> FindByIdAsync(int? id, params Expression<Func<TEntity, object>>[] includeProperties);
         IEnumerable<TEntity> GetAll();
 
         Task<List<TEntity>> GetAllAsync();
         Task<int> InsertAsync(TEntity entity);
-        Task<TEntity> SingleAsync(object primaryKey);
-        TEntity SingleOrDefault(object primaryKey);
+        Task<TEntity> FindAsync(object primaryKey);
         void Update(TEntity entity);
         void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
-        int AddOrUpdate(TEntity entity);
+        Task<int> AddOrUpdateAsync(TEntity entity);
 
         Task<int> SaveChangesAsync();
     }

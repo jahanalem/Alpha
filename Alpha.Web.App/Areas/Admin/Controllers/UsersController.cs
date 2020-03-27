@@ -26,14 +26,12 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         private IUserValidator<User> _userValidator;
         private IPasswordValidator<User> _passwordValidator;
         private IPasswordHasher<User> _passwordHasher;
-        private RoleManager<Role> _roleManager;
-        private IUserRoleStore<UserRole> _userRoleStore;
+        //private RoleManager<Role> _roleManager;
+        //private IUserRoleStore<UserRole> _userRoleStore;
 
         private IUserService _userService;
 
-        public UsersController(ApplicationDbContext dbContext,
-                                UserManager<User> usrMgr,
-                                RoleManager<Role> roleMgr,
+        public UsersController(UserManager<User> usrMgr,
                                 IUserValidator<User> userValid,
                                 IPasswordValidator<User> passValid,
                                 IPasswordHasher<User> passwordHash)
@@ -42,7 +40,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             _userValidator = userValid;
             _passwordValidator = passValid;
             _passwordHasher = passwordHash;
-            _roleManager = roleMgr;
+            //_roleManager = roleMgr;
             _userService = new UserService(this.ModelState, _userManager, _userValidator, _passwordValidator, _passwordHasher);
         }
         public IActionResult Index()

@@ -13,7 +13,6 @@ namespace Alpha.Web.App.Components
     public class ArticleListViewComponent : ViewComponent
     {
         public static int PageSize = 3;
-        private readonly ApplicationDbContext _context;
         private readonly IArticleService _articleService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private int pageNumber = 1;

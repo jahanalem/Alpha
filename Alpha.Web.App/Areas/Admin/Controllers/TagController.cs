@@ -46,7 +46,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _tagService.AddOrUpdate(tag);
+                await _tagService.AddOrUpdateAsync(tag);
                 await _tagService.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

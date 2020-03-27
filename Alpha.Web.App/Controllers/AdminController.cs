@@ -78,14 +78,6 @@ namespace Alpha.Web.App.Controllers
             }
             return View("Index", userManager.Users);
         }
-        private void AddErrorsFromResult(IdentityResult result)
-        {
-            foreach (IdentityError error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
-        }
-
 
         public async Task<IActionResult> Edit(string id)
         {

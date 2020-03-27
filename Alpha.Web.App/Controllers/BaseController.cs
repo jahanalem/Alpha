@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using Alpha.Infrastructure;
+using Alpha.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +55,12 @@ namespace Alpha.Web.App.Controllers
             {
                 ModelState.AddModelError(error.Code, error.Description);
             }
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        protected IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

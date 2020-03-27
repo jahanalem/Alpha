@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Alpha.Services
 {
-    public class BaseService<TIRepository, TEntity> where TEntity : Entity, new()
+    public abstract class BaseService<TIRepository, TEntity> where TEntity : Entity, new()
         where TIRepository : IRepository<TEntity>
     {
         private TIRepository _repository;
@@ -22,6 +22,17 @@ namespace Alpha.Services
             _repository = obj;
         }
 
+        #region Insert
+
+        public virtual async Task<int> InsertAsync(TEntity entity)
+        {
+            return await _repository.InsertAsync(entity);
+        }
+
+
+        #endregion
+
+        #region Delete
 
         public virtual int Delete(TEntity entity)
         {
@@ -33,25 +44,28 @@ namespace Alpha.Services
             _repository.Delete(id);
         }
 
-        public virtual async Task<bool> ExistsAsync(object primaryKey)
+        #endregion
+
+        #region Update
+
+        public virtual void Update(TEntity entity)
         {
-            return await _repository.ExistsAsync(primaryKey);
+            _repository.Update(entity);
         }
 
-        public virtual IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties)
+        public virtual void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
         {
-            return _repository.FindAll(includeProperties);
+            _repository.UpdatePartial(entity, properties);
         }
 
-        public virtual IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        public virtual async Task<int> AddOrUpdateAsync(TEntity entity)
         {
-            return _repository.FindAll(predicate, includeProperties);
+            return await _repository.AddOrUpdateAsync(entity);
         }
 
-        public virtual async Task<TEntity> FindByIdAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties)
-        {
-            return await _repository.FindByIdAsync(id, includeProperties);
-        }
+        #endregion
+
+        #region Get
 
         public virtual IEnumerable<TEntity> GetAll()
         {
@@ -67,35 +81,49 @@ namespace Alpha.Services
             return _repository.GetAllAsyncEnumerable();
         }
 
-        public virtual async Task<int> InsertAsync(TEntity entity)
+        #region Search
+
+        public virtual async Task<bool> ExistsAsync(object primaryKey)
         {
-            return await _repository.InsertAsync(entity);
+            return await _repository.ExistsAsync(primaryKey);
         }
 
-        public virtual async Task<TEntity> SingleAsync(object primaryKey)
+        public virtual IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return await _repository.SingleAsync(primaryKey);
+            return _repository.FindAll(includeProperties);
+        }
+        public virtual IQueryable<TEntity> FindAll(int? itemsPerPage = null, int? pageNumber = null, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            if (itemsPerPage.HasValue && pageNumber.HasValue)
+            {
+                if (itemsPerPage > 0 && pageNumber > 0)
+                {
+                    return _repository.FindAll(includeProperties)
+                        .Skip((pageNumber.Value - 1) * itemsPerPage.Value).Take(itemsPerPage.Value);
+                }
+            }
+            return _repository.FindAll(includeProperties);
+        }
+        public virtual IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            return _repository.FindAll(predicate, includeProperties);
         }
 
-        public virtual TEntity SingleOrDefault(object primaryKey)
+        public virtual async Task<TEntity> FindByIdAsync(int? id, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return _repository.SingleOrDefault(primaryKey);
+            if (id != null)
+                return await _repository.FindByIdAsync(id.Value, includeProperties);
+            return null;
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual async Task<TEntity> FindAsync(object primaryKey)
         {
-            _repository.Update(entity);
+            return await _repository.FindAsync(primaryKey);
         }
 
-        public virtual void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
-        {
-            _repository.UpdatePartial(entity, properties);
-        }
+        #endregion
 
-        public virtual int AddOrUpdate(TEntity entity)
-        {
-            return _repository.AddOrUpdate(entity);
-        }
+        #endregion
 
         public virtual Task<int> SaveChangesAsync()
         {
