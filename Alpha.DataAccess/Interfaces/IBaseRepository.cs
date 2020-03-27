@@ -17,7 +17,7 @@ namespace Alpha.DataAccess.Interfaces
         void Update(TEntity entity);
         void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
 
-        TId AddOrUpdate(TEntity entity);
+        Task<int> AddOrUpdateAsync(TEntity entity);
 
         Task<TEntity> FindByIdAsync(TId id, params Expression<Func<TEntity, object>>[] includeProperties);
         IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties);
@@ -27,8 +27,8 @@ namespace Alpha.DataAccess.Interfaces
         Task<List<TEntity>> GetAllAsync();
         //void Add(T entity);
         //void Remove(T entity);
-        Task<TEntity> SingleAsync(object primaryKey);
-        TEntity SingleOrDefault(object primaryKey);
+        Task<TEntity> FindAsync(object primaryKey);
+        
         Task<bool> ExistsAsync(object primaryKey);
         
         Task<int> SaveChangesAsync();

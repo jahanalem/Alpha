@@ -17,6 +17,7 @@ namespace Alpha.Services
         public async Task<bool> InsertAsync(ContactUsViewModel viewModel)
         {
             var result = Validate(viewModel);
+            result.contactUs.IsActive = true;
             if (result.isValid)
             {
                 var newId = InsertAsync(result.contactUs);
