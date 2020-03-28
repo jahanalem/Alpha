@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Alpha.ViewModels.Helper
+namespace Alpha.Infrastructure.PaginationUtility
 {
     public class PagingInfo
     {
-        public int PageSize = 3;
+        public virtual int DefaultItemsPerPage { get; set; } = 3;
+        //int.Parse(System.Configuration.ConfigurationManager.AppSettings["DefaultItemsPerPage"]);
         /// <summary>
         /// All of items that exist
         /// </summary>
@@ -21,7 +22,7 @@ namespace Alpha.ViewModels.Helper
             get
             {
                 if (_itemsPerPage <= 0)
-                    return PageSize;
+                    return DefaultItemsPerPage;
                 return _itemsPerPage;
             }
             set

@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Shared\Components\ArticleTagList\**" />
+    <Content Remove="Views\Shared\Components\ArticleTagList\**" />
+    <EmbeddedResource Remove="Views\Shared\Components\ArticleTagList\**" />
+    <None Remove="Views\Shared\Components\ArticleTagList\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\ArticleTagListViewComponent.cs" />
+    <Compile Remove="Utilities\Pagination.cs" />
+    <Compile Remove="Utilities\PagingInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="bootstrap" Version="4.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.2" />
@@ -37,6 +50,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Utilities\" />
     <Folder Include="wwwroot\lib\font-awesome\css\" />
     <Folder Include="wwwroot\lib\font-awesome\fonts\" />
     <Folder Include="wwwroot\lib\font-awesome\js\" />

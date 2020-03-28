@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
-using Alpha.ViewModels.Helper;
 using Alpha.Web.App.Controllers;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
@@ -18,15 +18,15 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
     [Area(AreaConstants.AdminArea)]
     public class ContactUsController : BaseController
     {
-       private IContactUsService _contactUsService;
+        private IContactUsService _contactUsService;
 
         public ContactUsController(IContactUsService contactUsService)
         {
             _contactUsService = contactUsService;
         }
-        public async Task<IActionResult> Index(int? pageNumber = 1)
+        public async Task<IActionResult> Index(int? pagenumber = 1)
         {
-            if (pageNumber.HasValue)
+            if (pagenumber.HasValue)
             {
                 var viewModel = new ContactUsListViewModel();
                 if (TempData.Peek("TotalItems") == null)
@@ -34,18 +34,20 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                     TempData["TotalItems"] = await _contactUsService.FindAll().CountAsync();
                 }
                 viewModel.ContactUsList = await _contactUsService
-                    .FindAll(3, pageNumber.Value, null)
+                    .FindAll(3, pagenumber.Value, null)
                     .OrderByDescending(c => c.CreatedDate).ToListAsync();
                 var pageInfo = new PagingInfo
                 {
-                    CurrentPage = pageNumber.Value,
+                    CurrentPage = pagenumber.Value,
                     ItemsPerPage = 3,
                     TotalItems = int.Parse(TempData.Peek("TotalItems").ToString())
                 };
 
-                viewModel.PagingInfo = pageInfo;
-                viewModel.TargetController = "ContactUs";
-                viewModel.TargetAction = "Index";
+                viewModel.Pagination.PagingInfo = pageInfo;
+                viewModel.Pagination.TargetController = "ContactUs";
+                viewModel.Pagination.TargetAction = "Index";
+                viewModel.Pagination.TargetArea = "Admin";
+                //viewModel.Pagination.QueryStrings = new Dictionary<string, string>();
                 return View(viewModel);
             }
 
