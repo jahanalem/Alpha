@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
+using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
-using Alpha.ViewModels.Helper;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,7 +61,7 @@ namespace Alpha.Web.App.Components
 
             PagingInfo pInfo = new PagingInfo
             {
-                PageSize = 5,
+                //PageSize = 5,
                 CurrentPage = articlePage,
                 ItemsPerPage = 5,
                 TotalItems = _articleService.FindAll(p => p.Id == _tagId).Count()

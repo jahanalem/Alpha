@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.DataAccess.UnitOfWork;
+using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Services.Interfaces;
-using Alpha.ViewModels.Helper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -67,7 +67,7 @@ namespace Alpha.Services
 
             PagingInfo pInfo = new PagingInfo
             {
-                PageSize = 3,
+                //PageSize = 3,
                 CurrentPage = articlePage,
                 ItemsPerPage = 3,
                 TotalItems = totalItems

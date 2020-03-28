@@ -10,7 +10,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Alpha.Infrastructure\Alpha.Infrastructure.csproj" />
     <ProjectReference Include="..\Alpha.Models\Alpha.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Helper\" />
   </ItemGroup>
 
 </Project>

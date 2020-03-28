@@ -46,7 +46,7 @@
         <ul class="pagination justify-content-center">
             @{
                 var totalPages = Model.PagingInfo.TotalPages;
-                var pageSize = Model.PagingInfo.PageSize;
+                var pageSize = Model.PagingInfo.ItemsPerPage;
                 int m = -(pageSize - 1) / 2;
                 int p = pageSize + m;
                 var currentPage = Model.PagingInfo.CurrentPage;
@@ -78,6 +78,7 @@
                 <li class="page-item @nextPageButtonStatus">
                     <a class="page-link" asp-controller="Article" asp-action="ShowArticles" asp-route-tagId="@Model.TagId" asp-route-articlePage="@nextPage">nextPage</a>
                 </li>
+                
             }
         </ul>
     </nav>
