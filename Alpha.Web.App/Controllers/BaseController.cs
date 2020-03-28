@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -17,14 +18,15 @@ namespace Alpha.Web.App.Controllers
         //private readonly IHttpContextAccessor _httpContextAccessor;
         public BaseController() : base()
         {
+            //x = _configuration.GetValue<string>("appSettings:DefaultItemsPerPage");
             //ViewBag.CurrentUser = CurrentUserInfo;
         }
-        
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
         }
-        
+
         protected CurrentUser GetCurrentUserInfo()
         {
             CurrentUser cUser = new CurrentUser
