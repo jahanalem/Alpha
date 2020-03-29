@@ -2,6 +2,4 @@
 @using Alpha.ViewModels
 @model Alpha.ViewModels.ArticleTagListViewModel
 
-
-@await Html.PartialAsync("_ArticleList", Model)
-
+@await Component.InvokeAsync("ArticleList")

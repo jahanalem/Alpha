@@ -51,6 +51,7 @@ namespace Alpha.Services
 
             return query;
         }
+
         public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber)
         {
             var itemsPerPage = PagingInfo.DefaultItemsPerPage;
@@ -80,7 +81,7 @@ namespace Alpha.Services
             };
             if (tagId != null)
             {
-                result.Pagination.QueryStrings = new Dictionary<string, string> { { "tagId", tagId.Value.ToString() } };
+                result.Pagination.QueryStrings.TryAdd(QueryStringParameters.TagId, tagId.Value.ToString());// = new Dictionary<string, string> { { "tagId", tagId.Value.ToString() } };
             }
             return result;
         }
