@@ -6,6 +6,7 @@ using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Services;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,9 @@ namespace Alpha.Web.App.Components
 {
     public class ArticleListViewComponent : ViewComponent
     {
-        //public static int PageSize = 3;
         private readonly IArticleService _articleService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private int pageNumber = 1;
-        //public int ArticlePage = 1;
         private int? tagId = null;
         public ArticleListViewComponent(IArticleService articleService, IHttpContextAccessor httpContextAccessor)
         {
@@ -28,8 +27,8 @@ namespace Alpha.Web.App.Components
             //var result = 1;
             if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
             {
-                string queryString = (_httpContextAccessor.HttpContext.Request.Query["pageNumber"]);
-                string tId = (_httpContextAccessor.HttpContext.Request.Query["tagId"]);
+                string queryString = (_httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.PageNumber]);
+                string tId = (_httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.TagId]);
                 if (queryString != null)
                 {
                     Int32.TryParse(queryString, out pageNumber);
@@ -48,7 +47,7 @@ namespace Alpha.Web.App.Components
             var key = $"TotalItems-TagId-{tagId}";
             if (TempData[key]== null)
             {
-                TempData[key] = await _articleService.FilterByTag(null).CountAsync();
+                TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
             }
 
             var result = await _articleService.FilterByTagAsync(tagId, pageNumber);
