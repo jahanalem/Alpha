@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Show";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container-fluid">
     <div class="row">
@@ -26,7 +25,7 @@
                 <p class="lead">@Html.Raw(Model.Summary)</p>
 
                 <div class="text-justify">
-                   @Html.Raw(Model.Description)
+                    @Html.Raw(Model.Description)
                 </div>
                 <blockquote class="blockquote">
                     <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
@@ -40,80 +39,13 @@
             </div>
             <!-- Comments Form -->
             <div class="card my-4">
-                @Html.PartialAsync("_SendComment", new Alpha.ViewModels.SendCommentViewModel
+                @await Html.PartialAsync("_SendComment", new Alpha.ViewModels.SendCommentViewModel
                 { Dsc = string.Empty, ArticleId = Model.Id, ParentId = null })
             </div>
 
             @await Component.InvokeAsync("CommentList", Model.Id)
             @*//comments*@
-
-
         </div>
     </div>
 </div>
-<h2>Show</h2>
 
-<div style="display: none">
-    <h4>Article</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Summary)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Summary)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.RateCounter)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.RateCounter)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.LikeCounter)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.LikeCounter)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IsActive)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IsActive)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.IsActiveNewComment)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.IsActiveNewComment)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
