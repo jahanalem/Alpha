@@ -6,7 +6,7 @@ namespace Alpha.Infrastructure.PaginationUtility
 {
     public class PagingInfo
     {
-        public virtual int DefaultItemsPerPage { get; set; } = 3;
+        public static int DefaultItemsPerPage { get; set; } = 3;
         //int.Parse(System.Configuration.ConfigurationManager.AppSettings["DefaultItemsPerPage"]);
         /// <summary>
         /// All of items that exist

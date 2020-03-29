@@ -1,4 +1,5 @@
-﻿@using Alpha.Models
+﻿@using Alpha.Infrastructure.PaginationUtility
+@using Alpha.Models
 @using Alpha.ViewModels
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
 @model Alpha.ViewModels.ArticleTagListViewModel
@@ -7,79 +8,42 @@
     ViewBag.Title = "title";
 }
 
-<div class="col-md-12">
-    @foreach (var instance in Model.ArticleViewModelList)
-    {
-        <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id">
-            <h1>@instance.Article.Title</h1>
-        </a>
+    <div class="col-md-12">
+        @foreach (var instance in Model.ArticleViewModelList)
+        {
+            <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id">
+                <h1>@instance.Article.Title</h1>
+            </a>
 
-        <p>
-            @Html.Raw(instance.Article.Summary)
-        </p>
-        <div>
-            <span class="badge-pill">Posted 2012-08-02 20:47:04</span>
-            <div class="float-right">
-                @foreach (var tag in instance.Tags)
-                {
-                    if (tag != null)
+            <p>
+                @Html.Raw(instance.Article.Summary)
+            </p>
+            <div>
+                <span class="badge-pill">Posted 2012-08-02 20:47:04</span>
+                <div class="float-right">
+                    @foreach (var tag in instance.Tags)
                     {
+                        if (tag != null)
+                        {
 
-                        <a asp-controller="Article" asp-action="ShowArticles" asp-route-tagId="@tag.Id" asp-route-articlePage="1" title="@tag.Description">
-                            @if (Model.TagId == tag.Id)
-                            {
-                                <span class="badge badge-info">@tag.Title</span>
-                            }
-                            else
-                            {
-                                <span class="badge badge-dark">@tag.Title</span>
-                            }
+                            <a asp-controller="Article" asp-action="Index" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
+                                @if (Model.TagId == tag.Id)
+                                {
+                                    <span class="badge badge-info">@tag.Title</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-dark">@tag.Title</span>
+                                }
 
-                        </a>
+                            </a>
+                        }
                     }
-                }
+                </div>
             </div>
-        </div>
-        <hr>
-    }
-    <nav aria-label="Page navigation example">
-        <ul class="pagination justify-content-center">
-            @{
-                var totalPages = Model.PagingInfo.TotalPages;
-                var pageSize = Model.PagingInfo.ItemsPerPage;
-                int m = -(pageSize - 1) / 2;
-                int p = pageSize + m;
-                var currentPage = Model.PagingInfo.CurrentPage;
-                var start = currentPage + m;
-                if (start <= 0) { start = 1; }
-                var end = currentPage + p;
-                if (end > totalPages) { end = totalPages; }
-                var previousPage = start - 1;
-                if (previousPage <= 0) { previousPage = 1; }
-                var nextPage = end + 1;
-                string pageNumberStatus = string.Empty;// or active
-                string nextPageButtonStatus = string.Empty; // or disabled
-                string previousPageButtonStatus = string.Empty; // or disabled
-                if (nextPage > totalPages) { nextPage = totalPages; }
+            <hr>
+        }
 
-                if (currentPage == start) { previousPageButtonStatus = "disabled"; } else { previousPageButtonStatus = string.Empty; }
-                <li class="page-item @previousPageButtonStatus">
-                    <a class="page-link" asp-controller="Article" asp-action="ShowArticles" asp-route-tagId="@Model.TagId" asp-route-articlePage="@previousPage" title="" tabindex="-1">Previous</a>
-                </li>
-                for (int pageNumber = start; pageNumber <= end; pageNumber++)
-                {
-                    if (pageNumber == currentPage) { pageNumberStatus = "active"; }
-                    else { pageNumberStatus = string.Empty; }
-                    <li class="page-item @pageNumberStatus">
-                        <a class="page-link" asp-controller="Article" asp-action="ShowArticles" asp-route-tagId="@Model.TagId" asp-route-articlePage="@pageNumber">@pageNumber</a>
-                    </li>
-                }
-                if (currentPage == end) { nextPageButtonStatus = "disabled"; } else { nextPageButtonStatus = string.Empty; }
-                <li class="page-item @nextPageButtonStatus">
-                    <a class="page-link" asp-controller="Article" asp-action="ShowArticles" asp-route-tagId="@Model.TagId" asp-route-articlePage="@nextPage">nextPage</a>
-                </li>
-                
-            }
-        </ul>
-    </nav>
-</div>
+
+        @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+    </div>

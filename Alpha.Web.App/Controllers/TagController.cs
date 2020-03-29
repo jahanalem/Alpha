@@ -19,7 +19,7 @@ namespace Alpha.Web.App.Controllers
         // GET: Tag
         public async Task<IActionResult> Index()
         {
-            return View(await _tagRepository.FindAll().ToListAsync());
+            return View(await _tagRepository.FindAll(null).ToListAsync());
         }
 
         

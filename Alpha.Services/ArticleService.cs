@@ -13,6 +13,7 @@ using Alpha.DataAccess.UnitOfWork;
 using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Alpha.Services
@@ -35,49 +36,52 @@ namespace Alpha.Services
             _unitOfWork = uow;
         }
 
-        public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int articlePage, int pageSize)
+        public IQueryable<Article> FilterByTag(int? tagId)
         {
-            var articleList = new List<ArticleViewModel>();
-            var totalItems = 0;
-            List<int> articleIdList = new List<int>();
+            IQueryable<Article> query;
             if (tagId != null)
             {
-                articleIdList = _articleTagRepository.FindAll(t => t.TagId == tagId)
-                    .OrderByDescending(k => k.CreatedDate)
-                    .Skip((articlePage - 1) * pageSize).Take(pageSize)
-                    .Select(p => p.ArticleId).ToList();
-                totalItems = _articleTagRepository.FindAll(p => p.TagId == tagId).Count();
+                query = _articleRepository.Instance().Where(c => c.IsActive).Join(_articleTagRepository.Instance()
+                    .Where(x => x.TagId == tagId.Value), a => a.Id, at => at.ArticleId, (a, at) => a);
             }
             else
             {
-                articleIdList = _articleRepository.GetAll().OrderByDescending(k => k.CreatedDate).Skip((articlePage - 1) * pageSize).Take(pageSize).Select(p => p.Id).ToList();
-                totalItems = _articleRepository.GetAll().Count();
+                query = _articleRepository.Instance().Where(c => c.IsActive);
             }
 
-            foreach (var articleId in articleIdList)
+            return query;
+        }
+        public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber)
+        {
+            var itemsPerPage = PagingInfo.DefaultItemsPerPage;
+            var articleViewModelList = new List<ArticleViewModel>();
+
+            IQueryable<Article> query = FilterByTag(tagId);
+
+            var articleList = await query.OrderByDescending(k => k.CreatedDate)
+                .Skip((pageNumber - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ToListAsync();
+
+            foreach (var article in articleList)
             {
-                Article art = await _articleRepository.FindByIdAsync(articleId);
-                var tags = _articleTagService.GetTagsByArticleId(articleId);
-                articleList.Add(new ArticleViewModel
+                var tags = _articleTagService.GetTagsByArticleId(article.Id);
+                articleViewModelList.Add(new ArticleViewModel
                 {
-                    Article = art,
+                    Article = article,
                     Tags = tags,
                 });
             }
 
-            PagingInfo pInfo = new PagingInfo
-            {
-                //PageSize = 3,
-                CurrentPage = articlePage,
-                ItemsPerPage = 3,
-                TotalItems = totalItems
-            };
             var result = new ArticleTagListViewModel
             {
-                ArticleViewModelList = articleList,
-                PagingInfo = pInfo,
+                ArticleViewModelList = articleViewModelList,
                 TagId = tagId
             };
+            if (tagId != null)
+            {
+                result.Pagination.QueryStrings = new Dictionary<string, string> { { "tagId", tagId.Value.ToString() } };
+            }
             return result;
         }
 
