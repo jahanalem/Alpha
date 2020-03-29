@@ -4,11 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Alpha.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Alpha.DataAccess.Interfaces
 {
     public interface IBaseRepository<TEntity, TId> where TEntity : Entity
     {
+        DbSet<TEntity> Instance();
         Task<int> InsertAsync(TEntity entity);
 
         int Delete(TEntity entity);
@@ -20,7 +22,7 @@ namespace Alpha.DataAccess.Interfaces
         Task<int> AddOrUpdateAsync(TEntity entity);
 
         Task<TEntity> FindByIdAsync(TId id, params Expression<Func<TEntity, object>>[] includeProperties);
-        IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties);
+        //IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties);
         IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
         IEnumerable<TEntity> GetAll();
         IAsyncEnumerable<TEntity> GetAllAsyncEnumerable();

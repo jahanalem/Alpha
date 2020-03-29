@@ -13,8 +13,11 @@ namespace Alpha.Services.Interfaces
         int Delete(TEntity entity);
         void Delete(int id);
         Task<bool> ExistsAsync(object primaryKey);
-        IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties);
-        IQueryable<TEntity> FindAll(int? itemsPerPage = null, int? pageNumber = null, params Expression<Func<TEntity, object>>[] includeProperties);
+        //IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties);
+        IQueryable<TEntity> GetByCriteria(int? itemsPerPage = null,
+            int? pageNumber = null,
+            Expression<Func<TEntity, bool>> predicate = null,
+            params Expression<Func<TEntity, object>>[] includeProperties);
 
         IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate,
             params Expression<Func<TEntity, object>>[] includeProperties);

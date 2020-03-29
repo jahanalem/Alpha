@@ -23,7 +23,11 @@ namespace Alpha.DataAccess
             this.context = context;
             entities = context.Set<TEntity>();
         }
-        
+
+        public DbSet<TEntity> Instance()
+        {
+            return entities;
+        }
         #region Insert
 
         public virtual async Task<int> InsertAsync(TEntity entity)
@@ -114,10 +118,24 @@ namespace Alpha.DataAccess
             return await entities.FindAsync(primaryKey) != null;
         }
 
-        public virtual IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties)
+        //public virtual IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties)
+        //{
+        //    IQueryable<TEntity> items = entities;
+
+        //    if (includeProperties != null)
+        //    {
+        //        foreach (var includeProperty in includeProperties)
+        //        {
+        //            items = items.Include(includeProperty);
+        //        }
+        //    }
+        //    return items;
+        //}
+
+        public virtual IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate = null,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             IQueryable<TEntity> items = entities;
-
             if (includeProperties != null)
             {
                 foreach (var includeProperty in includeProperties)
@@ -125,25 +143,14 @@ namespace Alpha.DataAccess
                     items = items.Include(includeProperty);
                 }
             }
+            if (predicate != null)
+                items = items.Where(predicate);
             return items;
-        }
-
-        public virtual IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
-        {
-            IQueryable<TEntity> items = entities;
-            if (includeProperties != null)
-            {
-                foreach (var includeProperty in includeProperties)
-                {
-                    items = items.Include(includeProperty);
-                }
-            }
-            return items.Where(predicate);
         }
 
         public virtual async Task<TEntity> FindByIdAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return await FindAll(includeProperties).SingleOrDefaultAsync(x => x.Id == id);
+            return await FindAll(null, includeProperties).SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public virtual async Task<TEntity> FindAsync(object primaryKey)

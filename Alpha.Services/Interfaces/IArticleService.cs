@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
@@ -15,7 +16,8 @@ namespace Alpha.Services.Interfaces
         Task<List<ArticleViewModel>> GetAllOfArticleViewModel();
         Task<ArticleViewModel> GetArticleById(int articleId);
 
-        Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int articlePage, int pageSize);
+        IQueryable<Article> FilterByTag(int? tagId);
+        Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int articlePage);
 
         Task<int> InsertAsync(ArticleViewModel viewModel);
         List<Tag> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList);
