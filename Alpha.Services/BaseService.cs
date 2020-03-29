@@ -88,23 +88,31 @@ namespace Alpha.Services
             return await _repository.ExistsAsync(primaryKey);
         }
 
-        public virtual IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties)
-        {
-            return _repository.FindAll(includeProperties);
-        }
-        public virtual IQueryable<TEntity> FindAll(int? itemsPerPage = null, int? pageNumber = null, params Expression<Func<TEntity, object>>[] includeProperties)
+        //public virtual IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties)
+        //{
+        //    return _repository.FindAll(null, includeProperties);
+        //}
+
+
+        public virtual IQueryable<TEntity> GetByCriteria(int? itemsPerPage = null,
+            int? pageNumber = null,
+            Expression<Func<TEntity, bool>> predicate = null,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             if (itemsPerPage.HasValue && pageNumber.HasValue)
             {
                 if (itemsPerPage > 0 && pageNumber > 0)
                 {
-                    return _repository.FindAll(includeProperties)
+                    return _repository.FindAll(predicate, includeProperties)
                         .Skip((pageNumber.Value - 1) * itemsPerPage.Value).Take(itemsPerPage.Value);
                 }
             }
-            return _repository.FindAll(includeProperties);
+            return _repository.FindAll(predicate, includeProperties);
         }
-        public virtual IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties)
+
+
+        public virtual IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return _repository.FindAll(predicate, includeProperties);
         }

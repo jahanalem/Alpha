@@ -31,23 +31,21 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 var viewModel = new ContactUsListViewModel();
                 if (TempData.Peek("TotalItems") == null)
                 {
-                    TempData["TotalItems"] = await _contactUsService.FindAll().CountAsync();
+                    TempData["TotalItems"] = await _contactUsService.GetByCriteria().CountAsync();
                 }
-                viewModel.ContactUsList = await _contactUsService
-                    .FindAll(3, pagenumber.Value, null)
-                    .OrderByDescending(c => c.CreatedDate).ToListAsync();
-                var pageInfo = new PagingInfo
-                {
-                    CurrentPage = pagenumber.Value,
-                    ItemsPerPage = 3,
-                    TotalItems = int.Parse(TempData.Peek("TotalItems").ToString())
-                };
 
-                viewModel.Pagination.PagingInfo = pageInfo;
-                viewModel.Pagination.TargetController = "ContactUs";
-                viewModel.Pagination.TargetAction = "Index";
-                viewModel.Pagination.TargetArea = "Admin";
-                //viewModel.Pagination.QueryStrings = new Dictionary<string, string>();
+                viewModel.ContactUsList = await _contactUsService
+                    .GetByCriteria(PagingInfo.DefaultItemsPerPage, pagenumber.Value, null)
+                    .OrderByDescending(c => c.CreatedDate).ToListAsync();
+
+                viewModel.Pagination.Init(pagenumber.Value,
+                    PagingInfo.DefaultItemsPerPage,
+                    int.Parse(TempData.Peek("TotalItems").ToString()),
+                    "ContactUs",
+                    "Index",
+                    "Admin"
+                );
+
                 return View(viewModel);
             }
 
