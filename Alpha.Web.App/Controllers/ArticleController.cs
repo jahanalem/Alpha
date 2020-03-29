@@ -49,16 +49,5 @@ namespace Alpha.Web.App.Controllers
             TempData.Keep(key);
             return View(result);
         }
-
-        // GET: Article/Details/5
-        //[HttpGet("Details/{id}")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            var article = await _articleService.FindByIdAsync(id);
-            if (article == null)
-                return NotFound();
-
-            return View(article);
-        }
     }
 }

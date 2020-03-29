@@ -15,6 +15,19 @@ namespace Alpha.Infrastructure.PaginationUtility
             string targetArea = "",
             Dictionary<string, string> queryStrings = null)
         {
+            var test = new Pagination
+            {
+                PagingInfo = new PagingInfo
+                {
+                    TotalItems = 1,
+                    ItemsPerPage = 1,
+                    CurrentPage = 1
+                },
+                TargetAction = "",
+                TargetController = "",
+                TargetArea = "",
+                QueryStrings = null
+            };
             var pageInfo = new PagingInfo
             {
                 CurrentPage = currentPage,

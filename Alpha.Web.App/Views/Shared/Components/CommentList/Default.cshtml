@@ -6,7 +6,7 @@
 
 <div class="media mb-4">
     <div class="media-body">
-        @Html.PartialAsync("_ShowComments", new RecursionComment { Comments = Model, ParentId = null })
+        @await Html.PartialAsync("_ShowComments", new RecursionComment { Comments = Model, ParentId = null })
         @*@Html.Raw(TreeStructure.ShowComments(Model))*@
     </div>
 </div>
