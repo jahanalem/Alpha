@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
@@ -45,19 +46,26 @@ namespace Alpha.Web.App.Components
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var key = $"TotalItems-TagId-{tagId}";
-            if (TempData[key]== null)
+            if (TempData[key] == null)
             {
                 TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
             }
 
             var result = await _articleService.FilterByTagAsync(tagId, pageNumber);
 
-            result.Pagination.Init(pageNumber,
-                PagingInfo.DefaultItemsPerPage,
-                int.Parse(TempData[key].ToString()),
-                "Article",
-                "Index");
-            
+            result.Pagination.Init(new Pagination
+            {
+                PagingInfo = new PagingInfo
+                {
+                    TotalItems = int.Parse(TempData[key].ToString()),
+                    ItemsPerPage = PagingInfo.DefaultItemsPerPage,
+                    CurrentPage = pageNumber
+                },
+                TargetController = "Article",
+                TargetAction = "Index",
+                QueryStrings = new Dictionary<string, string>() { { QueryStringParameters.TagId, tagId.ToString() } }
+            });
+
             return View(result);
         }
     }
