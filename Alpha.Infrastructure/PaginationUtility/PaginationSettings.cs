@@ -26,6 +26,5 @@ namespace Alpha.Infrastructure.PaginationUtility
             }
             return pagination;
         }
-
     }
 }
