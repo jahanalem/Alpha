@@ -40,12 +40,19 @@ namespace Alpha.Web.App.Controllers
             }
 
             var result = await _articleService.FilterByTagAsync(tagId, pageNumber);
+            
+            result.Pagination.Init(new Pagination
+            {
+                PagingInfo = new PagingInfo
+                {
+                    TotalItems = int.Parse(TempData[key].ToString()),
+                    ItemsPerPage = PagingInfo.DefaultItemsPerPage,
+                    CurrentPage = pageNumber
+                },
+                TargetController = "Article",
+                TargetAction = "Index"
+            });
 
-            result.Pagination.Init(pageNumber,
-                PagingInfo.DefaultItemsPerPage,
-                int.Parse(TempData[key].ToString()),
-                "Article",
-                "Index", "");
             TempData.Keep(key);
             return View(result);
         }
