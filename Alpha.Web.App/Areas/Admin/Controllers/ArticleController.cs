@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.DataAccess.UnitOfWork;
+using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
@@ -35,10 +36,32 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             _articleTagService = articleTagService;
             _tagService = tagService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? tagId = null, int pageNumber = 1)
         {
-            var model = (await _articleService.GetAllAsync()).OrderByDescending(k => k.CreatedDate);//.GetAllOfArticleViewModel();
-            return View(model);
+            var key = $"admin_TotalItems-TagId-{tagId}";
+
+            if (TempData[key] == null)
+            {
+                TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
+            }
+
+            var result = await _articleService.FilterByTagAsync(tagId, pageNumber);
+
+            result.Pagination.Init(new Pagination
+            {
+                PagingInfo = new PagingInfo
+                {
+                    TotalItems = int.Parse(TempData[key].ToString()),
+                    ItemsPerPage = PagingInfo.DefaultItemsPerPage,
+                    CurrentPage = pageNumber
+                },
+                TargetController = "Article",
+                TargetAction = "Index",
+                TargetArea = AreaConstants.AdminArea
+            });
+
+            TempData.Keep(key);
+            return View(result);
         }
 
         // GET: Article/Details/5
@@ -129,7 +152,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ArticleExists(obj.Id))
+                    if (!ArticleExists(obj.Article.Id))
                     {
                         return NotFound();
                     }

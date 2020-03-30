@@ -1,5 +1,5 @@
 ﻿@using Alpha.Models.Identity
-@model IEnumerable<Alpha.Models.Identity.User>
+@model Alpha.ViewModels.UsersViewModel
 @{
     ViewData["Title"] = "Users";
 }
@@ -10,13 +10,13 @@
     <div class="text-danger" asp-validation-summary="ModelOnly"></div>
     <table class="table table-sm table-bordered">
         <tr><th>ID</th><th>Name</th><th>Email</th><th>Action</th></tr>
-        @if (!Model.Any())
+        @if (!Model.Users.Any())
         {
             <tr><td colspan="3" class="text-center">No User Accounts</td></tr>
         }
         else
         {
-            foreach (User user in Model)
+            foreach (User user in Model.Users)
             {
                 <tr>
                     <td>@user.Id</td>
@@ -32,6 +32,7 @@
             }
         }
     </table>
+    @await  Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
     <a class="btn btn-primary" asp-controller="Account" asp-action="Signup">Create</a>
 </div>
 <div class="container">

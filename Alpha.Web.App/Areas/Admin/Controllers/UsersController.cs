@@ -11,9 +11,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Dynamic.Core;
 using Alpha.Infrastructure;
+using Alpha.Infrastructure.PaginationUtility;
 using Alpha.ViewModels;
-using Alpha.Web.App.Areas.Admin.Models.ViewModels;
 using Alpha.Web.App.Resources.Constants;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
@@ -43,10 +44,36 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             //_roleManager = roleMgr;
             _userService = new UserService(this.ModelState, _userManager, _userValidator, _passwordValidator, _passwordHasher);
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            var users = _userManager.Users;
-            return View(users);
+            UsersViewModel result = new UsersViewModel();
+            string key = "totalUsers";
+            var usersQuery = _userManager.Users;
+
+            if (TempData[key] == null)
+            {
+                TempData[key] =await usersQuery.CountAsync();
+            }
+            var itemsPerPage = PagingInfo.DefaultItemsPerPage;
+            result.Users = await usersQuery.OrderByDescending(c => c.Id)
+                .Skip((pageNumber - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ToListAsync();
+            var totalUsers = int.Parse(TempData[key].ToString());
+            result.Pagination.Init(new Pagination
+            {
+                PagingInfo = new PagingInfo
+                {
+                    TotalItems = totalUsers,
+                    ItemsPerPage = itemsPerPage,
+                    CurrentPage = pageNumber
+                },
+                TargetArea = AreaConstants.AdminArea,
+                TargetController = "Users",
+                TargetAction = "Index"
+            });
+            
+            return View(result);
         }
 
         #region Edit
