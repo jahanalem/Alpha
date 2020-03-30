@@ -38,13 +38,18 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                     .GetByCriteria(PagingInfo.DefaultItemsPerPage, pagenumber.Value, null)
                     .OrderByDescending(c => c.CreatedDate).ToListAsync();
 
-                viewModel.Pagination.Init(pagenumber.Value,
-                    PagingInfo.DefaultItemsPerPage,
-                    int.Parse(TempData.Peek("TotalItems").ToString()),
-                    "ContactUs",
-                    "Index",
-                    "Admin"
-                );
+                viewModel.Pagination.Init(new Pagination
+                {
+                    PagingInfo = new PagingInfo
+                    {
+                        TotalItems = int.Parse(TempData.Peek("TotalItems").ToString()),
+                        ItemsPerPage = PagingInfo.DefaultItemsPerPage,
+                        CurrentPage = pagenumber.Value
+                    },
+                    TargetArea = "Admin",
+                    TargetController = "ContactUs",
+                    TargetAction = "Index"
+                });
 
                 return View(viewModel);
             }
