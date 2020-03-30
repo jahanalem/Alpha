@@ -1,11 +1,13 @@
-﻿@model IEnumerable<Alpha.Models.Article>
+﻿@using Alpha.Models
+@using Alpha.ViewModels
+@model Alpha.ViewModels.ArticleTagListViewModel
 
 @{
     ViewData["Title"] = "Articles";
 }
 
 <h2>Articles</h2>
-@if (Model.Any())
+@if (Model.ArticleViewModelList.Any())
 {
     <p>
         <a asp-action="Create">Create New</a>
@@ -14,66 +16,66 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Title)
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.Title)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.RateCounter)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.LikeCounter)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.IsActive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.IsActiveNewComment)
+                </th>
+                <th>
 
-                <th>
-                    @Html.DisplayNameFor(model => model.RateCounter)
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.CreatedDate)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.LikeCounter)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsActive)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsActiveNewComment)
-                </th>
-                <th>
-
-                    @Html.DisplayNameFor(model => model.CreatedDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ModifiedDate)
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.ModifiedDate)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (ArticleViewModel item in Model.ArticleViewModelList)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Title)
+                        @Html.DisplayFor(modelItem => item.Article.Title)
                     </td>
 
                     <td>
-                        @Html.DisplayFor(modelItem => item.RateCounter)
+                        @Html.DisplayFor(modelItem => item.Article.RateCounter)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.LikeCounter)
+                        @Html.DisplayFor(modelItem => item.Article.LikeCounter)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.IsActive)
+                        @Html.DisplayFor(modelItem => item.Article.IsActive)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.IsActiveNewComment)
+                        @Html.DisplayFor(modelItem => item.Article.IsActiveNewComment)
                     </td>
                     <td>
-                        <LocalDate utc="@item.CreatedDate"></LocalDate>
+                        <LocalDate utc="@item.Article.CreatedDate"></LocalDate>
                     </td>
                     <td>
-                        <LocalDate utc="@item.ModifiedDate"></LocalDate>
+                        <LocalDate utc="@item.Article.ModifiedDate"></LocalDate>
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.Article.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Article.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Article.Id">Delete</a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
 }
 else
 {
