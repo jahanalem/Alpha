@@ -14,13 +14,13 @@ namespace Alpha.Services
         {
         }
 
-        public async Task<bool> InsertAsync(ContactUsViewModel viewModel)
+        public async Task<bool> CreateAsync(ContactUsViewModel viewModel)
         {
             var result = Validate(viewModel);
             result.contactUs.IsActive = true;
             if (result.isValid)
             {
-                var newId = InsertAsync(result.contactUs);
+                var newId = CreateAsync(result.contactUs);
                 var x = await SaveChangesAsync();
                 return true;
             }

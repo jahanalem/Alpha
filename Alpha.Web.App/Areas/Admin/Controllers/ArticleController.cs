@@ -79,9 +79,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         // GET: Admin/Article/Create
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var tags = _tagService.GetAll().Where(c => c.IsActive == true).ToList();
+            var tags = await _tagService.GetByCriteria(c => c.IsActive == true).ToListAsync();
             for (int i = 0; i < tags.Count; i++)
             {
                 tags[i].IsActive = false;
@@ -134,7 +134,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
             ArticleViewModel article = await _articleService.GetArticleById(id);
 
-            article.AllTags = _articleService.SpecifyRelatedTagsInTheGeneralSet(article.Tags);
+            article.AllTags = await _articleService.SpecifyRelatedTagsInTheGeneralSet(article.Tags);
             return View(article);
         }
 
@@ -152,7 +152,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ArticleExists(obj.Article.Id))
+                    bool x = await ArticleExists(obj.Article.Id);
+                    if (x)
                     {
                         return NotFound();
                     }
@@ -193,7 +194,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var article = _articleService.GetAll().SingleOrDefault(m => m.Id == id);
+            var article = await _articleService.GetByCriteria(m => m.Id == id).SingleOrDefaultAsync();
             _articleService.Delete(article);
             await _articleService.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -201,9 +202,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         #endregion
 
-        private bool ArticleExists(int id)
+        private async Task<bool> ArticleExists(int id)
         {
-            return _articleService.GetAll().Any(e => e.Id == id);
+            return await _articleService.ExistsAsync(id);
         }
     }
 }

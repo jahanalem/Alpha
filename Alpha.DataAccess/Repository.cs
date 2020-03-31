@@ -12,13 +12,13 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Alpha.DataAccess
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     {
         private readonly ApplicationDbContext context;
         private DbSet<TEntity> entities;
         string errorMessage = string.Empty;
 
-        public Repository(ApplicationDbContext context)
+        protected Repository(ApplicationDbContext context)
         {
             this.context = context;
             entities = context.Set<TEntity>();
@@ -43,7 +43,7 @@ namespace Alpha.DataAccess
 
         #region Delete
 
-        public virtual int Delete(TEntity entity)
+        public virtual int Remove(TEntity entity)
         {
             if (entity == null)
             {
@@ -53,10 +53,10 @@ namespace Alpha.DataAccess
             return obj.Entity.Id;
         }
 
-        public virtual void Delete(int id)
+        public virtual void Remove(int id)
         {
             var x = FindByIdAsync(id).Result;
-            Delete(x);
+            Remove(x);
         }
 
         #endregion
@@ -96,21 +96,6 @@ namespace Alpha.DataAccess
 
         #region Get
 
-        public virtual async Task<List<TEntity>> GetAllAsync()
-        {
-            return await entities.AsQueryable().ToListAsync();
-        }
-
-        public virtual IEnumerable<TEntity> GetAll()
-        {
-            return entities.AsQueryable().AsEnumerable();
-        }
-
-        public IAsyncEnumerable<TEntity> GetAllAsyncEnumerable()
-        {
-            return entities.AsAsyncEnumerable();
-        }
-
         #region Search
 
         public virtual async Task<bool> ExistsAsync(object primaryKey)
@@ -118,21 +103,7 @@ namespace Alpha.DataAccess
             return await entities.FindAsync(primaryKey) != null;
         }
 
-        //public virtual IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties)
-        //{
-        //    IQueryable<TEntity> items = entities;
-
-        //    if (includeProperties != null)
-        //    {
-        //        foreach (var includeProperty in includeProperties)
-        //        {
-        //            items = items.Include(includeProperty);
-        //        }
-        //    }
-        //    return items;
-        //}
-
-        public virtual IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate = null,
+        public virtual IQueryable<TEntity> FetchByCriteria(Expression<Func<TEntity, bool>> predicate = null,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
             IQueryable<TEntity> items = entities;
@@ -150,7 +121,7 @@ namespace Alpha.DataAccess
 
         public virtual async Task<TEntity> FindByIdAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return await FindAll(null, includeProperties).SingleOrDefaultAsync(x => x.Id == id);
+            return await FetchByCriteria(null, includeProperties).SingleOrDefaultAsync(x => x.Id == id);
         }
 
         public virtual async Task<TEntity> FindAsync(object primaryKey)
