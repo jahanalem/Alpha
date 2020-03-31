@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Alpha.Services
 {
-    public abstract class BaseService<TIRepository, TEntity> where TEntity : Entity, new()
+    public abstract class BaseService<TIRepository, TEntity> : IBaseService<TEntity> where TEntity : Entity, new()
         where TIRepository : IRepository<TEntity>
     {
         private TIRepository _repository;
@@ -22,9 +22,9 @@ namespace Alpha.Services
             _repository = obj;
         }
 
-        #region Insert
+        #region Create/Insert
 
-        public virtual async Task<int> InsertAsync(TEntity entity)
+        public virtual async Task<int> CreateAsync(TEntity entity)
         {
             return await _repository.InsertAsync(entity);
         }
@@ -32,16 +32,16 @@ namespace Alpha.Services
 
         #endregion
 
-        #region Delete
+        #region Delete/Remove
 
         public virtual int Delete(TEntity entity)
         {
-            return _repository.Delete(entity);
+            return _repository.Remove(entity);
         }
 
         public virtual void Delete(int id)
         {
-            _repository.Delete(id);
+            _repository.Remove(id);
         }
 
         #endregion
@@ -67,32 +67,12 @@ namespace Alpha.Services
 
         #region Get
 
-        public virtual IEnumerable<TEntity> GetAll()
-        {
-            return _repository.GetAll();
-        }
-        public virtual async Task<List<TEntity>> GetAllAsync()
-        {
-            return await _repository.GetAllAsync();
-        }
-
-        public virtual IAsyncEnumerable<TEntity> GetAllAsyncEnumerable()
-        {
-            return _repository.GetAllAsyncEnumerable();
-        }
-
         #region Search
 
         public virtual async Task<bool> ExistsAsync(object primaryKey)
         {
             return await _repository.ExistsAsync(primaryKey);
         }
-
-        //public virtual IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties)
-        //{
-        //    return _repository.FindAll(null, includeProperties);
-        //}
-
 
         public virtual IQueryable<TEntity> GetByCriteria(int? itemsPerPage = null,
             int? pageNumber = null,
@@ -103,18 +83,17 @@ namespace Alpha.Services
             {
                 if (itemsPerPage > 0 && pageNumber > 0)
                 {
-                    return _repository.FindAll(predicate, includeProperties)
+                    return _repository.FetchByCriteria(predicate, includeProperties)
                         .Skip((pageNumber.Value - 1) * itemsPerPage.Value).Take(itemsPerPage.Value);
                 }
             }
-            return _repository.FindAll(predicate, includeProperties);
+            return _repository.FetchByCriteria(predicate, includeProperties);
         }
 
-
-        public virtual IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate,
+        public virtual IQueryable<TEntity> GetByCriteria(Expression<Func<TEntity, bool>> predicate = null,
             params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            return _repository.FindAll(predicate, includeProperties);
+            return _repository.FetchByCriteria(predicate, includeProperties);
         }
 
         public virtual async Task<TEntity> FindByIdAsync(int? id, params Expression<Func<TEntity, object>>[] includeProperties)

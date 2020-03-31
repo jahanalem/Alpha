@@ -25,12 +25,12 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var tagList = await _tagService.GetAllAsync();
+            var tagList = await _tagService.GetByCriteria(null, null).ToListAsync();
             return View(tagList);
         }
 
         #region Create
-        
+
         // GET: Tag/Create
         public IActionResult Create()
         {

@@ -6,6 +6,6 @@ namespace Alpha.Services.Interfaces
 {
     public interface IContactUsService : IBaseService<ContactUs>
     {
-        Task<bool> InsertAsync(ContactUsViewModel viewModel);
+        Task<bool> CreateAsync(ContactUsViewModel viewModel);
     }
 }
