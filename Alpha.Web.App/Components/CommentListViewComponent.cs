@@ -29,7 +29,7 @@ namespace Alpha.Web.App.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int Id)
         {
-            var comments = await _commentRepository.FindAll(c => c.ArticleId == Id).ToListAsync();
+            var comments = await _commentRepository.FetchByCriteria(c => c.ArticleId == Id).ToListAsync();
             return View(comments);
         }
 

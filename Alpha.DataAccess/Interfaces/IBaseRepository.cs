@@ -13,8 +13,8 @@ namespace Alpha.DataAccess.Interfaces
         DbSet<TEntity> Instance();
         Task<int> InsertAsync(TEntity entity);
 
-        int Delete(TEntity entity);
-        void Delete(TId id);
+        int Remove(TEntity entity);
+        void Remove(TId id);
 
         void Update(TEntity entity);
         void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
@@ -22,13 +22,9 @@ namespace Alpha.DataAccess.Interfaces
         Task<int> AddOrUpdateAsync(TEntity entity);
 
         Task<TEntity> FindByIdAsync(TId id, params Expression<Func<TEntity, object>>[] includeProperties);
-        //IQueryable<TEntity> FindAll(params Expression<Func<TEntity, object>>[] includeProperties);
-        IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
-        IEnumerable<TEntity> GetAll();
-        IAsyncEnumerable<TEntity> GetAllAsyncEnumerable();
-        Task<List<TEntity>> GetAllAsync();
-        //void Add(T entity);
-        //void Remove(T entity);
+
+        IQueryable<TEntity> FetchByCriteria(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+        
         Task<TEntity> FindAsync(object primaryKey);
         
         Task<bool> ExistsAsync(object primaryKey);

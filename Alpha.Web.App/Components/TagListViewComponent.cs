@@ -21,7 +21,7 @@ namespace Alpha.Web.App.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            List<Tag> result = await _tagRepository.FindAll(p => p.IsActive == true).ToListAsync();
+            List<Tag> result = await _tagRepository.FetchByCriteria(p => p.IsActive == true).ToListAsync();
             return View(result);
         }
     }

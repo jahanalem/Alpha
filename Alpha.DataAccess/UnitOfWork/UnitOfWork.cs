@@ -181,7 +181,7 @@ namespace Alpha.DataAccess.UnitOfWork
         {
             return Context.Database.BeginTransaction();
         }
-        private IRepository<TEntity> GetRepository<TEntity>() where TEntity : Entity
+        /*private IRepository<TEntity> GetRepository<TEntity>() where TEntity : Entity
         {
             // Checks if the Dictionary Key contains the Model class
             if (_repositories.Keys.Contains(typeof(TEntity)))
@@ -197,7 +197,7 @@ namespace Alpha.DataAccess.UnitOfWork
             _repositories.Add(typeof(TEntity), repository);
 
             return repository;
-        }
+        }*/
 
         //public TRepository RepositoryFactory<TRepository, TEntity>() where TRepository : Repository<TEntity> where TEntity : Entity
         //{

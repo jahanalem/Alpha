@@ -105,9 +105,9 @@ namespace Alpha.Services
         /// </summary>
         /// <param name="tagList">return related tags along with the general set tags</param>
         /// <returns></returns>
-        public virtual List<Tag> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList)
+        public virtual async Task<List<Tag>> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList)
         {
-            List<Tag> allAvailableTags = _tagRepository.GetAll().Where(c => c.IsActive == true).ToList();
+            List<Tag> allAvailableTags = await _tagRepository.FetchByCriteria(c => c.IsActive).ToListAsync();
             for (int t = 0; t < allAvailableTags.Count; t++)
             {
                 allAvailableTags[t].IsActive = false;
@@ -128,7 +128,9 @@ namespace Alpha.Services
         public virtual async Task<List<ArticleViewModel>> GetAllOfArticleViewModel()
         {
             var result = new List<ArticleViewModel>();
-            List<int> articleIds = _articleTagService.GetAll().Select(c => c.ArticleId).Distinct().ToList();
+            List<int> articleIds = await _articleTagService.GetByCriteria(null, null)
+                .Select(p => p.ArticleId)
+                .Distinct().ToListAsync();
             foreach (var id in articleIds)
             {
                 result.Add(await GetArticleById(id));
