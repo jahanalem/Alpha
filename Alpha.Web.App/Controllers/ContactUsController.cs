@@ -32,7 +32,7 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _contactUsService.InsertAsync(contactObject);
+                var result = await _contactUsService.CreateAsync(contactObject);
                 if (result)
                 {
                     return Json(new

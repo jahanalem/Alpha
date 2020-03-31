@@ -85,7 +85,7 @@ namespace Alpha.Web.App.Controllers
                 cmmt.Description = obj.Dsc;
                 cmmt.ModifiedDate = DateTime.UtcNow;
 
-                var id =await _commentRepository.AddOrUpdateAsync(cmmt);
+                var id = await _commentRepository.AddOrUpdateAsync(cmmt);
                 if (Request.IsAjaxRequest())
                 {
                     return Json(id);
@@ -99,11 +99,11 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
-                var comment = _commentRepository.GetAll().SingleOrDefault(m => m.Id == obj.CommentId);
+                var comment = await _commentRepository.FetchByCriteria(m => m.Id == obj.CommentId).SingleOrDefaultAsync();
                 if (comment != null)
                 {
                     await RemoveChildren(comment.Id);
-                    _commentRepository.Delete(comment);
+                    _commentRepository.Remove(comment);
                 }
                 if (Request.IsAjaxRequest())
                 {
@@ -116,11 +116,11 @@ namespace Alpha.Web.App.Controllers
 
         async Task RemoveChildren(int i)
         {
-            var children = _commentRepository.GetAll().Where(c => c.ParentId == i).ToList();
+            var children = _commentRepository.FetchByCriteria(c => c.ParentId == i).ToList();
             foreach (var child in children)
             {
                 await RemoveChildren(child.Id);
-                _commentRepository.Delete(child);
+                _commentRepository.Remove(child);
             }
         }
 
@@ -137,7 +137,7 @@ namespace Alpha.Web.App.Controllers
                     ArticleId = obj.ArticleId,
                     ParentId = obj.ParentId
                 };
-                var id =await _commentRepository.AddOrUpdateAsync(comment);
+                var id = await _commentRepository.AddOrUpdateAsync(comment);
                 if (Request.IsAjaxRequest())
                 {
                     return Json(id);
@@ -157,7 +157,7 @@ namespace Alpha.Web.App.Controllers
                     ArticleId = obj.ArticleId,
                     ParentId = obj.ParentId
                 };
-                var id =await _commentRepository.AddOrUpdateAsync(comment);
+                var id = await _commentRepository.AddOrUpdateAsync(comment);
             }
             return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });
         }
