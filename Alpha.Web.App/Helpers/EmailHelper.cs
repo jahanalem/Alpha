@@ -29,28 +29,28 @@ namespace Alpha.Web.App.Helpers
             }
         }
 
-        public static string GetImagesUrl(IConfiguration configuration, HttpRequest request)
-        {
-            var uriBuilder = new UriBuilder
-            {
-                Host = configuration.GetSection("AppSettings")["ExternalHostName"],
-                Scheme = request.Scheme,
-                Path = Paths.Images
-            };
+        //public static string GetImagesUrl(IConfiguration configuration, HttpRequest request)
+        //{
+        //    var uriBuilder = new UriBuilder
+        //    {
+        //        Host = configuration.GetSection("AppSettings")["ExternalHostName"],
+        //        Scheme = request.Scheme,
+        //        Path = Paths.Images
+        //    };
 
-            return uriBuilder.ToString();
-        }
+        //    return uriBuilder.ToString();
+        //}
 
-        public static string GetImagesUrl(IConfiguration configuration, string httpRequestScheme)
-        {
-            var uriBuilder = new UriBuilder
-            {
-                Host = configuration.GetSection("AppSettings")["ExternalHostName"],
-                Scheme = httpRequestScheme,
-                Path = Paths.Images
-            };
+        //public static string GetImagesUrl(IConfiguration configuration, string httpRequestScheme)
+        //{
+        //    var uriBuilder = new UriBuilder
+        //    {
+        //        Host = configuration.GetSection("AppSettings")["ExternalHostName"],
+        //        Scheme = httpRequestScheme,
+        //        Path = Paths.Images
+        //    };
 
-            return uriBuilder.ToString();
-        }
+        //    return uriBuilder.ToString();
+        //}
     }
 }

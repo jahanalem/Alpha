@@ -4,6 +4,9 @@ namespace Alpha.Infrastructure.Email
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(string empfaengerEmail, string absenderEmail, string subject, string message);
+        Task SendEmailAsync(string recipientEmail, string senderEmail, string subject, string message);
+        Task SendResetPasswordLink(string activationLink, string userName, string emailAddress);
+
+        Task SendEmailConfirmationLink(string activationLink, string userName, string emailAddress);
     }
 }

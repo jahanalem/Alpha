@@ -1,8 +1,13 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Mail;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Alpha.Infrastructure.Email;
+using Alpha.Web.App.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
 namespace Alpha.Web.App.Services
@@ -13,31 +18,83 @@ namespace Alpha.Web.App.Services
     {
         private readonly IConfiguration _configuration;
         private IWebHostEnvironment _environment;
-        public EmailSender(IConfiguration configuration, IWebHostEnvironment environment)
+        private IHttpContextAccessor _httpContextAccessor;
+        public EmailSender(IConfiguration configuration, IWebHostEnvironment environment, IHttpContextAccessor httpContextAccessor)
         {
             _configuration = configuration;
             _environment = environment;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public Task SendEmailAsync(string recipientEmail, string senderEmail, string subject, string message)
         {
-            var emailSettings = _configuration.GetSection("Email");
+            var emailSettings = _configuration.GetSection("EmailConfiguration");
             SmtpClient client = new SmtpClient(emailSettings["SmtpServer"]);
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential(emailSettings["SMTPUserName"], emailSettings["SMTPPassword"]);//,emailSettings["SMTPDomain"]
+            client.Credentials = new NetworkCredential(emailSettings["From"], emailSettings["SMTPPassword"]);//,emailSettings["SMTPDomain"]
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.Port = 587; // port 587it is valid for gmail
             client.EnableSsl = true;
-                
+
             MailMessage mailMessage = new MailMessage();
             mailMessage.IsBodyHtml = true;
-            mailMessage.From = new MailAddress(senderEmail);
+            try
+            {
+                mailMessage.From = new MailAddress(senderEmail);
+            }
+            catch (Exception e)
+            {
+                return Task.FromException(e);
+            }
             mailMessage.To.Add(recipientEmail);
             mailMessage.Body = message;
             mailMessage.Subject = subject;
             client.Send(mailMessage);
 
             return Task.CompletedTask;
+        }
+
+        public Task SendEmailConfirmationLink(string activationLink, string userName, string emailAddress)
+        {
+            string messageBody = EmailHelper.GetEmailTemplate(_environment, EmailTemplatesSettings.EmailConfirmation.HtmlTemplateName);
+
+            return CreateAndSendMessageBody(messageBody, userName, emailAddress, activationLink);
+        }
+
+        public Task SendResetPasswordLink(string activationLink, string userName, string emailAddress)
+        {
+            string messageBody = EmailHelper.GetEmailTemplate(_environment, EmailTemplatesSettings.PasswordForgot.HtmlTemplateName);
+
+            return CreateAndSendMessageBody(messageBody, userName, emailAddress, activationLink);
+        }
+
+        private Task CreateAndSendMessageBody(string messageBody, string userName, string emailAddress, string activationLink)
+        {
+            //var imageUrl = EmailHelper.GetImagesUrl(_configuration, _httpContextAccessor.HttpContext.Request);
+            var impressum = EmailHelper.GetEmailTemplate(_environment, EmailTemplatesSettings.HtmlTemplateImpressum);
+
+            messageBody = messageBody.Replace(EmailTemplatesSettings.ReplaceToken.Impressum, impressum); //immer zuerst replacen !!!
+
+            var tokenValues = new Dictionary<string, string>
+            {
+                //{ EmailTemplatesSettings.ReplaceToken.ImagesUrl, imageUrl },
+                { EmailTemplatesSettings.ReplaceToken.UserName, userName},
+                { EmailTemplatesSettings.ReplaceToken.Link, HtmlEncoder.Default.Encode(activationLink)}
+            };
+
+            foreach (var key in tokenValues.Keys)
+            {
+                messageBody = messageBody.Replace(key, tokenValues[key]);
+            }
+
+            var sender = _configuration.GetSection("EmailConfiguration");
+
+            var senderAddress = sender["From"].ToString();// EmailTemplatesSettings.AccountActivation.SenderAddressPrefix + "@" + EmailTemplatesSettings.EmailSenderDomain;
+
+            return SendEmailAsync(emailAddress,
+                senderAddress,
+                EmailTemplatesSettings.AccountActivation.Subject,
+                messageBody);
         }
     }
 }

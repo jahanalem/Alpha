@@ -10,15 +10,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Configuration;
 
 namespace Alpha.Web.App.Controllers
 {
     public class ContactUsController : BaseController
     {
         private IContactUsService _contactUsService;
-        public ContactUsController(IContactUsService contactUsService)
+        private IEmailSender _emailSender;
+        private IConfiguration _configuration;
+        public ContactUsController(IContactUsService contactUsService, IEmailSender emailSender, IConfiguration config)
         {
             _contactUsService = contactUsService;
+            _emailSender = emailSender;
+            _configuration = config;
         }
 
         [HttpGet, AllowAnonymous]
@@ -35,6 +40,23 @@ namespace Alpha.Web.App.Controllers
                 var result = await _contactUsService.CreateAsync(contactObject);
                 if (result)
                 {
+                    var senderName = string.Empty;
+                    if (!string.IsNullOrEmpty(contactObject.FirstName))
+                        senderName = contactObject.FirstName.Trim();
+                    if (!string.IsNullOrEmpty(contactObject.LastName))
+                        senderName = $"{senderName} {contactObject.LastName.Trim()}";
+
+                    var forwardMessageTo = _configuration.GetSection("EmailConfiguration");
+                    var sentResult = _emailSender.SendEmailAsync(forwardMessageTo["ForwardMessageTo"],
+                        contactObject.Email,
+                        contactObject.Title,
+                        contactObject.Description);
+
+                    if (!sentResult.IsCompletedSuccessfully)
+                    {
+                        // Sending operation is failed!
+                        //TODO
+                    }
                     return Json(new
                     {
                         status = Messages.SuccessStatus,
@@ -55,6 +77,5 @@ namespace Alpha.Web.App.Controllers
 
             return View();
         }
-
     }
 }
