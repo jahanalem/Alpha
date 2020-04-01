@@ -1,8 +1,10 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -15,9 +17,9 @@ namespace Alpha.Web.App.Controllers
             ViewBag.Titel = "About Us";
         }
 
-        public ViewResult AboutUs()
+        public async Task<ViewResult> AboutUs()
         {
-            var result = _aboutUsService.GetByCriteria(null, null).ToList();
+            var result =await _aboutUsService.GetByCriteria(null, null).FirstOrDefaultAsync();
             return View(result);
         }
     }
