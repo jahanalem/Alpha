@@ -74,12 +74,11 @@ namespace Alpha.Web.App.Controllers
                         Request.Scheme);
 
                     //var message = new Message(new string[] { user.Email }, "Confirmation email link", confirmationLink, null);
-                    await SendActivationEmail(user.UserName, user.Email, confirmationLink);
+                    await _emailSender.SendEmailConfirmationLink(confirmationLink, user.UserName, user.Email);
+
                     await _userManager.AddToRoleAsync(user, PolicyTypes.OrdinaryUsers);
+
                     return RedirectToAction(nameof(SuccessRegistration));
-                    //var callbackUrl = Url.AccountActivationLink()
-                    //await SendActivationEmail(user.UserName, user.Email, callbackUrl);
-                    //return RedirectToAction("Login", "Account");
                 }
                 else
                 {
@@ -109,50 +108,6 @@ namespace Alpha.Web.App.Controllers
         public IActionResult SuccessRegistration()
         {
             return View();
-        }
-
-        private Task SendActivationEmail(string userName, string emailAddress, string activationLink)
-        {
-            var messageBody = EmailHelper.GetEmailTemplate(_environment, EmailSettings.AccountActivation.HtmlTemplateName);
-
-            var imageUrl = EmailHelper.GetImagesUrl(_configuration, HttpContext.Request);
-            var impressum = EmailHelper.GetEmailTemplate(_environment, EmailSettings.HtmlTemplateImpressum);
-
-            messageBody = messageBody.Replace(EmailSettings.ReplaceToken.Impressum, impressum); //immer zuerst replacen !!!
-
-            var tokenValues = new Dictionary<string, string>
-            {
-                { EmailSettings.ReplaceToken.ImagesUrl, imageUrl },
-                { EmailSettings.ReplaceToken.UserName, userName},
-                { EmailSettings.ReplaceToken.Link, HtmlEncoder.Default.Encode(activationLink)}
-            };
-
-            foreach (var key in tokenValues.Keys)
-            {
-                messageBody = messageBody.Replace(key, tokenValues[key]);
-            }
-
-            var senderAddress = EmailSettings.AccountActivation.SenderAddressPrefix + "@" + EmailSettings.EmailSenderDomain;
-
-            return _emailSender.SendEmailAsync(emailAddress,
-                senderAddress,
-                EmailSettings.AccountActivation.Subject,
-                messageBody);
-        }
-
-        public async Task<IActionResult> AccountActivation()
-        {
-            return null;
-        }
-
-        //public async Task<IActionResult> EmailConfirmation()
-        //{
-        //    return null;
-        //}
-
-        public async Task<IActionResult> PasswordReset()
-        {
-            return null;
         }
 
         #endregion
@@ -226,6 +181,7 @@ namespace Alpha.Web.App.Controllers
 
         #region Forgot Password
 
+
         [HttpGet, AllowAnonymous]
         public IActionResult ForgotPassword()
         {
@@ -233,7 +189,73 @@ namespace Alpha.Web.App.Controllers
         }
 
         [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordUserViewModel forgotPasswordObject)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPasswordObject)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(forgotPasswordObject);
+            }
+
+            var user = await _userManager.FindByEmailAsync(forgotPasswordObject.Email);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(ForgotPasswordConfirmation));
+            }
+
+            var senderEmail = _configuration.GetSection("EmailConfiguration");
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callback = Url.PasswordResetLink(user.Email, token, Request.Scheme);
+            await _emailSender.SendResetPasswordLink(callback, user.Email, user.Email);
+
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+        }
+
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet, AllowAnonymous]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            var model = new ResetPasswordViewModel { Token = token, Email = email };
+            return View(model);
+        }
+
+        [HttpPost, AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(resetPasswordViewModel);
+            }
+
+            var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.Email);
+            if (user == null)
+            {
+                RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
+
+            var resetPasswordResult = await _userManager.ResetPasswordAsync(user,
+                resetPasswordViewModel.Token,
+                resetPasswordViewModel.Password);
+
+            if (!resetPasswordResult.Succeeded)
+            {
+                foreach (var error in resetPasswordResult.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return View();
+            }
+
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
+        }
+
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
         {
             return View();
         }

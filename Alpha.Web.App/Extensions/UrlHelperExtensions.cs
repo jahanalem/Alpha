@@ -21,31 +21,31 @@ namespace Alpha.Web.App.Extensions
                 protocol: scheme);
         }
 
-        public static string AccountActivationLink(this IUrlHelper urlHelper,
-            string userId,
-            string code,
-            string scheme,
-            string externalHostName)
-        {
-            return urlHelper.Action(
-                action: nameof(AccountController.AccountActivation),
-                controller: "Account",
-                values: new { userId, code },
-                protocol: scheme,
-                host: externalHostName
-            );
-        }
+        //public static string AccountActivationLink(this IUrlHelper urlHelper,
+        //    string userId,
+        //    string code,
+        //    string scheme,
+        //    string externalHostName)
+        //{
+        //    return urlHelper.Action(
+        //        action: nameof(AccountController.AccountActivation),
+        //        controller: "Account",
+        //        values: new { userId, code },
+        //        protocol: scheme,
+        //        host: externalHostName
+        //    );
+        //}
 
         public static string PasswordResetLink(this IUrlHelper urlHelper,
-            string userId,
-            string code,
+            string email,
+            string token,
             string scheme,
-            string externalHostName)
+            string externalHostName = null)
         {
             return urlHelper.Action(
-                action: nameof(AccountController.PasswordReset),
+                action: nameof(AccountController.ResetPassword),
                 controller: "Account",
-                values: new { userId, code },
+                values: new { email, token },
                 protocol: scheme,
                 host: externalHostName);
         }
