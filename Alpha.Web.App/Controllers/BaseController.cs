@@ -22,10 +22,10 @@ namespace Alpha.Web.App.Controllers
             //ViewBag.CurrentUser = CurrentUserInfo;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            base.OnActionExecuting(context);
-        }
+        //public override void OnActionExecuting(ActionExecutingContext context)
+        //{
+        //    base.OnActionExecuting(context);
+        //}
 
         protected CurrentUser GetCurrentUserInfo()
         {
