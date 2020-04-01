@@ -92,6 +92,7 @@ namespace Alpha.Web.App
             }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
                 .AddTokenProvider<EmailConfirmationTokenProvider<User>>("emailconfirmation");
+
             services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(2));
             services.Configure<EmailConfirmationTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromDays(3));
 

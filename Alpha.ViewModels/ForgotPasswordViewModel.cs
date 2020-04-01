@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Alpha.ViewModels
 {
-    public class PasswordForgotViewModel : BaseViewModel
+    public class ForgotPasswordViewModel
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "EMail Address")]
+        [UIHint("email")]
         public string Email { get; set; }
     }
 }
