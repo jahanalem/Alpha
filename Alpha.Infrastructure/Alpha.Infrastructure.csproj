@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Email\EmailSender.cs" />
     <Compile Remove="PaginationUtility\LinkTagHelper.cs" />
   </ItemGroup>
 

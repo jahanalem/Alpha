@@ -23,7 +23,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess.UnitOfWork;
+using Alpha.Infrastructure.Email;
+using Alpha.Web.App.CustomTokenProviders;
 using Alpha.Web.App.Resources.Constants;
+using Alpha.Web.App.Services;
 using Newtonsoft.Json;
 
 
@@ -72,6 +75,8 @@ namespace Alpha.Web.App
 
             services.AddScoped<ApplicationDbContext, ApplicationDbContext>();
 
+            services.AddScoped<IEmailSender, EmailSender>();
+
             services.AddIdentity<User, Role>(opts =>
             {
                 opts.Password.RequiredLength = 6;
@@ -80,8 +85,16 @@ namespace Alpha.Web.App
                 opts.Password.RequireUppercase = false;
                 opts.Password.RequireDigit = false;
                 opts.User.RequireUniqueEmail = true;
+                opts.SignIn.RequireConfirmedAccount = true;
+                opts.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
+
                 //opts.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyz";
-            }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<EmailConfirmationTokenProvider<User>>("emailconfirmation");
+            services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(2));
+            services.Configure<EmailConfirmationTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromDays(3));
+
             services.AddTransient<IPasswordValidator<User>, CustomPasswordValidator>();
             services.AddTransient<IUserValidator<User>, CustomUserValidator>();
 
