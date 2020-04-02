@@ -5,16 +5,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices.ComTypes;
+using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.DataAccess.UnitOfWork;
 using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Services.Interfaces;
+using Alpha.ViewModels.Searches;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.VisualBasic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Alpha.Services
 {
@@ -25,8 +32,12 @@ namespace Alpha.Services
         private IArticleTagService _articleTagService;
         private ITagRepository _tagRepository;
         private IUnitOfWork _unitOfWork;
+        private IUrlHelper _urlHelper;
 
-        public ArticleService(IUnitOfWork uow, IArticleRepository articleRepository, IArticleTagRepository articleTagRepository, ITagRepository tagRepository)
+        public ArticleService(IUnitOfWork uow,
+            IArticleRepository articleRepository,
+            IArticleTagRepository articleTagRepository,
+            ITagRepository tagRepository, IUrlHelper urlHelper)
             : base(articleRepository)
         {
             _articleRepository = articleRepository;
@@ -34,6 +45,7 @@ namespace Alpha.Services
             _articleTagService = new ArticleTagService(_articleTagRepository);
             _tagRepository = tagRepository;
             _unitOfWork = uow;
+            _urlHelper = urlHelper;
         }
 
         public IQueryable<Article> FilterByTag(int? tagId)
@@ -170,6 +182,51 @@ namespace Alpha.Services
                     return -1;
                 }
             }
+        }
+
+        public virtual async Task<SearchResultsViewModel> Search(string search, int pageNumber = 1)
+        {
+            if (string.IsNullOrEmpty(search))
+                return null;
+            int itemsPerPage = 3;
+
+            var searchValue = search.Trim().ToLower();
+
+            //var xxx = from a in _articleRepository.Instance()
+            //          where (EF.Functions.Like(a.Summary.ToLower(), $"%{searchValue}%"))
+            //          select a;
+            //var t = xxx.ToList();
+
+            var query = _articleRepository.Instance().AsQueryable()
+                .Where(a =>
+                    (EF.Functions.Like(a.Summary.ToLower(), $"%{searchValue}%")) &&
+                    a.IsActive)
+                .OrderByDescending(o => o.CreatedDate);
+            // || a.Title.ToLower().Contains(searchValue)
+            var totalItems = await query.CountAsync();
+
+            var articles = await query.Skip(pageNumber - 1).Take(itemsPerPage).ToListAsync();
+
+            var pagination = new Pagination
+            {
+                PagingInfo = new PagingInfo
+                {
+                    TotalItems = totalItems,
+                    ItemsPerPage = itemsPerPage,
+                    CurrentPage = pageNumber
+                },
+                Url = _urlHelper.Action(action: "Index",
+                    controller: "Search",
+                    new { search = search.Trim(), pageNumber = pageNumber })
+            };
+
+            var result = new SearchResultsViewModel
+            {
+                Articles = articles,
+                Pagination = pagination
+            };
+
+            return result;
         }
     }
 }

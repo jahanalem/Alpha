@@ -28,6 +28,11 @@ namespace Alpha.DataAccess
         {
             return entities;
         }
+
+        public ApplicationDbContext DbContext()
+        {
+            return this.context;
+        }
         #region Insert
 
         public virtual async Task<int> InsertAsync(TEntity entity)

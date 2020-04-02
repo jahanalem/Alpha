@@ -5,6 +5,7 @@ using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.Models;
 using Alpha.ViewModels;
+using Alpha.ViewModels.Searches;
 
 namespace Alpha.Services.Interfaces
 {
@@ -21,5 +22,7 @@ namespace Alpha.Services.Interfaces
 
         Task<int> InsertAsync(ArticleViewModel viewModel);
         Task<List<Tag>> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList);
+
+        Task<SearchResultsViewModel> Search(string search, int pageNumber);
     }
 }
