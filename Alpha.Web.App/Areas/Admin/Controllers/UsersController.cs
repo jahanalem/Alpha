@@ -52,7 +52,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
             if (TempData[key] == null)
             {
-                TempData[key] =await usersQuery.CountAsync();
+                TempData[key] = await usersQuery.CountAsync();
             }
             var itemsPerPage = PagingInfo.DefaultItemsPerPage;
             result.Users = await usersQuery.OrderByDescending(c => c.Id)
@@ -68,11 +68,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                     ItemsPerPage = itemsPerPage,
                     CurrentPage = pageNumber
                 },
-                TargetArea = AreaConstants.AdminArea,
-                TargetController = "Users",
-                TargetAction = "Index"
+                Url = Url.Action(action: "Index", controller: "Users", new { area = "Admin", pageNumber = pageNumber })
             });
-            
+
             return View(result);
         }
 

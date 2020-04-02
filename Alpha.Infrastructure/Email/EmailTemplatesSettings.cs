@@ -10,14 +10,12 @@ namespace Alpha.Infrastructure.Email
         public const string EmailSenderDomain = @"gmail.com";
         public static class AccountActivation
         {
-            public const string SenderAddressPrefix = "test19application";
             public const string Subject = @"Alpha: Bitte aktivieren Sie Ihren Zugang";
             public const string HtmlTemplateName = "Confirm_Account_Registration.html";
         }
 
         public static class PasswordForgot
         {
-            public const string SenderAddressPrefix = "test19application";
             public const string Subject = @"Alpha: Password reset";
             public const string HtmlTemplateName = "Reset_Password.html";
         }
