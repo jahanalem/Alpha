@@ -1,0 +1,29 @@
+﻿@using Alpha.Infrastructure.PaginationUtility
+@using Alpha.Models
+@using Alpha.ViewModels
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model Alpha.ViewModels.Searches.SearchResultsViewModel
+
+@{
+    ViewBag.Title = "title";
+}
+
+<div class="col-md-12">
+    @foreach (var instance in Model.Articles)
+    {
+        <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Id">
+            <h1>@instance.Title</h1>
+        </a>
+
+        <p>
+            @Html.Raw(instance.Summary)
+        </p>
+        <div>
+            <span class="badge-pill">Posted @instance.CreatedDate</span>
+        </div>
+        <hr>
+    }
+
+
+    @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+</div>

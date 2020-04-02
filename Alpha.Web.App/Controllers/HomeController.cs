@@ -25,9 +25,9 @@ namespace Alpha.Web.App.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        //public IActionResult Privacy()
+        //{
+        //    return View();
+        //}
     }
 }
