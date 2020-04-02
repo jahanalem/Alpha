@@ -181,7 +181,6 @@ namespace Alpha.Web.App.Controllers
 
         #region Forgot Password
 
-
         [HttpGet, AllowAnonymous]
         public IActionResult ForgotPassword()
         {

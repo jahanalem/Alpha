@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Alpha.Infrastructure.PaginationUtility
 {
@@ -16,14 +17,7 @@ namespace Alpha.Infrastructure.PaginationUtility
             };
 
             pagination.PagingInfo = pageInfo;
-            pagination.TargetController = pSettings.TargetController;
-            pagination.TargetAction = pSettings.TargetAction;
-            pagination.TargetArea = pSettings.TargetArea;
-            if (pSettings.QueryStrings != null)
-            {
-                pagination.QueryStrings = pSettings.QueryStrings;
-                //QueryStrings = new Dictionary<string, string> { { "pageNumber", "1" } };
-            }
+            pagination.Url = pSettings.Url;
             return pagination;
         }
     }

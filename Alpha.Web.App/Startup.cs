@@ -106,7 +106,7 @@ namespace Alpha.Web.App
             services.AddAuthorization(opts =>
             {
                 opts.AddPolicy(PolicyTypes.OrdinaryUsers, policy => policy.RequireRole("Users"));
-                opts.AddPolicy(PolicyTypes.SuperAdmin, policy => policy.RequireRole("Admins", "Users"));
+                opts.AddPolicy(PolicyTypes.SuperAdmin, policy => policy.RequireRole("Admins"));
             });
             services.AddAuthentication().AddGoogle(opts =>
             {
