@@ -27,6 +27,8 @@ using Alpha.Infrastructure.Email;
 using Alpha.Web.App.CustomTokenProviders;
 using Alpha.Web.App.Resources.Constants;
 using Alpha.Web.App.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 
 
@@ -47,11 +49,20 @@ namespace Alpha.Web.App
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
 
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(x =>
+            {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 
 
             //services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 
             services.AddTransient<IAboutUsRepository, AboutUsRepository>();
             services.AddTransient<IAboutUsService, AboutUsService>();
@@ -76,6 +87,7 @@ namespace Alpha.Web.App
             services.AddScoped<ApplicationDbContext, ApplicationDbContext>();
 
             services.AddScoped<IEmailSender, EmailSender>();
+
 
             services.AddIdentity<User, Role>(opts =>
             {
