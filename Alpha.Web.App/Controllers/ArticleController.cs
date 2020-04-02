@@ -49,8 +49,7 @@ namespace Alpha.Web.App.Controllers
                     ItemsPerPage = PagingInfo.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
-                TargetController = "Article",
-                TargetAction = "Index"
+                Url = Url.Action(action: "Index", controller: "Article", new { tagId = tagId, pageNumber = pageNumber })
             });
 
             TempData.Keep(key);

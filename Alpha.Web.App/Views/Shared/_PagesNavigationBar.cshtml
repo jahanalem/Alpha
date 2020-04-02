@@ -1,5 +1,6 @@
 ﻿@using Alpha.Infrastructure.PaginationUtility
 @using Alpha.Web.App.Resources.Constants
+@using Alpha.Infrastructure.PaginationUtility
 @model Pagination
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -28,28 +29,24 @@
 
 
             if (currentPage == start) { previousPageButtonStatus = "disabled"; } else { previousPageButtonStatus = string.Empty; }
-            Model.QueryStrings[QueryStringParameters.PageNumber] = previousPage.ToString();
             <li class="page-item @previousPageButtonStatus">
-                <a class="page-link" asp-area="@Model.TargetArea" asp-controller="@Model.TargetController" asp-action="@Model.TargetAction"
-                   asp-all-route-data="@Model.QueryStrings" title="" tabindex="-1">Previous</a>
+                <a class="page-link" href="@Model.Url.UpdatePageNumber(previousPage)" title="" tabindex="-1">Previous</a>
             </li>
             for (int pageNumber = start; pageNumber <= end; pageNumber++)
             {
                 if (pageNumber == currentPage) { pageNumberStatus = "active"; }
                 else { pageNumberStatus = string.Empty; }
-                Model.QueryStrings[QueryStringParameters.PageNumber] = pageNumber.ToString();
+
                 <li class="page-item @pageNumberStatus">
-                    <a class="page-link" asp-area="@Model.TargetArea" asp-controller="@Model.TargetController" asp-action="@Model.TargetAction"
-                       asp-all-route-data="@Model.QueryStrings">@pageNumber</a>
+                    <a class="page-link" href="@Model.Url.UpdatePageNumber(pageNumber)">@pageNumber</a>
                 </li>
             }
             if (currentPage == end) { nextPageButtonStatus = "disabled"; }
             else { nextPageButtonStatus = string.Empty; }
-            Model.QueryStrings[QueryStringParameters.PageNumber] = nextPage.ToString();
+
             <li class="page-item @nextPageButtonStatus">
                 @*<pageLink asp-area="@Model.TargetArea" asp-controller="@Model.TargetController" asp-action="@Model.TargetAction" asp-route-pagenumber="@nextPage">nextPage</pageLink>*@
-                <a class="page-link" asp-area="@Model.TargetArea" asp-controller="@Model.TargetController" asp-action="@Model.TargetAction"
-                   asp-all-route-data="@Model.QueryStrings">nextPage</a>
+                <a class="page-link" href="@Model.Url.UpdatePageNumber(nextPage)">nextPage</a>
             </li>
         }
     </ul>

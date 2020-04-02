@@ -55,9 +55,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                     ItemsPerPage = PagingInfo.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
-                TargetController = "Article",
-                TargetAction = "Index",
-                TargetArea = AreaConstants.AdminArea
+                Url = Url.Action(action: "Index", controller: "Article", new {area="Admin", tagId = tagId, pageNumber = pageNumber })
             });
 
             TempData.Keep(key);

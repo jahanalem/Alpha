@@ -61,11 +61,8 @@ namespace Alpha.Web.App.Components
                     ItemsPerPage = PagingInfo.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
-                TargetController = "Article",
-                TargetAction = "Index",
-                QueryStrings = new Dictionary<string, string>() { { QueryStringParameters.TagId, tagId.ToString() } }
+                Url = Url.Action(action: "Index", controller: "Article", new { tagId = tagId, pageNumber = pageNumber })
             });
-
             return View(result);
         }
     }

@@ -24,9 +24,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         {
             _contactUsService = contactUsService;
         }
-        public async Task<IActionResult> Index(int? pagenumber = 1)
+        public async Task<IActionResult> Index(int? pageNumber = 1)
         {
-            if (pagenumber.HasValue)
+            if (pageNumber.HasValue)
             {
                 var viewModel = new ContactUsListViewModel();
                 if (TempData.Peek("TotalItems") == null)
@@ -35,7 +35,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 }
 
                 viewModel.ContactUsList = await _contactUsService
-                    .GetByCriteria(PagingInfo.DefaultItemsPerPage, pagenumber.Value, null)
+                    .GetByCriteria(PagingInfo.DefaultItemsPerPage, pageNumber.Value, null)
                     .OrderByDescending(c => c.CreatedDate).ToListAsync();
 
                 viewModel.Pagination.Init(new Pagination
@@ -44,11 +44,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                     {
                         TotalItems = int.Parse(TempData.Peek("TotalItems").ToString()),
                         ItemsPerPage = PagingInfo.DefaultItemsPerPage,
-                        CurrentPage = pagenumber.Value
+                        CurrentPage = pageNumber.Value
                     },
-                    TargetArea = "Admin",
-                    TargetController = "ContactUs",
-                    TargetAction = "Index"
+                    Url = Url.Action(action: "Index", controller: "ContactUs", new { area = "Admin", pageNumber = pageNumber })
                 });
 
                 return View(viewModel);
