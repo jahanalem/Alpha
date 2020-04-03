@@ -64,7 +64,6 @@
     <Folder Include="wwwroot\lib\font-awesome\sprites\" />
     <Folder Include="wwwroot\lib\font-awesome\webfonts\" />
     <Folder Include="wwwroot\lib\jquery-validate\localization\" />
-    <Folder Include="wwwroot\Templates\Emails\" />
   </ItemGroup>
 
 </Project>
