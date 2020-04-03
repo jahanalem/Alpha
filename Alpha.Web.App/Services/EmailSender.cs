@@ -56,30 +56,44 @@ namespace Alpha.Web.App.Services
 
         public Task SendEmailConfirmationLink(string activationLink, string userName, string emailAddress)
         {
-            string messageBody = EmailHelper.GetEmailTemplate(_environment, EmailTemplatesSettings.EmailConfirmation.HtmlTemplateName);
+            string messageBody = EmailHelper.GetEmailTemplate(_environment,
+                EmailTemplatesSettings.EmailConfirmation.HtmlTemplateName);
 
-            return CreateAndSendMessageBody(messageBody, userName, emailAddress, activationLink);
+            return CreateAndSendMessageBody(messageBody,
+                userName,
+                emailAddress,
+                activationLink,
+                EmailTemplatesSettings.EmailConfirmation.Subject);
         }
 
         public Task SendResetPasswordLink(string activationLink, string userName, string emailAddress)
         {
-            string messageBody = EmailHelper.GetEmailTemplate(_environment, EmailTemplatesSettings.PasswordForgot.HtmlTemplateName);
+            string messageBody = EmailHelper.GetEmailTemplate(_environment,
+                EmailTemplatesSettings.PasswordForgot.HtmlTemplateName);
 
-            return CreateAndSendMessageBody(messageBody, userName, emailAddress, activationLink);
+            return CreateAndSendMessageBody(messageBody,
+                userName,
+                emailAddress,
+                activationLink,
+                EmailTemplatesSettings.PasswordForgot.Subject);
         }
 
-        private Task CreateAndSendMessageBody(string messageBody, string userName, string emailAddress, string activationLink)
+        private Task CreateAndSendMessageBody(string messageBody, string userName, string emailAddress, string activationLink, string emailSubject)
         {
             //var imageUrl = EmailHelper.GetImagesUrl(_configuration, _httpContextAccessor.HttpContext.Request);
-            var impressum = EmailHelper.GetEmailTemplate(_environment, EmailTemplatesSettings.HtmlTemplateImpressum);
-
-            messageBody = messageBody.Replace(EmailTemplatesSettings.ReplaceToken.Impressum, impressum); //immer zuerst replacen !!!
+            var appSettings = _configuration.GetSection("appSettings");
+            var websiteUrl = appSettings["WebsiteUrl"].ToString();
+            var websiteName = appSettings["WebsiteName"].ToString();
+            var supportUrl = appSettings["SupportUrl"].ToString();
+            messageBody = messageBody.Replace(EmailTemplatesSettings.ReplaceToken.WebsiteUrl, websiteUrl);
+            messageBody = messageBody.Replace(EmailTemplatesSettings.ReplaceToken.WebsiteName, websiteName);
+            messageBody = messageBody.Replace(EmailTemplatesSettings.ReplaceToken.SupportUrl, supportUrl);
 
             var tokenValues = new Dictionary<string, string>
             {
                 //{ EmailTemplatesSettings.ReplaceToken.ImagesUrl, imageUrl },
                 { EmailTemplatesSettings.ReplaceToken.UserName, userName},
-                { EmailTemplatesSettings.ReplaceToken.Link, HtmlEncoder.Default.Encode(activationLink)}
+                { EmailTemplatesSettings.ReplaceToken.ActionUrl, HtmlEncoder.Default.Encode(activationLink)}
             };
 
             foreach (var key in tokenValues.Keys)
@@ -93,7 +107,7 @@ namespace Alpha.Web.App.Services
 
             return SendEmailAsync(emailAddress,
                 senderAddress,
-                EmailTemplatesSettings.AccountActivation.Subject,
+                emailSubject,
                 messageBody);
         }
     }
