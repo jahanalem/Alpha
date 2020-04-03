@@ -12,7 +12,9 @@ using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.DataAccess.UnitOfWork;
+using Alpha.Infrastructure.LinqUtility;
 using Alpha.Infrastructure.PaginationUtility;
+using Alpha.Models.Identity;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels.Searches;
 using Microsoft.EntityFrameworkCore;
@@ -37,12 +39,13 @@ namespace Alpha.Services
         public ArticleService(IUnitOfWork uow,
             IArticleRepository articleRepository,
             IArticleTagRepository articleTagRepository,
+            IArticleTagService articleTagService,
             ITagRepository tagRepository, IUrlHelper urlHelper)
             : base(articleRepository)
         {
             _articleRepository = articleRepository;
             _articleTagRepository = articleTagRepository;
-            _articleTagService = new ArticleTagService(_articleTagRepository);
+            _articleTagService = articleTagService;
             _tagRepository = tagRepository;
             _unitOfWork = uow;
             _urlHelper = urlHelper;
@@ -188,21 +191,28 @@ namespace Alpha.Services
         {
             if (string.IsNullOrEmpty(search))
                 return null;
-            int itemsPerPage = 3;
+            int itemsPerPage = PagingInfo.DefaultItemsPerPage;
 
             var searchValue = search.Trim().ToLower();
 
-            //var xxx = from a in _articleRepository.Instance()
-            //          where (EF.Functions.Like(a.Summary.ToLower(), $"%{searchValue}%"))
-            //          select a;
-            //var t = xxx.ToList();
+            var pr = PredicateBuilder.False<Article>();
+            pr = pr.Or(a =>
+                a.Title.ToLower().Contains(searchValue) ||
+                a.Summary.ToLower().Contains(searchValue) ||
+                a.Description.ToLower().Contains(searchValue));
 
-            var query = _articleRepository.Instance().AsQueryable()
-                .Where(a =>
-                    (EF.Functions.Like(a.Summary.ToLower(), $"%{searchValue}%")) &&
-                    a.IsActive)
-                .OrderByDescending(o => o.CreatedDate);
-            // || a.Title.ToLower().Contains(searchValue)
+            foreach (var term in search.ToLower().Split(' '))
+            {
+                string temp = term.Trim();
+                pr = pr.Or(a => a.Title.ToLower().Contains(temp) ||
+                              a.Summary.ToLower().Contains(temp) ||
+                              a.Description.ToLower().Contains(temp));
+            }
+
+            pr = pr.And(a => a.IsActive);
+
+            var query = _articleRepository.Instance().AsQueryable().Where(pr).OrderByDescending(o => o.CreatedDate);
+            // EF.Functions.Like(a.Title.ToLower(), $"%{searchValue}%"))
             var totalItems = await query.CountAsync();
 
             var articles = await query.Skip(pageNumber - 1).Take(itemsPerPage).ToListAsync();
