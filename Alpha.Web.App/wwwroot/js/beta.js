@@ -30,7 +30,7 @@ $('[data-toggle="collapse"]').on('click', function () {
 
 
 
-// Edit a comment // 
+/* <<<<<<<<<<<<<<<<<<<  Edit   >>>>>>>>>>>>>>>>>>> */
 $(document).on("click", "input[id^='editC_']", function (event) {
 
     var clickedId = event.target.id;
@@ -63,41 +63,6 @@ $(document).on("click", "input[id^='cancelEdit_']", function (event) {
 
 
 
-$("a[id^='replyC_']").on("click", function (event) {
-    var nodeId = event.target.id;
-    var commentId = nodeId.split("_")[1];
-    var articleId = nodeId.split("_")[2];
-    var commentReplyId = "#replyComment_" + commentId.toString();
-    var commentTextId = "#commentText_" + commentId;
-    var formId = "form_" + commentId;
-    var valueOftextarea = $(commentTextId).val();
-    var appendReplyNode = true;
-    if (typeof valueOftextarea != "undefined") {
-        if (valueOftextarea.length >= 0) {
-            appendReplyNode = false;
-        }
-    }
-    if (appendReplyNode) {
-        $(commentReplyId).append(
-            $('<form />', { method: 'post', action: '/Comment/Save', id: formId }).append(
-                $('<div/>', { class: 'form-group' }).append(
-                    $('<textarea />',
-                        {
-                            class: 'form-control',
-                            id: 'commentText_' + commentId,
-                            name: 'Dsc',
-                            placeholder: 'your comment',
-                            type: 'text',
-                            row: '3'
-                        }),
-                    $('<input/>', { type: 'hidden', name: 'CurrentArticleId', id: 'CurrentArticleId', value: articleId }),
-                    $('<input/>', { type: 'hidden', name: 'CurrentParentId', id: 'CurrentParentId', value: commentId }),
-                    $('<input />', { id: 'submitComment_' + commentId, type: 'submit', value: 'send', class: 'btn btn-secondary' })
-                )
-            ));
-    }
-
-});
 
 
 /* ************* Save editing *************  */
@@ -137,7 +102,7 @@ $(document).on("click", "input[id^='saveC_']", function (event) {
     });
 });
 
-/* ************* Save editing *************  */
+/* <<<<<<<<<<<<<<<<<<<  Delete   >>>>>>>>>>>>>>>>>>> */
 $(document).on("click", "input[id^='deleteC_']", function (event) {
     event.preventDefault();
     var clickedId = event.target.id;
@@ -166,16 +131,17 @@ $(document).on("click", "input[id^='deleteC_']", function (event) {
 });
 
 
-
-
+/* <<<<<<<<<<<<<<<<<<<  Submit   >>>>>>>>>>>>>>>>>>> */
 $(document).on("click", "input[id^='submitComment_']", function (event) {
     event.preventDefault();
     var submitCommentId = event.target.id;
     var id = submitCommentId.split("_")[1];
     var commentTextId = jQuery.validator.format('#commentText_{0}', id);
     var formData = new FormData();
-    formData.append("Dsc", $(commentTextId).val());
-    formData.append("ArticleId", $("#CurrentArticleId").val());
+    var newMessage = $(commentTextId).val();
+    var currentArticleId = $("#CurrentArticleId").val();
+    formData.append("Dsc", newMessage);
+    formData.append("ArticleId", currentArticleId);
     formData.append("ParentId", $("#CurrentParentId").val());
     $.ajax({
         url: "/Comment/Save",
@@ -189,18 +155,43 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
         contentType: false,
         processData: false,
         success: function (data, textStatus, jqXhr) {
-            var nodeId = data;
+            var newCommentId = data;
             var parentId = event.target.id.split("_")[1];
-            var collapseId = jQuery.validator.format('#cardId_{0}', parentId);
+            var collapseId = jQuery.validator.format('#collapse_{0}', parentId);
+
+            $("#form_" + parentId).remove();
             var appendTo = collapseId + "~ul";
             if ($(appendTo).length) {
                 var ee = $(appendTo).prepend("<li>Saved Successfully!</li>");
             }
             else {
-                $(collapseId).append("<ul><li>Saved Successfully!</li></ul>");
-            }
+                var newCommentTemplate = '<div class="media mt-3 w-100" id="commentNode_{{ID}}">' +
+                    '<a class="pr-0" href = "#" >' +
+                    '<img class="mr-3" src="/images/comment1.png" alt="x">' +
+                    '</a>' +
+                    '<div class="media-body w-100">' +
+                    '<h5 class="mt-0 mb-1">User</h5>' +
+                    '<div id="collapse_{{ID}}" class="">' +
+                    '<div id="cardId_{{ID}}" class="card">' +
+                    '<p>{{MESSAGE}}</p>' +
+                    '</div>' +
+                    '<div class="comment-meta" id="commentId_{{ID}}">' +
+                    '<span><input id="deleteC_{{ID}}_{{ARTICLEID}}" type="submit" class="submitLink" value="delete"></span>' +
+                    '<span><input id="editC_{{ID}}_{{ARTICLEID}}" type="submit" class="submitLink" value="edit"></span>' +
+                    '<span>' +
+                    '<a id="replyC_{{ID}}_{{ARTICLEID}}" class="" role="button" data-toggle="collapse" href="#replyComment_{{ID}}" aria-expanded="false" aria-controls="collapseExample">reply</a>' +
+                    '</span>' +
+                    '<div id="replyComment_{{ID}}" class="collapse"></div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
 
-            //            document.location.reload();
+                var newComment = newCommentTemplate.replace(/{{ID}}/g, newCommentId)
+                    .replace(/{{ARTICLEID}}/g, currentArticleId)
+                    .replace(/{{MESSAGE}}/g, newMessage);
+                $(collapseId).append(newComment);
+            }
         },
         failure: function (response) {
             alert(response);
@@ -209,8 +200,50 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
 
 });
 
+/* <<<<<<<<<<<<<<<<<<<  Reply   >>>>>>>>>>>>>>>>>>> */
 
+$(document).on("click", "a[id^='replyC_']", function (event) {
+    var nodeId = event.target.id;
+    var commentId = nodeId.split("_")[1];
+    var articleId = nodeId.split("_")[2];
+    var commentReplyId = "#replyComment_" + commentId.toString();
+    var commentTextId = "#commentText_" + commentId;
+    var formId = "form_" + commentId;
+    var valueOftextarea = $(commentTextId).val();
+    var appendReplyNode = true;
+    if (typeof valueOftextarea != "undefined") {
+        if (valueOftextarea.length >= 0) {
+            appendReplyNode = false;
+        }
+    }
+    if (appendReplyNode) {
+        $(commentReplyId).append(
+            $('<form />', { method: 'post', action: '/Comment/Save', id: formId }).append(
+                $('<div/>', { class: 'form-group' }).append(
+                    $('<textarea />',
+                        {
+                            class: 'form-control',
+                            id: 'commentText_' + commentId,
+                            name: 'Dsc',
+                            placeholder: 'your comment',
+                            type: 'text',
+                            row: '3'
+                        }),
+                    $('<input/>', { type: 'hidden', name: 'CurrentArticleId', id: 'CurrentArticleId', value: articleId }),
+                    $('<input/>', { type: 'hidden', name: 'CurrentParentId', id: 'CurrentParentId', value: commentId }),
+                    $('<input />', { id: 'submitComment_' + commentId, type: 'submit', value: 'send', class: 'btn btn-secondary' })
+                )
+            ));
+    }
 
+});
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 
 function togglePasswordVisibility() {
     var x = document.getElementById("Password");
