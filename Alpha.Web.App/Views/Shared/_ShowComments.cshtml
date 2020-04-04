@@ -6,12 +6,12 @@
 {
     @foreach (var childComment in Model.Comments.Where(c => c.ParentId == Model.ParentId))
     {
-        <div class="media mt-3 w-100">
+        <div class="media mt-3 w-100" id="commentNode_@childComment.Id">
             <a class="pr-0" href="#">
                 <img class="mr-3" src="~/images/comment1.png" alt="x">
             </a>
             <div class="media-body w-100">
-                <h5 class="mt-0 mb-1" id="commentNode_@childComment.Id">User</h5>
+                <h5 class="mt-0 mb-1"            >User</h5>
                 <div id="collapse_@childComment.Id" class="">
 
 

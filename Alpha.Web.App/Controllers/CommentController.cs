@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess;
@@ -13,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Alpha.Web.App.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CommentController : BaseController
     {
         private readonly ApplicationDbContext _context;
@@ -26,8 +27,11 @@ namespace Alpha.Web.App.Controllers
         // GET: Comment
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Comments.Include(c => c.Article).Include(c => c.Parent);
-            return View(await applicationDbContext.ToListAsync());
+            var query = _context.Comments
+                .Include(c => c.Article)
+                .Include(c => c.Parent);
+            List<Comment> result =await query.ToListAsync();
+            return View(result);
         }
 
         // GET: Comment/Details/5
@@ -50,6 +54,9 @@ namespace Alpha.Web.App.Controllers
             return View(comment);
         }
 
+
+        #region Create
+
         // GET: Comment/Create
         public IActionResult Create()
         {
@@ -67,14 +74,19 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(comment);
-                await _context.SaveChangesAsync();
+                await _commentRepository.AddOrUpdateAsync(comment);
+                //_context.Add(comment);
+                //await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ArticleId"] = new SelectList(_context.Articles, "Id", "Description", comment.ArticleId);
             ViewData["ParentId"] = new SelectList(_context.Comments, "Id", "Id", comment.ParentId);
             return View(comment);
         }
+
+        #endregion
+
+        #region Edit
 
         [HttpPost]
         public async Task<JsonResult> EditComment([FromBody] EditCommentViewModel obj)
@@ -94,73 +106,7 @@ namespace Alpha.Web.App.Controllers
             return Json(new { code = 0 });
             //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
         }
-        [HttpPost]
-        public async Task<JsonResult> DeleteComment([FromBody] DeleteCommentViewModel obj)
-        {
-            if (ModelState.IsValid)
-            {
-                var comment = await _commentRepository.FetchByCriteria(m => m.Id == obj.CommentId).SingleOrDefaultAsync();
-                if (comment != null)
-                {
-                    await RemoveChildren(comment.Id);
-                    _commentRepository.Remove(comment);
-                }
-                if (Request.IsAjaxRequest())
-                {
-                    return Json(1);
-                }
-            }
-            return Json(new { code = 0 });
-            //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
-        }
 
-        async Task RemoveChildren(int i)
-        {
-            var children = _commentRepository.FetchByCriteria(c => c.ParentId == i).ToList();
-            foreach (var child in children)
-            {
-                await RemoveChildren(child.Id);
-                _commentRepository.Remove(child);
-            }
-        }
-
-        [HttpPost]
-        //[Route("Test/{des}")]
-        //[ValidateAntiForgeryToken]
-        public async Task<JsonResult> Save(SendCommentViewModel obj)
-        {
-            if (ModelState.IsValid)
-            {
-                var comment = new Comment
-                {
-                    Description = obj.Dsc,
-                    ArticleId = obj.ArticleId,
-                    ParentId = obj.ParentId
-                };
-                var id = await _commentRepository.AddOrUpdateAsync(comment);
-                if (Request.IsAjaxRequest())
-                {
-                    return Json(id);
-                }
-            }
-            return Json(new { code = 0 });
-            //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
-        }
-        [HttpPost]
-        public async Task<ActionResult> SavebyPageLoad(SendCommentViewModel obj)
-        {
-            if (ModelState.IsValid)
-            {
-                var comment = new Comment
-                {
-                    Description = obj.Dsc,
-                    ArticleId = obj.ArticleId,
-                    ParentId = obj.ParentId
-                };
-                var id = await _commentRepository.AddOrUpdateAsync(comment);
-            }
-            return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });
-        }
         // GET: Comment/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -216,6 +162,11 @@ namespace Alpha.Web.App.Controllers
             return View(comment);
         }
 
+
+        #endregion
+
+        #region Delete
+
         // GET: Comment/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -245,6 +196,79 @@ namespace Alpha.Web.App.Controllers
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteComment([FromBody] DeleteCommentViewModel obj)
+        {
+            if (ModelState.IsValid)
+            {
+                var comment = await _commentRepository.FetchByCriteria(m => m.Id == obj.CommentId).SingleOrDefaultAsync();
+                if (comment != null)
+                {
+                    await RemoveChildren(comment.Id);
+                    _commentRepository.Remove(comment);
+                    await _commentRepository.SaveChangesAsync();
+                }
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(1);
+                }
+            }
+            return Json(new { code = 0 });
+            //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
+        }
+
+        async Task RemoveChildren(int i)
+        {
+            var children = _commentRepository.FetchByCriteria(c => c.ParentId == i).ToList();
+            foreach (var child in children)
+            {
+                await RemoveChildren(child.Id);
+                _commentRepository.Remove(child);
+            }
+        }
+
+        #endregion
+
+        
+        [HttpPost]
+        //[Route("Test/{des}")]
+        //[ValidateAntiForgeryToken]
+        public async Task<JsonResult> Save(SendCommentViewModel obj)
+        {
+            if (ModelState.IsValid)
+            {
+                var comment = new Comment
+                {
+                    Description = obj.Dsc,
+                    ArticleId = obj.ArticleId,
+                    ParentId = obj.ParentId
+                };
+                var id = await _commentRepository.AddOrUpdateAsync(comment);
+                if (Request.IsAjaxRequest())
+                {
+                    return Json(id);
+                }
+            }
+            return Json(new { code = 0 });
+            //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SavebyPageLoad(SendCommentViewModel obj)
+        {
+            if (ModelState.IsValid)
+            {
+                var comment = new Comment
+                {
+                    Description = obj.Dsc,
+                    ArticleId = obj.ArticleId,
+                    ParentId = obj.ParentId
+                };
+                var id = await _commentRepository.AddOrUpdateAsync(comment);
+            }
+            return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });
         }
 
         private bool CommentExists(int id)
