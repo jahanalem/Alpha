@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
+using Alpha.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,13 @@ namespace Alpha.Web.App.Components
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICommentRepository _commentRepository;
+        private ICommentService _commentService;
         private int _articleId;
-        public CommentListViewComponent(ICommentRepository commentRepository, IHttpContextAccessor httpContextAccessor)
+        public CommentListViewComponent(ICommentRepository commentRepository, IHttpContextAccessor httpContextAccessor, ICommentService commentService)
         {
             _commentRepository = commentRepository;
             _httpContextAccessor = httpContextAccessor;
+            _commentService = commentService;
             if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
             {
                 string queryString = (_httpContextAccessor.HttpContext.Request.Query["articleId"]);
@@ -29,7 +32,8 @@ namespace Alpha.Web.App.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int Id)
         {
-            var comments = await _commentRepository.FetchByCriteria(c => c.ArticleId == Id).ToListAsync();
+            var comments = await _commentService.GetComments(Id); 
+            //var comments = await _commentRepository.FetchByCriteria(c => c.ArticleId == Id).ToListAsync();
             return View(comments);
         }
 

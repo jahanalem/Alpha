@@ -6,11 +6,15 @@ using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.Infrastructure;
 using Alpha.Models;
+using Alpha.Models.Identity;
 using Alpha.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -19,9 +23,11 @@ namespace Alpha.Web.App.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommentRepository _commentRepository;
-        public CommentController(ICommentRepository commentRepository)
+        private UserManager<User> _userManager;
+        public CommentController(ICommentRepository commentRepository, UserManager<User> userManager)
         {
             _commentRepository = commentRepository;
+            _userManager = userManager;
         }
 
         // GET: Comment
@@ -30,7 +36,7 @@ namespace Alpha.Web.App.Controllers
             var query = _context.Comments
                 .Include(c => c.Article)
                 .Include(c => c.Parent);
-            List<Comment> result =await query.ToListAsync();
+            List<Comment> result = await query.ToListAsync();
             return View(result);
         }
 
@@ -74,9 +80,10 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userInfo = GetCurrentUserInfo();
+                comment.UserId = userInfo.UserId;
                 await _commentRepository.AddOrUpdateAsync(comment);
-                //_context.Add(comment);
-                //await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ArticleId"] = new SelectList(_context.Articles, "Id", "Description", comment.ArticleId);
@@ -231,7 +238,7 @@ namespace Alpha.Web.App.Controllers
 
         #endregion
 
-        
+
         [HttpPost]
         //[Route("Test/{des}")]
         //[ValidateAntiForgeryToken]
@@ -239,16 +246,22 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
+                var CurrentUserInfo =GetCurrentUserInfo();
                 var comment = new Comment
                 {
                     Description = obj.Dsc,
                     ArticleId = obj.ArticleId,
-                    ParentId = obj.ParentId
+                    ParentId = obj.ParentId,
+                    UserId = CurrentUserInfo.UserId
                 };
-                var id = await _commentRepository.AddOrUpdateAsync(comment);
+                var commentId = await _commentRepository.AddOrUpdateAsync(comment);
+                var user = HttpContext.User.Identity.Name;
+
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(id);
+                    string data = JsonConvert.SerializeObject(new { user = user, id = commentId });
+                    object dataObj = JsonConvert.DeserializeObject(data);
+                    return Json(dataObj);
                 }
             }
             return Json(new { code = 0 });
@@ -260,11 +273,14 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userInfo = GetCurrentUserInfo();
+
                 var comment = new Comment
                 {
                     Description = obj.Dsc,
                     ArticleId = obj.ArticleId,
-                    ParentId = obj.ParentId
+                    ParentId = obj.ParentId,
+                    UserId = userInfo.UserId
                 };
                 var id = await _commentRepository.AddOrUpdateAsync(comment);
             }

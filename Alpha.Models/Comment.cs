@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alpha.Models
 {
@@ -24,6 +25,9 @@ namespace Alpha.Models
         /// 
         /// </summary>
         public virtual int? UserId { get; set; }
+
+        [NotMapped]
+        public virtual string PublicUserName { get; set; }
 
         /// <summary>
         /// Description: توضیحات

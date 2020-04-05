@@ -55,9 +55,10 @@ namespace Alpha.DataAccess
                 builder.HasOne(userLogin => userLogin.User).WithMany(user => user.Logins).HasForeignKey(userLogin => userLogin.UserId);
                 builder.ToTable("UserLogin");
             });
+            
             modelBuilder.Entity<User>(builder =>
             {
-                builder.ToTable("User");
+                builder.ToTable("User"); //.HasMany(e => e.Comments).WithOne().OnDelete(DeleteBehavior.Cascade);
             });
             modelBuilder.Entity<UserRole>(builder =>
             {
@@ -72,7 +73,12 @@ namespace Alpha.DataAccess
             });
 
             modelBuilder.Entity<AboutUs>().ToTable("AboutUs");
-            modelBuilder.Entity<Article>().ToTable("Article");
+
+            modelBuilder.Entity<Article>().ToTable("Article")
+                .HasMany(a=>a.Comments)
+                .WithOne(a=>a.Article)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<ArticleLike>().ToTable("ArticleLike");
             modelBuilder.Entity<ArticleTag>().ToTable("ArticleTag");
             modelBuilder.Entity<AttachmentFile>().ToTable("AttachmentFile");
