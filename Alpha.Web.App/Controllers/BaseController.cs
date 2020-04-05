@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Security.Claims;
 using Alpha.Infrastructure;
 using Alpha.Web.App.Models;
+using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,13 +31,19 @@ namespace Alpha.Web.App.Controllers
 
         protected CurrentUser GetCurrentUserInfo()
         {
+            var uId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int? userId = null;
+            if (uId != null)
+                userId = int.Parse(uId);
+
             CurrentUser cUser = new CurrentUser
             {
                 IsAuthenticated = HttpContext.User.Identity.IsAuthenticated,
                 AuthenticationType = HttpContext.User.Identity.AuthenticationType,
                 UserName = HttpContext.User.Identity.Name,
-                IsInRoleOfUsers = HttpContext.User.IsInRole("Users"),
-                IsInRoleOfAdmins = HttpContext.User.IsInRole("Admins"),
+                UserId = userId,// var userId = _userManager.GetUserId(HttpContext.User);
+                IsInRoleOfUsers = HttpContext.User.IsInRole(RoleTypes.Users),
+                IsInRoleOfAdmins = HttpContext.User.IsInRole(RoleTypes.Admins),
                 UserIp = GetClientIpAddress()
             };
             ViewBag.CurrentUser = cUser;

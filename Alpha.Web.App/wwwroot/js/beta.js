@@ -155,7 +155,8 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
         contentType: false,
         processData: false,
         success: function (data, textStatus, jqXhr) {
-            var newCommentId = data;
+            var newCommentId = data.id;
+            var user = data.user;
             var parentId = event.target.id.split("_")[1];
             var collapseId = jQuery.validator.format('#collapse_{0}', parentId);
 
@@ -170,7 +171,7 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
                     '<img class="mr-3" src="/images/comment1.png" alt="x">' +
                     '</a>' +
                     '<div class="media-body w-100">' +
-                    '<h5 class="mt-0 mb-1">User</h5>' +
+                    '<h5 class="mt-0 mb-1">{{USER}}</h5>' +
                     '<div id="collapse_{{ID}}" class="">' +
                     '<div id="cardId_{{ID}}" class="card">' +
                     '<p>{{MESSAGE}}</p>' +
@@ -186,8 +187,8 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
                     '</div>' +
                     '</div>' +
                     '</div>';
-
-                var newComment = newCommentTemplate.replace(/{{ID}}/g, newCommentId)
+                var newComment = newCommentTemplate.replace(/{{USER}}/g , user)
+                    .replace(/{{ID}}/g, newCommentId)
                     .replace(/{{ARTICLEID}}/g, currentArticleId)
                     .replace(/{{MESSAGE}}/g, newMessage);
                 $(collapseId).append(newComment);
