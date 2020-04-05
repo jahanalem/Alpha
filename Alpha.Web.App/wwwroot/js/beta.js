@@ -187,7 +187,7 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
                     '</div>' +
                     '</div>' +
                     '</div>';
-                var newComment = newCommentTemplate.replace(/{{USER}}/g , user)
+                var newComment = newCommentTemplate.replace(/{{USER}}/g, user)
                     .replace(/{{ID}}/g, newCommentId)
                     .replace(/{{ARTICLEID}}/g, currentArticleId)
                     .replace(/{{MESSAGE}}/g, newMessage);
@@ -298,19 +298,24 @@ $(document).ready(function () {
         //...your validation rules come here,
         invalidHandler: function (event, validator) {
             // 'this' refers to the form
+
             var errors = validator.numberOfInvalids();
+            var messageText;
+            var alertBox;
             if (errors) {
-                var messageText = errors == 1
+                messageText = errors === 1
                     ? 'You missed 1 field. It has been highlighted'
                     : 'You missed ' + errors + ' fields. They have been highlighted';
-                var alertBox = '<div class="alert alert-danger ' +
+                alertBox = '<div class="alert alert-danger ' +
                     ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
                     messageText +
                     '</div>';
                 $("div.messages").html(alertBox);
                 $("div.messages").show();
             } else {
+
                 $("div.messages").hide();
+
             }
         },
 
@@ -322,11 +327,27 @@ $(document).ready(function () {
 
             //var formAction = $(this).attr("action");
 
+            var firstNumber = $("#FirstNumber").val();
+            var secondNumber = $("#SecondNumber").val();
+            var captchaResult = $("#Result").val();
+            if (captchaResult !== (firstNumber + secondNumber)) {
+                var messageText = 'The sum is wrong';
+                var alertBox = '<div class="alert alert-danger ' +
+                    ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                    messageText +
+                    '</div>';
+                $("div.messages").html(alertBox);
+                $("div.messages").show();
+                return;
+            }
+
+
             var firstName = $("#FirstName").val();
             var lastName = $("#LastName").val();
             var email = $("#Email").val();
             var title = $("#Title").val();
             var description = $("#Description").val();
+
 
             var formData = new FormData();
             formData.append("FirstName", firstName);
@@ -334,6 +355,9 @@ $(document).ready(function () {
             formData.append("Email", email);
             formData.append("Title", title);
             formData.append("Description", description);
+            formData.append("FirstNumber", firstNumber);
+            formData.append("SecondNumber", secondNumber);
+            formData.append("Result", captchaResult);
 
             $.ajax({
                 type: form.method,
