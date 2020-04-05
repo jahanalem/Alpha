@@ -32,6 +32,13 @@ namespace Alpha.Services
         {
             var result = new ContactUs();
             var isVaild = true;
+            //if (!obj.NumericCaptcha.IsResultCorrect(obj.NumericCaptcha.FirstNumber,
+            //    obj.NumericCaptcha.SecondNumber,
+            //    obj.NumericCaptcha.Result))
+            //{
+            //    isVaild = false;
+            //    return (contactUs: result, isVaild);
+            //}
             if (!string.IsNullOrEmpty(obj.FirstName))
             {
                 result.FirstName = obj.FirstName.Trim();

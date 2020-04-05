@@ -24,6 +24,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess.UnitOfWork;
 using Alpha.Infrastructure.Email;
+using Alpha.ViewModels;
+using Alpha.ViewModels.Interfaces;
 using Alpha.Web.App.CustomTokenProviders;
 using Alpha.Web.App.Resources.Constants;
 using Alpha.Web.App.Services;
@@ -81,7 +83,7 @@ namespace Alpha.Web.App
 
             services.AddTransient<IContactUsRepository, ContactUsRepository>();
             services.AddTransient<IContactUsService, ContactUsService>();
-
+            
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<ApplicationDbContext, ApplicationDbContext>();
