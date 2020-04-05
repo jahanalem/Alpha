@@ -17,10 +17,9 @@
                 <a asp-action="Login" class="float-right btn btn-outline-primary">Sign in</a>
                 <h4 class="card-title mb-4 mt-1">Sign up</h4>
                 <p>
-                    <a href="" class="btn btn-block btn-outline-info"> <i class="fa fa-twitter"></i>  sign up via Twitter</a>
+                    @*<a href="" class="btn btn-block btn-outline-info"> <i class="fa fa-twitter"></i>  sign up via Twitter</a>*@
                     <a asp-action="FacebookLogin" class="btn btn-block btn-outline-primary"> <i class="fa fa-facebook-f"></i>  sign up via facebook</a>
                     <a asp-action="GoogleLogin" class="btn btn-block btn-outline-primary"> <i class="fa fa-google"></i>  sign up via Google</a>
-                    @*<div class="g-signin2" data-onsuccess="onSignIn"></div>*@
                 </p>
                 <hr>
                 <div class="text-danger" asp-validation-summary="All"></div>

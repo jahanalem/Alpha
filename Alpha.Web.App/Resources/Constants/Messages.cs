@@ -11,7 +11,8 @@ namespace Alpha.Web.App.Resources.Constants
         public const string SendingMessageFailed = "Sending message failed!";
         public const string SuccessStatus = "success";
         public const string FailedStatus = "failed";
-
+        public const string AnonymousUser = "Anonymous";
+        public const string CaptchaIsNotCorrect = "The result of captcha is not correct.";
         /// <summary>
         /// You can use as 'alert-success' class in bootstrap .
         /// </summary>
