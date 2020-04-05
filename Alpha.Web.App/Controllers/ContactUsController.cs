@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Alpha.Infrastructure.Captcha;
 using Alpha.Infrastructure.Email;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using Alpha.ViewModels.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Alpha.Web.App.Resources.Constants;
@@ -19,7 +21,9 @@ namespace Alpha.Web.App.Controllers
         private IContactUsService _contactUsService;
         private IEmailSender _emailSender;
         private IConfiguration _configuration;
-        public ContactUsController(IContactUsService contactUsService, IEmailSender emailSender, IConfiguration config)
+        public ContactUsController(IContactUsService contactUsService,
+            IEmailSender emailSender,
+            IConfiguration config)
         {
             _contactUsService = contactUsService;
             _emailSender = emailSender;
@@ -37,6 +41,18 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (!contactObject.IsResultCorrect(contactObject.FirstNumber,
+                            contactObject.SecondNumber,
+                            contactObject.Result))
+                {
+                    return Json(new
+                    {
+                        status = Messages.FailedStatus,
+                        message = Messages.CaptchaIsNotCorrect,
+                        type = Messages.ErrorAlertType
+                    });
+                }
+
                 var result = await _contactUsService.CreateAsync(contactObject);
                 if (result)
                 {

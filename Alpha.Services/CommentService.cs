@@ -36,7 +36,7 @@ namespace Alpha.Services
             var queryResults = await q0.ToListAsync();
             foreach (var r in queryResults)
             {
-                r.Comment.PublicUserName = r.PublicUserName;
+                r.Comment.PublicUserName = r.PublicUserName ?? "Anonymous";
                 comments.Add(r.Comment);
             }
             //var query = await _commentRepository.Instance().Where(c => c.ArticleId == articleId)
