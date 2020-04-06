@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpha.Services", "Alpha.Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpha.Infrastructure", "Alpha.Infrastructure\Alpha.Infrastructure.csproj", "{3F40AD3F-6F7F-4BE4-B5C6-D564FC77FB62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alpha.ViewModels", "Alpha.ViewModels\Alpha.ViewModels.csproj", "{EECD2CFA-51CD-4C4C-A6E0-B5CFB6D0599C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpha.ViewModels", "Alpha.ViewModels\Alpha.ViewModels.csproj", "{EECD2CFA-51CD-4C4C-A6E0-B5CFB6D0599C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alpha.LoggerService", "Alpha.LoggerService\Alpha.LoggerService.csproj", "{99E0CD49-ED5C-4312-B036-87A4365D609B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{EECD2CFA-51CD-4C4C-A6E0-B5CFB6D0599C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EECD2CFA-51CD-4C4C-A6E0-B5CFB6D0599C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EECD2CFA-51CD-4C4C-A6E0-B5CFB6D0599C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99E0CD49-ED5C-4312-B036-87A4365D609B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99E0CD49-ED5C-4312-B036-87A4365D609B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99E0CD49-ED5C-4312-B036-87A4365D609B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99E0CD49-ED5C-4312-B036-87A4365D609B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

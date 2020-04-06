@@ -6,6 +6,8 @@ namespace Alpha.Web.App.Models
     {
         public string RequestId { get; set; }
 
+        public DateTime TimeOfError { get; set; }
+
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
