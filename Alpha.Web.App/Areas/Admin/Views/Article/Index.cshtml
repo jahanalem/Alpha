@@ -18,11 +18,14 @@
                 <th>
                     @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.Title)
                 </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.RateCounter)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.LikeCounter)
+                    </th>*@
                 <th>
-                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.RateCounter)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.LikeCounter)
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.IsPublished)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.IsActive)
@@ -48,11 +51,14 @@
                         @Html.DisplayFor(modelItem => item.Article.Title)
                     </td>
 
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.Article.RateCounter)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Article.LikeCounter)
+                        </td>*@
                     <td>
-                        @Html.DisplayFor(modelItem => item.Article.RateCounter)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Article.LikeCounter)
+                        @Html.DisplayFor(modelItem => item.Article.IsPublished)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Article.IsActive)

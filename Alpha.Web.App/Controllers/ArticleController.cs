@@ -15,7 +15,7 @@ namespace Alpha.Web.App.Controllers
     public class ArticleController : BaseController
     {
         private readonly IArticleService _articleService;
-        public static int PageSize = 3;
+        
         public ArticleController(IArticleService articleService)
         {
             _articleService = articleService;
@@ -25,6 +25,8 @@ namespace Alpha.Web.App.Controllers
         public async Task<IActionResult> Show(int Id)
         {
             var result = await _articleService.FindByIdAsync(Id);
+            ViewBag.TitleHtmlMetaTag = result.TitleHtmlMetaTag;
+            ViewBag.DescriptionHtmlMetaTag = result.DescriptionHtmlMetaTag;
             return View(result);
         }
 
