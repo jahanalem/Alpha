@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
+using Alpha.Infrastructure;
 using Alpha.Services.Interfaces;
+using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +39,5 @@ namespace Alpha.Web.App.Components
             //var comments = await _commentRepository.FetchByCriteria(c => c.ArticleId == Id).ToListAsync();
             return View(comments);
         }
-
     }
 }

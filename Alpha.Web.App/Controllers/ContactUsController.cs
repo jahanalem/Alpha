@@ -28,6 +28,8 @@ namespace Alpha.Web.App.Controllers
             _contactUsService = contactUsService;
             _emailSender = emailSender;
             _configuration = config;
+            ViewBag.TitleHtmlMetaTag = "Contact Us";
+            ViewBag.DescriptionHtmlMetaTag = "You can contact me by this page.";
         }
 
         [HttpGet, AllowAnonymous]

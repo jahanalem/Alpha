@@ -15,6 +15,8 @@ namespace Alpha.Web.App.Controllers
         {
             _aboutUsService = aboutUsService;
             ViewBag.Titel = "About Us";
+            ViewBag.TitleHtmlMetaTag = "About Us";
+            ViewBag.DescriptionHtmlMetaTag = "I am a web developer.";
         }
 
         public async Task<ViewResult> AboutUs()
