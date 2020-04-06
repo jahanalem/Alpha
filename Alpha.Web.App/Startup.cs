@@ -20,19 +20,23 @@ using Alpha.Web.App.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Alpha.DataAccess.UnitOfWork;
 using Alpha.Infrastructure.Email;
+using Alpha.LoggerService;
 using Alpha.ViewModels;
 using Alpha.ViewModels.Interfaces;
 using Alpha.Web.App.CustomTokenProviders;
+using Alpha.Web.App.GlobalErrorHandling.Extensions;
 using Alpha.Web.App.Resources.Constants;
 using Alpha.Web.App.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
-
+using NLog;
+//using Microsoft.Extensions.Logging;
 
 namespace Alpha.Web.App
 {
@@ -41,6 +45,7 @@ namespace Alpha.Web.App
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
         }
 
         public IConfiguration Configuration { get; }
@@ -48,6 +53,7 @@ namespace Alpha.Web.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.ConfigureLoggerService();
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
 
@@ -83,13 +89,14 @@ namespace Alpha.Web.App
 
             services.AddTransient<IContactUsRepository, ContactUsRepository>();
             services.AddTransient<IContactUsService, ContactUsService>();
-            
+
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<ApplicationDbContext, ApplicationDbContext>();
 
             services.AddScoped<IEmailSender, EmailSender>();
 
+            services.AddSingleton<ILoggerManager, LoggerManager>();
 
             services.AddIdentity<User, Role>(opts =>
             {
@@ -142,7 +149,10 @@ namespace Alpha.Web.App
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IServiceProvider serviceProvider,
+            ILoggerManager logger)
         {
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
@@ -168,6 +178,9 @@ namespace Alpha.Web.App
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            //app.ConfigureExceptionHandler(logger);
+            app.ConfigureCustomExceptionMiddleware();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
