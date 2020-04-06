@@ -12,11 +12,24 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicons/favicon-32x32.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
     <meta name="author" content="">
     <meta name="google-signin-client_id" content="56074703213-u4qak3nim2ejjvdd23euf68e724qn4a7.apps.googleusercontent.com">
-
-    <title>Green Codes</title>
+    @if (!string.IsNullOrEmpty(ViewBag.TitleHtmlMetaTag))
+    {
+        <title>@ViewBag.TitleHtmlMetaTag.ToString()</title>
+    }
+    else
+    {
+        <title>Green Codes</title>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.DescriptionHtmlMetaTag))
+    {
+        <meta name="description" content="@ViewBag.DescriptionHtmlMetaTag.ToString()">
+    }
+    else
+    {
+        <meta name="description" content="PUT DESCRIPTION HERE!!!!!!">
+    }
     <!-- Bootstrap core CSS -->
     @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
     @*<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />*@
