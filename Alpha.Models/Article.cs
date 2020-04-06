@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Alpha.Models.Interfaces;
 
 namespace Alpha.Models
 {
-    public class Article : Entity
+    public class Article : Entity, IHtmlMetaTags
     {
         public Article()
         {
@@ -52,6 +53,10 @@ namespace Alpha.Models
         [Display(Name = "Active")]
         public virtual bool IsActive { get; set; }
 
+
+        [Display(Name = "Publish")]
+        public virtual bool IsPublished { get; set; } = true;
+
         /// <summary>
         /// IsActiveNewComment: آیا امکان گذاشتن نظر جدید وجود دارد؟
         /// </summary>
@@ -82,5 +87,12 @@ namespace Alpha.Models
         /// ArticleLikes: جدول واسط مقاله-لایک
         /// </summary>
         public virtual ISet<ArticleLike> ArticleLikes { get; set; }
+
+        [Display(Name = "Title Html Meta Tag"), StringLength(70)]
+        public virtual string TitleHtmlMetaTag { get; set; }
+
+        [Display(Name = "Description Html Meta Tag"), StringLength(300)]
+        public virtual string DescriptionHtmlMetaTag { get; set; }
+        public virtual string KeywordsHtmlMetaTag { get; set; }
     }
 }

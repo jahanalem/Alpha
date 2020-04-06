@@ -30,8 +30,7 @@ namespace Alpha.Web.App.Controllers
             GetCurrentUserInfo();
             return View();
         }
-
-
+        
         public IActionResult Error(string requestId, string timeOfError)
         {
             var t = DateTime.ParseExact(timeOfError, "yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture);

@@ -57,6 +57,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="logs\" />
     <Folder Include="Pages\" />
     <Folder Include="Utilities\" />
     <Folder Include="Views\Search\" />

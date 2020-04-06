@@ -56,12 +56,14 @@ namespace Alpha.Services
             IQueryable<Article> query;
             if (tagId != null)
             {
-                query = _articleRepository.Instance().Where(c => c.IsActive).Join(_articleTagRepository.Instance()
+                query = _articleRepository.Instance()
+                    .Where(c => c.IsActive && c.IsPublished)
+                    .Join(_articleTagRepository.Instance()
                     .Where(x => x.TagId == tagId.Value), a => a.Id, at => at.ArticleId, (a, at) => a);
             }
             else
             {
-                query = _articleRepository.Instance().Where(c => c.IsActive);
+                query = _articleRepository.Instance().Where(c => c.IsActive && c.IsPublished);
             }
 
             return query;
@@ -210,6 +212,7 @@ namespace Alpha.Services
             }
 
             pr = pr.And(a => a.IsActive);
+            pr = pr.And(a => a.IsPublished);
 
             var query = _articleRepository.Instance().AsQueryable().Where(pr).OrderByDescending(o => o.CreatedDate);
             // EF.Functions.Like(a.Title.ToLower(), $"%{searchValue}%"))
