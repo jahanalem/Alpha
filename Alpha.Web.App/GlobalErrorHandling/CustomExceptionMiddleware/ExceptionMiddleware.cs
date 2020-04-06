@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,7 +14,8 @@ namespace Alpha.Web.App.GlobalErrorHandling.CustomExceptionMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILoggerManager _logger;
-
+        private string _requestId = string.Empty;
+        private DateTime _errorTime;
         public ExceptionMiddleware(RequestDelegate next, ILoggerManager logger)
         {
             _logger = logger;
@@ -28,7 +30,9 @@ namespace Alpha.Web.App.GlobalErrorHandling.CustomExceptionMiddleware
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong: {ex}");
+                _requestId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
+                _errorTime = DateTime.Now;
+                _logger.LogError($"\n\n\n Something went wrong:\n >>> RequestId = {_requestId} \n >>> ErrorTime = {_errorTime} \n\n\n {ex}");
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
@@ -37,7 +41,7 @@ namespace Alpha.Web.App.GlobalErrorHandling.CustomExceptionMiddleware
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
+            context.Response.Redirect($"/Home/Error?requestId={_requestId}&timeOfError={_errorTime.ToString("yyyy-MM-dd_HH-mm-ss")}");
             return context.Response.WriteAsync(new ErrorDetails()
             {
                 StatusCode = context.Response.StatusCode,
