@@ -23,14 +23,27 @@ namespace Alpha.Web.App.Controllers
         public HomeController(ILoggerManager logger)
         {
             _logger = logger;
+            
         }
 
         public IActionResult Index()
         {
+            int t = 1;
+            var l = 2 /(t-1);
             GetCurrentUserInfo();
             return View();
         }
-        
+
+        public IActionResult MailSentSuccessfully()
+        {
+            return View();
+        }
+
+        public IActionResult MailSentFailed()
+        {
+            return View();
+        }
+
         public IActionResult Error(string requestId, string timeOfError)
         {
             var t = DateTime.ParseExact(timeOfError, "yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture);
