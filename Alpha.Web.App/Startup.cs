@@ -98,6 +98,8 @@ namespace Alpha.Web.App
 
             services.AddSingleton<ILoggerManager, LoggerManager>();
 
+            services.AddTransient<CurrentUserInformation>();
+
             services.AddIdentity<User, Role>(opts =>
             {
                 opts.Password.RequiredLength = 6;

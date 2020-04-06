@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Alpha.Infrastructure;
 using Alpha.Models;
 
 namespace Alpha.ViewModels
@@ -7,5 +8,7 @@ namespace Alpha.ViewModels
     {
         public List<Comment> Comments { get; set; }
         public int? ParentId { get; set; }
+
+        public CurrentUser CurrentUserInfo { get; set; }
     }
 }
