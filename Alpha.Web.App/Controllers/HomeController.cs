@@ -28,8 +28,6 @@ namespace Alpha.Web.App.Controllers
 
         public IActionResult Index()
         {
-            int t = 1;
-            var l = 2 /(t-1);
             GetCurrentUserInfo();
             return View();
         }
