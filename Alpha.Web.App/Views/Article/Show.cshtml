@@ -1,7 +1,11 @@
-﻿@model Alpha.Models.Article
+﻿@using Alpha.Web.App.Services
 
+@model Alpha.Models.Article
+
+@inject CurrentUserInformation  CurrentUserInfo
 @{
     ViewData["Title"] = "Show";
+    var currentUserInfo = CurrentUserInfo.GetCurrentUserInfo();
 }
 <div class="container-fluid">
     <div class="row">
@@ -28,24 +32,31 @@
                     @Html.Raw(Model.Description)
                 </div>
                 <blockquote class="blockquote">
-                    <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+                    <p class="mb-0"></p>
                     <footer class="blockquote-footer">
-                        Someone famous in
-                        <cite title="Source Title">Source Title</cite>
+                        <cite title="Source Title"></cite>
                     </footer>
                 </blockquote>
 
                 <hr>
             </div>
-            <!-- Comments Form -->
-            <div class="card my-4">
-                @await Html.PartialAsync("_SendComment", new Alpha.ViewModels.SendCommentViewModel
-                { Dsc = string.Empty, ArticleId = Model.Id, ParentId = null })
-            </div>
 
+            @if (currentUserInfo.IsAuthenticated)
+            {
+                <!-- Comments Form -->
+                <div class="card my-4">
+                    @await Html.PartialAsync("_SendComment", new Alpha.ViewModels.SendCommentViewModel
+                    { Dsc = string.Empty, ArticleId = Model.Id, ParentId = null })
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    Please <a asp-action="Login" asp-controller="Account">login</a> to comment.
+                </div>
+            }
             @await Component.InvokeAsync("CommentList", Model.Id)
             @*//comments*@
         </div>
     </div>
 </div>
-

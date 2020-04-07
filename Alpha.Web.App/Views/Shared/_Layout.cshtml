@@ -66,11 +66,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a asp-controller="AboutUs" asp-action="AboutUs" asp-area="" class="nav-link">About</a>
+                        <a asp-controller="Article" asp-action="Index" asp-area="" class="nav-link">Articles</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Services</a>
+                        <a asp-controller="AboutUs" asp-action="AboutUs" asp-area="" class="nav-link">About</a>
                     </li>
+
                     <li class="nav-item">
                         <a asp-controller="ContactUs" asp-action="ContactUsForm" asp-area="" class="nav-link">Contact</a>
                     </li>
@@ -109,11 +110,13 @@
     <!-- Footer -->
     <footer class="py-5 bg-dark">
         <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+            <p class="m-0 text-center text-white">
+                Made by 
+            <a class="" href="/AboutUs/AboutUs">
+                Said Roohullah Allem
+                </a>
+            </p>
         </div>
-        <a role="button" href="#">AAAAAAAAAAAAAAAA</a>
-        <input type="submit" role="button" value="IIIIIIIIII" />
-        <!-- /.container -->
     </footer>
 
     <!-- Bootstrap core JavaScript -->

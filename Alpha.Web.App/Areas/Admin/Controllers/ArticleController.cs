@@ -26,7 +26,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         private readonly IArticleTagService _articleTagService;
         private readonly ITagService _tagService;
 
-        public static int PageSize = 3;
+        
         public ArticleController(IArticleService articleService,
             IArticleTagService articleTagService,
             ITagService tagService
@@ -58,7 +58,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 Url = Url.Action(action: "Index", controller: "Article", new {area="Admin", tagId = tagId, pageNumber = pageNumber })
             });
 
-            TempData.Keep(key);
+            //TempData.Keep(key);
             return View(result);
         }
 
