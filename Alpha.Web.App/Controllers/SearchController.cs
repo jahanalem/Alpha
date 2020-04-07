@@ -24,7 +24,7 @@ namespace Alpha.Web.App.Controllers
             string searchVal = search.Trim();
            
             var searchResult = await _articleService.Search(searchVal, pageNumber);
-
+            ViewBag.SearchTerm = searchVal;
             return View(searchResult);
         }
     }

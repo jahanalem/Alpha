@@ -18,7 +18,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Alpha.Web.App.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class CommentController : BaseController
     {
         private readonly ApplicationDbContext _context;
@@ -111,64 +111,7 @@ namespace Alpha.Web.App.Controllers
                 }
             }
             return Json(new { code = 0 });
-            //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
         }
-
-        // GET: Comment/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var comment = await _context.Comments.SingleOrDefaultAsync(m => m.Id == id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
-            ViewData["ArticleId"] = new SelectList(_context.Articles, "Id", "Description", comment.ArticleId);
-            ViewData["ParentId"] = new SelectList(_context.Comments, "Id", "Id", comment.ParentId);
-            return View(comment);
-        }
-
-        // POST: Comment/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ParentId,ArticleId,UserId,Description,LikeCounter,Id,CreatedDate,ModifiedDate")] Comment comment)
-        {
-            if (id != comment.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(comment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CommentExists(comment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ArticleId"] = new SelectList(_context.Articles, "Id", "Description", comment.ArticleId);
-            ViewData["ParentId"] = new SelectList(_context.Comments, "Id", "Id", comment.ParentId);
-            return View(comment);
-        }
-
 
         #endregion
 
@@ -223,7 +166,6 @@ namespace Alpha.Web.App.Controllers
                 }
             }
             return Json(new { code = 0 });
-            //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
         }
 
         async Task RemoveChildren(int i)
@@ -237,16 +179,18 @@ namespace Alpha.Web.App.Controllers
         }
 
         #endregion
-
-
+        
         [HttpPost]
-        //[Route("Test/{des}")]
         //[ValidateAntiForgeryToken]
         public async Task<JsonResult> Save(SendCommentViewModel obj)
         {
             if (ModelState.IsValid)
             {
-                var CurrentUserInfo =GetCurrentUserInfo();
+                if (!GetCurrentUserInfo().IsAuthenticated)
+                {
+                    return Json(new { code = 0 });
+                }
+                var CurrentUserInfo = GetCurrentUserInfo();
                 var comment = new Comment
                 {
                     Description = obj.Dsc,
