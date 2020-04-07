@@ -11,7 +11,7 @@
                     @foreach (var tag in Model.Take(numberOfTags / 2))
                     {
                         <li>
-                            <a asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-articlePage="1" title="@tag.Description">@tag.Title</a>
+                            <a asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">@tag.Title</a>
                         </li>
                     }
                 </ul>
@@ -21,7 +21,7 @@
                     @foreach (var tag in Model.Skip(numberOfTags / 2).Take(remainTags))
                     {
                         <li>
-                            <a asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-articlePage="1" title="@tag.Description">@tag.Title</a>
+                            <a asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">@tag.Title</a>
                         </li>
                     }
                 </ul>
