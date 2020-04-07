@@ -194,6 +194,7 @@ namespace Alpha.Web.App
             {
                 endpoints.MapControllerRoute("areasDefault", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller}/{action}/{id?}");
+                endpoints.MapControllerRoute(name: "articleformat", pattern: "{controller=Article}/{action}/tagId/{tagId?}/pageNumber/{pageNumber}");
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{id?}");
                 //endpoints.MapAreaControllerRoute("areasDefault","Admin", "{controller=Home}/{action=Index}/{id?}");

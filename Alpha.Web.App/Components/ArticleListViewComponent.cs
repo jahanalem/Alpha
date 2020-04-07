@@ -10,6 +10,7 @@ using Alpha.ViewModels;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 
@@ -21,6 +22,7 @@ namespace Alpha.Web.App.Components
         private readonly IHttpContextAccessor _httpContextAccessor;
         private int pageNumber = 1;
         private int? tagId = null;
+        private string niceUrl = string.Empty;
         public ArticleListViewComponent(IArticleService articleService, IHttpContextAccessor httpContextAccessor)
         {
             _articleService = articleService;
@@ -30,6 +32,18 @@ namespace Alpha.Web.App.Components
             {
                 string queryString = (_httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.PageNumber]);
                 string tId = (_httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.TagId]);
+                if (queryString == null && tId == null)
+                {
+                    var routeValues = _httpContextAccessor.HttpContext.Request.RouteValues;
+                    if (routeValues["tagId"] != null)
+                    {
+                        tagId = int.Parse(routeValues["tagId"].ToString());
+                    }
+                    if (routeValues["pageNumber"] != null)
+                    {
+                        pageNumber = int.Parse(routeValues["pageNumber"].ToString());
+                    }
+                }
                 if (queryString != null)
                 {
                     Int32.TryParse(queryString, out pageNumber);
@@ -39,7 +53,7 @@ namespace Alpha.Web.App.Components
                 {
                     tagId = int.Parse(tId);
                 }
-                ViewBag.ArticlePage = pageNumber;
+                ViewBag.PageNumber = pageNumber;
             }
         }
 
@@ -52,7 +66,7 @@ namespace Alpha.Web.App.Components
             }
 
             var result = await _articleService.FilterByTagAsync(tagId, pageNumber);
-
+            var x = Url.Action(niceUrl);
             result.Pagination.Init(new Pagination
             {
                 PagingInfo = new PagingInfo
