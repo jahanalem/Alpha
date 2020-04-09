@@ -84,6 +84,7 @@ namespace Alpha.Services
                 if (itemsPerPage > 0 && pageNumber > 0)
                 {
                     return _repository.FetchByCriteria(predicate, includeProperties)
+                        .OrderByDescending(c=>c.CreatedDate)
                         .Skip((pageNumber.Value - 1) * itemsPerPage.Value).Take(itemsPerPage.Value);
                 }
             }

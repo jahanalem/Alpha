@@ -11,10 +11,12 @@ using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
 using Alpha.Web.App.Controllers;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {
@@ -25,16 +27,18 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         private readonly IArticleService _articleService;
         private readonly IArticleTagService _articleTagService;
         private readonly ITagService _tagService;
+        private IOptions<AppSettingsModel> _appSettings;
 
-        
         public ArticleController(IArticleService articleService,
             IArticleTagService articleTagService,
-            ITagService tagService
+            ITagService tagService,
+            IOptions<AppSettingsModel> appSettings
             )
         {
             _articleService = articleService;
             _articleTagService = articleTagService;
             _tagService = tagService;
+            _appSettings = appSettings;
         }
         public async Task<IActionResult> Index(int? tagId = null, int pageNumber = 1)
         {
@@ -45,17 +49,17 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
             }
 
-            var result = await _articleService.FilterByTagAsync(tagId, pageNumber);
+            var result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
 
             result.Pagination.Init(new Pagination
             {
                 PagingInfo = new PagingInfo
                 {
                     TotalItems = int.Parse(TempData[key].ToString()),
-                    ItemsPerPage = PagingInfo.DefaultItemsPerPage,
+                    ItemsPerPage = _appSettings.Value.DefaultItemsPerPage,// PagingInfo.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
-                Url = Url.Action(action: "Index", controller: "Article", new {area="Admin", tagId = tagId, pageNumber = pageNumber })
+                Url = Url.Action(action: "Index", controller: "Article", new { area = "Admin", tagId = tagId, pageNumber = pageNumber })
             });
 
             //TempData.Keep(key);

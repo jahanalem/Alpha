@@ -20,7 +20,9 @@ namespace Alpha.Web.App
                 .AddJsonFile("appsettings.json")
                 .Build();
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnection");//.GetConnectionString("DefaultConnection");
+            //string connectionString = configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value;
+
             builder.UseSqlServer(connectionString);
             return new ApplicationDbContext(builder.Options);
         }

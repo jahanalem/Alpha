@@ -15,7 +15,8 @@ using Alpha.Infrastructure.PaginationUtility;
 using Alpha.ViewModels;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Options;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {
@@ -31,16 +32,18 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         //private IUserRoleStore<UserRole> _userRoleStore;
 
         private IUserService _userService;
-
+        private IOptions<AppSettingsModel> _appSettings;
         public UsersController(UserManager<User> usrMgr,
                                 IUserValidator<User> userValid,
                                 IPasswordValidator<User> passValid,
-                                IPasswordHasher<User> passwordHash)
+                                IPasswordHasher<User> passwordHash,
+                                IOptions<AppSettingsModel> appSettings)
         {
             _userManager = usrMgr;
             _userValidator = userValid;
             _passwordValidator = passValid;
             _passwordHasher = passwordHash;
+            _appSettings = appSettings;
             //_roleManager = roleMgr;
             _userService = new UserService(this.ModelState, _userManager, _userValidator, _passwordValidator, _passwordHasher);
         }
@@ -54,7 +57,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             {
                 TempData[key] = await usersQuery.CountAsync();
             }
-            var itemsPerPage = PagingInfo.DefaultItemsPerPage;
+            var itemsPerPage = _appSettings.Value.DefaultItemsPerPage;// PagingInfo.DefaultItemsPerPage;
             result.Users = await usersQuery.OrderByDescending(c => c.Id)
                 .Skip((pageNumber - 1) * itemsPerPage)
                 .Take(itemsPerPage)

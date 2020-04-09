@@ -40,6 +40,7 @@ namespace Alpha.Infrastructure.Email
             public const string WebsiteUrl = "{{websiteUrl}}";
             public const string WebsiteName = "{{websiteName}}";
             public const string SupportUrl = "{{supportUrl}}";
+            public const string MessageBody = "{{MessageBody}}";
         }
     }
 }
