@@ -7,11 +7,13 @@ using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Services;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
 namespace Alpha.Web.App.Components
@@ -23,10 +25,14 @@ namespace Alpha.Web.App.Components
         private int pageNumber = 1;
         private int? tagId = null;
         private string niceUrl = string.Empty;
-        public ArticleListViewComponent(IArticleService articleService, IHttpContextAccessor httpContextAccessor)
+        private IOptions<AppSettingsModel> _appSettings;
+        public ArticleListViewComponent(IArticleService articleService,
+            IHttpContextAccessor httpContextAccessor,
+            IOptions<AppSettingsModel> appSettings)
         {
             _articleService = articleService;
             _httpContextAccessor = httpContextAccessor;
+            _appSettings = appSettings;
             //var result = 1;
             if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
             {
@@ -65,14 +71,14 @@ namespace Alpha.Web.App.Components
                 TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
             }
 
-            var result = await _articleService.FilterByTagAsync(tagId, pageNumber);
+            var result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
             var x = Url.Action(niceUrl);
             result.Pagination.Init(new Pagination
             {
                 PagingInfo = new PagingInfo
                 {
                     TotalItems = int.Parse(TempData[key].ToString()),
-                    ItemsPerPage = PagingInfo.DefaultItemsPerPage,
+                    ItemsPerPage = _appSettings.Value.DefaultItemsPerPage,// PagingInfo.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
                 Url = Url.Action(action: "Index", controller: "Article", new { tagId = tagId, pageNumber = pageNumber })

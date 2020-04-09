@@ -1,13 +1,21 @@
 using System;
+using System.IO;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
+using Alpha.DataAccess.UnitOfWork;
 using Alpha.Infrastructure;
 using Alpha.Models.Identity;
 using Alpha.Services;
+using Alpha.Infrastructure.Email;
+using Alpha.LoggerService;
+using Alpha.Web.App.CustomTokenProviders;
+using Alpha.Web.App.GlobalErrorHandling.Extensions;
+using Alpha.Web.App.Resources.Constants;
+using Alpha.Web.App.Services;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Alpha.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,28 +23,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Alpha.Web.App.Models;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Alpha.DataAccess.UnitOfWork;
-using Alpha.Infrastructure.Email;
-using Alpha.LoggerService;
-using Alpha.ViewModels;
-using Alpha.ViewModels.Interfaces;
-using Alpha.Web.App.CustomTokenProviders;
-using Alpha.Web.App.GlobalErrorHandling.Extensions;
-using Alpha.Web.App.Resources.Constants;
-using Alpha.Web.App.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Newtonsoft.Json;
 using NLog;
-//using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
+using Alpha.Web.App.Models;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Alpha.ViewModels;
+using Alpha.ViewModels.Interfaces;
+using Newtonsoft.Json;
+using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
 
 namespace Alpha.Web.App
 {
@@ -56,21 +57,16 @@ namespace Alpha.Web.App
             //services.ConfigureLoggerService();
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
-
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(x =>
-            {
-                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
-                var factory = x.GetRequiredService<IUrlHelperFactory>();
-                return factory.GetUrlHelper(actionContext);
-            });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 
+            #region Repositories and Services
 
-            //services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
+            services.AddScoped<ApplicationDbContext, ApplicationDbContext>();
 
             services.AddTransient<IAboutUsRepository, AboutUsRepository>();
             services.AddTransient<IAboutUsService, AboutUsService>();
@@ -90,15 +86,9 @@ namespace Alpha.Web.App
             services.AddTransient<IContactUsRepository, ContactUsRepository>();
             services.AddTransient<IContactUsService, ContactUsService>();
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            #endregion
 
-            services.AddScoped<ApplicationDbContext, ApplicationDbContext>();
-
-            services.AddScoped<IEmailSender, EmailSender>();
-
-            services.AddSingleton<ILoggerManager, LoggerManager>();
-
-            services.AddTransient<CurrentUserInformation>();
+            #region Security, Authorization, Authentication
 
             services.AddIdentity<User, Role>(opts =>
             {
@@ -148,6 +138,34 @@ namespace Alpha.Web.App
             //?? services.AddSingleton<RazorTemplateEngine, CustomTemplateEngine>();
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
+
+            #endregion
+
+            #region UrlHelper, Email, Logger, CurrenUser, 
+
+            services.AddScoped<IUrlHelper>(x =>
+            {
+                var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = x.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
+
+            services.AddScoped<IEmailSender, EmailSender>();
+
+            services.AddSingleton<ILoggerManager, LoggerManager>();
+
+            services.AddTransient<CurrentUserInformation>();
+
+            #endregion
+
+            #region appsettings.json file
+
+            services.Configure<AppSettingsModel>(Configuration.GetSection("appSettings"));
+            services.Configure<DomainAndUrlSettingsModel>(Configuration.GetSection("DomainAndUrlSettings"));
+            services.Configure<EmailConfigurationSettingsModel>(Configuration.GetSection("EmailConfigurationSettings"));
+            //EmailTemplatesSettingsModel
+            services.Configure<EmailTemplatesSettingsModel>(Configuration.GetSection("EmailTemplatesSettings"));
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
