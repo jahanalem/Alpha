@@ -7,18 +7,22 @@ using Alpha.Models;
 using Alpha.Services;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Alpha.Web.App.Controllers
 {
     public class ArticleController : BaseController
     {
         private readonly IArticleService _articleService;
-        
-        public ArticleController(IArticleService articleService)
+        private IOptions<AppSettingsModel> _appSettings;
+        public ArticleController(IArticleService articleService,
+            IOptions<AppSettingsModel> appSettings)
         {
             _articleService = articleService;
+            _appSettings = appSettings;
         }
 
         [HttpGet]
@@ -41,14 +45,14 @@ namespace Alpha.Web.App.Controllers
                 TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
             }
 
-            var result = await _articleService.FilterByTagAsync(tagId, pageNumber);
-            
+            var result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
+
             result.Pagination.Init(new Pagination
             {
                 PagingInfo = new PagingInfo
                 {
                     TotalItems = int.Parse(TempData[key].ToString()),
-                    ItemsPerPage = PagingInfo.DefaultItemsPerPage,
+                    ItemsPerPage = _appSettings.Value.DefaultItemsPerPage, //PagingInfo.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
                 Url = Url.Action(action: "Index", controller: "Article", new { tagId = tagId, pageNumber = pageNumber })
@@ -59,4 +63,3 @@ namespace Alpha.Web.App.Controllers
         }
     }
 }
-

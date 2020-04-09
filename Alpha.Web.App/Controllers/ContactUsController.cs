@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
+using Microsoft.Extensions.Options;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -21,15 +23,18 @@ namespace Alpha.Web.App.Controllers
         private IContactUsService _contactUsService;
         private IEmailSender _emailSender;
         private IConfiguration _configuration;
+        private IOptions<EmailConfigurationSettingsModel> _emailConfigurationSettings;
         public ContactUsController(IContactUsService contactUsService,
             IEmailSender emailSender,
-            IConfiguration config)
+            IConfiguration config,
+            IOptions<EmailConfigurationSettingsModel> emailConfigurationSettings)
         {
             _contactUsService = contactUsService;
             _emailSender = emailSender;
             _configuration = config;
             ViewBag.TitleHtmlMetaTag = "Contact Us";
             ViewBag.DescriptionHtmlMetaTag = "You can contact me by this page.";
+            _emailConfigurationSettings = emailConfigurationSettings;
         }
 
         [HttpGet, AllowAnonymous]
@@ -64,10 +69,10 @@ namespace Alpha.Web.App.Controllers
                     if (!string.IsNullOrEmpty(contactObject.LastName))
                         senderName = $"{senderName} {contactObject.LastName.Trim()}";
 
-                    var forwardMessageTo = _configuration.GetSection("EmailConfiguration");
-                    var sentResult = _emailSender.SendEmailAsync(forwardMessageTo["ForwardMessageTo"],
-                        contactObject.Email,
-                        contactObject.Title,
+                    var fullName = $"{contactObject.FirstName} {contactObject.LastName}";
+                    var sentResult= _emailSender.ForwardIncomingMessageToAdmin(contactObject.Email,
+                        fullName, 
+                        contactObject.Title, 
                         contactObject.Description);
 
                     if (!sentResult.IsCompletedSuccessfully)

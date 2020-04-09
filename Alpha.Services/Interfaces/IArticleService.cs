@@ -18,11 +18,11 @@ namespace Alpha.Services.Interfaces
         Task<ArticleViewModel> GetArticleById(int articleId);
 
         IQueryable<Article> FilterByTag(int? tagId);
-        Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber);
+        Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber, int items);
 
         Task<int> InsertAsync(ArticleViewModel viewModel);
         Task<List<Tag>> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList);
 
-        Task<SearchResultsViewModel> Search(string search, int pageNumber);
+        Task<SearchResultsViewModel> Search(string search, int pageNumber, int items);
     }
 }
