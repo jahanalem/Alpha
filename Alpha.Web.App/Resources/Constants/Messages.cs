@@ -7,7 +7,7 @@ namespace Alpha.Web.App.Resources.Constants
 {
     public static class Messages
     {
-        public const string SendingMessageSuccessfully = "Your message has been successfully sent.I will contact you very soon!";
+        public const string SendingMessageSuccessfully = "Your message has been sent successfully. We will contact you very soon!";
         public const string SendingMessageFailed = "Sending message failed!";
         public const string SuccessStatus = "success";
         public const string FailedStatus = "failed";

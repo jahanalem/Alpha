@@ -24,6 +24,7 @@ using Microsoft.VisualBasic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.Extensions.Options;
 
 namespace Alpha.Services
 {
@@ -35,7 +36,7 @@ namespace Alpha.Services
         private ITagRepository _tagRepository;
         private IUnitOfWork _unitOfWork;
         private IUrlHelper _urlHelper;
-
+        
         public ArticleService(IUnitOfWork uow,
             IArticleRepository articleRepository,
             IArticleTagRepository articleTagRepository,
@@ -69,9 +70,9 @@ namespace Alpha.Services
             return query;
         }
 
-        public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber)
+        public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber, int items = 10)
         {
-            var itemsPerPage = PagingInfo.DefaultItemsPerPage;
+            var itemsPerPage = items;
             var articleViewModelList = new List<ArticleViewModel>();
 
             IQueryable<Article> query = FilterByTag(tagId);
@@ -189,11 +190,11 @@ namespace Alpha.Services
             }
         }
 
-        public virtual async Task<SearchResultsViewModel> Search(string search, int pageNumber = 1)
+        public virtual async Task<SearchResultsViewModel> Search(string search, int pageNumber = 1, int itemsNum = 10)
         {
             if (string.IsNullOrEmpty(search))
                 return null;
-            int itemsPerPage = PagingInfo.DefaultItemsPerPage;
+            int itemsPerPage = itemsNum;
 
             var searchValue = search.Trim().ToLower();
 

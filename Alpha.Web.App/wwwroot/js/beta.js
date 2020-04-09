@@ -330,7 +330,7 @@ $(document).ready(function () {
             var firstNumber = $("#FirstNumber").val();
             var secondNumber = $("#SecondNumber").val();
             var captchaResult = $("#Result").val();
-            if (captchaResult !== (firstNumber + secondNumber)) {
+            if (parseInt(captchaResult) !== (parseInt(firstNumber) + parseInt(secondNumber))) {
                 var messageText = 'The sum is wrong';
                 var alertBox = '<div class="alert alert-danger ' +
                     ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +

@@ -47,6 +47,10 @@ namespace Alpha.Services
             {
                 result.LastName = obj.LastName.Trim();
             }
+            if (!string.IsNullOrEmpty(obj.Title))
+            {
+                result.Title = obj.Title.Trim();
+            }
 
             if (!string.IsNullOrEmpty(obj.Description))
             {
