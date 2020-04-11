@@ -38,6 +38,8 @@ using Alpha.ViewModels;
 using Alpha.ViewModels.Interfaces;
 using Newtonsoft.Json;
 using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
+using Alpha.Web.App.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Alpha.Web.App
 {
@@ -54,6 +56,9 @@ namespace Alpha.Web.App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureCors();
+            services.ConfigureIISIntegration();
+
             //services.ConfigureLoggerService();
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
@@ -213,6 +218,14 @@ namespace Alpha.Web.App
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+
+            app.UseCors("CorsPolicy");
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
 
             app.UseRouting();
 
