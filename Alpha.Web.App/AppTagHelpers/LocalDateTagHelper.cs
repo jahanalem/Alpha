@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Alpha.Web.App.AppTagHelpers
 {
+    // There is a function in javascript file that convert the utc to local time zone: function convertUTCDateToLocalDate(date) {}
     [HtmlTargetElement("LocalDate")]
     public class LocalDateTagHelper : TagHelper
     {
