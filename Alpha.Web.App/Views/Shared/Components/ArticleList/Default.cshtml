@@ -29,7 +29,7 @@
                         <a asp-controller="Article" asp-action="Index" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
                             @if (Model.TagId == tag.Id)
                             {
-                                <span class="badge badge-info">@tag.Title</span>
+                                <span class="badge badge-success">@tag.Title</span>
                             }
                             else
                             {
@@ -41,6 +41,7 @@
                 }
             </div>
         </div>
+        <br />
         <hr>
     }
 

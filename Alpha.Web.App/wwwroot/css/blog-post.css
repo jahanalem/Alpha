@@ -8,11 +8,7 @@ body {
     padding-top: 54px;
 }
 
-@media (min-width: 992px) {
-    body {
-        padding-top: 56px;
-    }
-}
+
 
 ul {
     list-style: none;
@@ -83,6 +79,7 @@ ul {
 .show {
     display: block;
 }
+
 .submitLink {
     background-color: transparent;
     text-decoration: none;
@@ -90,9 +87,36 @@ ul {
     color: green;
     cursor: pointer;
 }
-.submitLink:hover{
-    text-decoration:underline;
-}
+
+    .submitLink:hover {
+        text-decoration: underline;
+    }
+
 submitLink:focus {
     outline: none;
+}
+
+#tagList li{
+    padding:5px;
+}
+span .fa-tag{
+    padding-right:2px;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-top: 56px;
+    }
+}
+
+@media (max-width:355px) {
+    .homePageImageContainer {
+        margin-top: 5.1em !important;
+    }
+}
+
+@media (min-width:356px) {
+    .homePageImageContainer {
+        margin-top: 3em !important;
+    }
 }
