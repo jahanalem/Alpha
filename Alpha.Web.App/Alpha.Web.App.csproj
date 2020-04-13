@@ -62,6 +62,7 @@
     <Folder Include="Pages\" />
     <Folder Include="Utilities\" />
     <Folder Include="Views\Search\" />
+    <Folder Include="wwwroot\images\personal photos\" />
     <Folder Include="wwwroot\lib\font-awesome\css\" />
     <Folder Include="wwwroot\lib\font-awesome\fonts\" />
     <Folder Include="wwwroot\lib\font-awesome\js\" />
