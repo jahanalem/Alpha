@@ -103,6 +103,12 @@ span .fa-tag{
     padding-right:2px;
 }
 
+.roohullahPhoto{
+    display:block;
+    margin:auto;
+    margin-bottom:22px
+}
+
 @media (min-width: 992px) {
     body {
         padding-top: 56px;
