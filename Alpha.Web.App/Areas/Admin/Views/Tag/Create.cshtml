@@ -13,7 +13,7 @@
         <form asp-controller="Tag" asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Size" class="control-label"></label>
+                <label asp-for="Size" class="control-label"></label><label>(1 to 4)</label>
                 <input asp-for="Size" class="form-control" />
                 <span asp-validation-for="Size" class="text-danger"></span>
             </div>
