@@ -150,7 +150,6 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 try
                 {
                     await _articleService.InsertAsync(obj);
-                    await _articleService.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -161,7 +160,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                     }
                     else
                     {
-                        throw;
+                        return Error();
                     }
                 }
                 return RedirectToAction(nameof(Index));
