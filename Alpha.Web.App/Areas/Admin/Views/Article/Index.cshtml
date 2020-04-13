@@ -7,11 +7,11 @@
 }
 
 <h2>Articles</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 @if (Model.ArticleViewModelList.Any())
 {
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
     <table class="table">
         <thead>
             <tr>
