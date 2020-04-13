@@ -1,8 +1,8 @@
 ﻿@using Alpha.Models
 @model List<Tag>
-<h5 class="card-header">Categories</h5>
+<h5 class="card-header"><span class="fa fa-tag mr-1"> </span>Tags</h5>
 <div class="card-body">
-    <div class="row">
+    <div id="tagList" class="row">
         @{
             var numberOfTags = Model.Count();
             var remainTags = Model.Count() - numberOfTags / 2;
@@ -11,7 +11,9 @@
                     @foreach (var tag in Model.Take(numberOfTags / 2))
                     {
                         <li>
-                            <a asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">@tag.Title</a>
+                            <a class="btn btn-sm btn-success" asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
+                                <span class="fa fa-tag mr-1"> </span>@tag.Title
+                            </a>
                         </li>
                     }
                 </ul>
@@ -21,7 +23,9 @@
                     @foreach (var tag in Model.Skip(numberOfTags / 2).Take(remainTags))
                     {
                         <li>
-                            <a asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">@tag.Title</a>
+                            <a class="btn btn-sm btn-success" asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
+                                <span class="fa fa-tag mr-1"></span>@tag.Title
+                            </a>
                         </li>
                     }
                 </ul>
