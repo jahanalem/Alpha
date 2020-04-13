@@ -26,7 +26,8 @@ namespace Alpha.Services
 
         public virtual async Task<int> CreateAsync(TEntity entity)
         {
-            return await _repository.InsertAsync(entity);
+            var x = await _repository.InsertAsync(entity);
+            return await _repository.SaveChangesAsync();
         }
 
 

@@ -20,8 +20,8 @@ namespace Alpha.Services
             result.contactUs.IsActive = true;
             if (result.isValid)
             {
-                var newId = CreateAsync(result.contactUs);
-                var x = await SaveChangesAsync();
+                await CreateAsync(result.contactUs);
+                //var x = await SaveChangesAsync();
                 return true;
             }
 
