@@ -36,7 +36,7 @@ namespace Alpha.Services
         private ITagRepository _tagRepository;
         private IUnitOfWork _unitOfWork;
         private IUrlHelper _urlHelper;
-        
+
         public ArticleService(IUnitOfWork uow,
             IArticleRepository articleRepository,
             IArticleTagRepository articleTagRepository,
@@ -60,7 +60,8 @@ namespace Alpha.Services
                 query = _articleRepository.Instance()
                     .Where(c => c.IsActive && c.IsPublished)
                     .Join(_articleTagRepository.Instance()
-                    .Where(x => x.TagId == tagId.Value), a => a.Id, at => at.ArticleId, (a, at) => a);
+                    .Where(x => x.TagId == tagId.Value), a => a.Id, at => at.ArticleId, (a, at) => a)
+                    .Distinct();
             }
             else
             {
@@ -163,26 +164,54 @@ namespace Alpha.Services
         /// <returns>It returns Id from new Article. If operation was not successfully it returns -1.</returns>
         public virtual async Task<int> InsertAsync(ArticleViewModel viewModel)
         {
+            var oldTags = await _articleTagRepository
+                .FetchByCriteria(c => c.ArticleId == viewModel.Article.Id)
+                .Select(t => t.Tag)
+                .ToListAsync();
+
+            var newTags = viewModel.AllTags.Where(c => c.IsActive).ToList();
+            List<Tag> addedList = new List<Tag>();
+            List<Tag> deletedList = new List<Tag>();
+            bool isDeletedTag = true;
+            foreach (var ot in oldTags)
+            {
+                isDeletedTag = true;
+                foreach (var nt in newTags)
+                {
+                    if (ot.Id == nt.Id)
+                    {
+                        isDeletedTag = false;
+                        newTags.Remove(nt);
+                        break;
+                    }
+                }
+                if (isDeletedTag)
+                {
+                    deletedList.Add(ot);
+                }
+            }
+            addedList = newTags;
             using (var transaction = _unitOfWork.BeginTransactionAsync())
             {
                 try
                 {
                     var articleId = await _unitOfWork.Article.AddOrUpdateAsync(viewModel.Article);
-                    if (viewModel.AllTags != null)
-                        foreach (var tag in viewModel.AllTags.Where(t => t.IsActive == true))
-                        {
-                            var at = new ArticleTag()
-                            {
-                                ArticleId = articleId,
-                                TagId = tag.Id
-                            };
-                            await _unitOfWork.ArticleTag.AddOrUpdateAsync(at);
-                        }
+
+                    foreach (var tag in deletedList)
+                    {
+                        await _unitOfWork.ArticleTag.Remove(c => c.ArticleId == articleId && c.TagId == tag.Id);
+                    }
+                    foreach (var tag in addedList)
+                    {
+                        var addArticleTag = new ArticleTag() { ArticleId = articleId, TagId = tag.Id };
+                        await _unitOfWork.ArticleTag.InsertAsync(addArticleTag);
+                    }
+                    await _unitOfWork.ArticleTag.SaveChangesAsync();
 
                     await transaction.Result.CommitAsync();
                     return articleId;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     await transaction.Result.RollbackAsync();
                     return -1;

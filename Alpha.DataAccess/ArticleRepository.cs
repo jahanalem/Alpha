@@ -16,10 +16,5 @@ namespace Alpha.DataAccess
         {
             _context = context;
         }
-
-        public void Test()
-        {
-
-        }
     }
 }

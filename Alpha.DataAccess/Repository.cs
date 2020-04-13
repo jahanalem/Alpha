@@ -35,13 +35,15 @@ namespace Alpha.DataAccess
         }
         #region Insert
 
-        public virtual async Task<int> InsertAsync(TEntity entity)
+        public virtual async Task<EntityState> InsertAsync(TEntity entity)
         {
             if (!entity.CreatedDate.HasValue)
                 entity.CreatedDate = DateTime.UtcNow;
-            dynamic obj = await entities.AddAsync(entity);
-            //SaveChangeAsync();
-            return obj.Id;
+            await entities.AddAsync(entity);
+            context.Entry(entity).State = EntityState.Added;
+            //await context.SaveChangesAsync();
+            //context.Entry(entity).Entity.Id
+            return EntityState.Added;
         }
 
         #endregion
@@ -64,6 +66,19 @@ namespace Alpha.DataAccess
             Remove(x);
         }
 
+        public virtual async Task RemoveWhile(Expression<Func<TEntity, bool>> predicate)
+        {
+            var candidates = await FetchByCriteria(predicate).ToListAsync();
+            foreach (var item in candidates)
+            {
+                Remove(item);
+            }
+        }
+        public virtual async Task Remove(Expression<Func<TEntity, bool>> predicate)
+        {
+            var item = await FetchByCriteria(predicate).SingleOrDefaultAsync();
+            Remove(item);
+        }
         #endregion
 
         #region Update
@@ -75,7 +90,8 @@ namespace Alpha.DataAccess
             entities.Update(entity);
         }
 
-        public virtual void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        public virtual void UpdatePartial(TEntity entity,
+            params Expression<Func<TEntity, object>>[] properties)
         {
             if (properties != null)
             {
@@ -93,6 +109,13 @@ namespace Alpha.DataAccess
         public virtual async Task<int> AddOrUpdateAsync(TEntity entity)
         {
             context.Entry(entity).State = entities.AddOrUpdate(entity);
+            await context.SaveChangesAsync();
+            return context.Entry(entity).Entity.Id;
+        }
+        public virtual async Task<int> AddOrUpdateAsync(TEntity entity,
+            Expression<Func<TEntity, bool>> predicate)
+        {
+            context.Entry(entity).State = entities.AddOrUpdate(entity, predicate);
             await context.SaveChangesAsync();
             return context.Entry(entity).Entity.Id;
         }
