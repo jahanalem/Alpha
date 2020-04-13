@@ -60,8 +60,7 @@ namespace Alpha.Services
                 query = _articleRepository.Instance()
                     .Where(c => c.IsActive && c.IsPublished)
                     .Join(_articleTagRepository.Instance()
-                    .Where(x => x.TagId == tagId.Value), a => a.Id, at => at.ArticleId, (a, at) => a)
-                    .Distinct();
+                    .Where(x => x.TagId == tagId.Value), a => a.Id, at => at.ArticleId, (a, at) => a);
             }
             else
             {
@@ -214,7 +213,7 @@ namespace Alpha.Services
                 catch (Exception ex)
                 {
                     await transaction.Result.RollbackAsync();
-                    return -1;
+                    throw new Exception(ex.Message);
                 }
             }
         }
