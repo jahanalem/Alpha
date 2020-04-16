@@ -152,29 +152,25 @@ span .fa-tag {
 }
 
     .about-title p {
-        color: #7a7a7a;
         line-height: 1.8;
         margin: 0 0 15px;
     }
 
+.about-icons div {
+    margin: 1rem;
+}
 
 /* Social Icons */
 .about-icons {
-    margin: 48px 0px 48px 0px;
 }
 
     .about-icons i {
-        margin-right: 10px;
-        padding: 0px;
         font-size: 35px;
         color: #323232;
         box-shadow: 0 0 3px rgba(0, 0, 0, .2);
     }
 
     .about-icons li {
-        margin: 0px;
-        padding: 0;
-        display: inline-block;
     }
 
 #social-linkedin:hover {
@@ -209,8 +205,9 @@ span .fa-tag {
 .greenCodesText {
     color: #28A745;
 }
-.fa .fa-search{
-    color:green;
+
+.fa .fa-search {
+    color: green;
 }
 /* default styles here for older browsers. 
        I tend to go for a 600px - 960px width max but using percentages
@@ -227,11 +224,32 @@ span .fa-tag {
     /* for sumo sized (mac) screens */
 }
 
-@media screen and (min-width:360px) and (max-width:414px){
+@media screen and (min-width:360px) and (max-width:414px) {
     #aboutUsContainer {
         margin-top: 4rem;
     }
+
+        #aboutUsContainer h1 {
+            font-size: 2.1rem;
+        }
+
+        #aboutUsContainer ul {
+            padding-left: 80px;
+        }
+
+    #loginContainer {
+        margin-top: 3rem;
+    }
+
+    #articlesContainer {
+        margin-top: 3rem;
+    }
+
+        #articlesContainer h3 {
+            font-size: 1.3rem;
+        }
 }
+
 @media only screen and (max-device-width: 359px) {
     /* styles for mobile browsers smaller than 480px; (iPhone) */
     .homePageImageContainer {
@@ -242,7 +260,7 @@ span .fa-tag {
     }
 
     #contactUsFormContainer {
-        margin-top:3rem;
+        margin-top: 3rem;
     }
 
     #aboutUsContainer {
@@ -252,6 +270,7 @@ span .fa-tag {
         #aboutUsContainer h1 {
             font-size: 1.8rem;
         }
+
         #aboutUsContainer h3 {
             font-size: 1.25rem;
         }
@@ -259,9 +278,11 @@ span .fa-tag {
     #articlesContainer {
         margin-top: 6rem;
     }
-    #articlesContainer h3 {
-        font-size:1rem;
-    }
+
+        #articlesContainer h3 {
+            font-size: 1rem;
+        }
+
     #loginContainer {
         margin-top: 6em;
     }
