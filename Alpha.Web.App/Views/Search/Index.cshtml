@@ -9,7 +9,7 @@
 }
 
 
-@if (Model.Articles.Any())
+@if (Model != null && Model.Articles.Any())
 {
     <div class="col-md-12">
         @foreach (var instance in Model.Articles)
