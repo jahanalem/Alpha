@@ -46,13 +46,15 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">Green Codes</a>
+            <a class="navbar-brand text-success" asp-controller="Home" >Green Codes</a>
             <form asp-controller="Search" asp-action="Index" class="form-inline" role="search">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="search">
-                    <div class="input-group-btn">
-                        <button class="btn btn-secondary" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                    </div>
+                    <input type="search" class="form-control" placeholder="Search" name="search">
+                    <span class="input-group-append">
+                        <button class="btn btn-outline-secondary border border-left-0" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
                 </div>
             </form>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,7 +72,7 @@
                         <a asp-controller="Article" asp-action="Index" asp-area="" class="nav-link">Articles</a>
                     </li>
                     <li class="nav-item">
-                        <a asp-controller="AboutUs" asp-action="AboutUs" asp-area="" class="nav-link">About</a>
+                        <a asp-controller="AboutUs" asp-action="Index" asp-area="" class="nav-link">About</a>
                     </li>
 
                     <li class="nav-item">
@@ -101,9 +103,10 @@
     </nav>
 
     <!-- Page Content -->
-    <div class="container" style="min-height:450px">
-
-        @RenderBody()
+    <div  id="containerLoader" class="container" style="min-height:450px">
+       
+            @RenderBody()
+       
         <!-- /.row -->
 
     </div>
@@ -112,9 +115,9 @@
     <footer class="py-5 bg-dark">
         <div class="container">
             <p class="m-0 text-center text-white">
-                Developed by 
-            <a class="" href="/AboutUs/AboutUs">
-                Said Roohullah Allem
+                Developed by
+                <a class="" href="/AboutUs/AboutUs">
+                    Said Roohullah Allem
                 </a>
             </p>
         </div>

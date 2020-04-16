@@ -6,37 +6,18 @@
     ViewData["Title"] = "ContactUsForm";
 }
 <style type="text/css">
-    h1 {
-        margin-bottom: 40px;
-    }
-
-    label {
-        color: #333;
-    }
-
-    .btn-send {
-        font-weight: 300;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        margin-bottom: 20px;
-    }
-
-    .help-block.with-errors {
-        color: #ff5050;
-        margin-top: 5px;
-    }
+ 
 </style>
 
-<div class="row">
+<div id="contactUsFormContainer" class="row">
 
     <div class="col-xl-8 offset-xl-2 py-5">
 
         <h1>
             Contact Us
-            <a href="http://alpha.com">alpha.com</a>
         </h1>
 
-        <p class="lead">If you have a question, Please send us a message and we will respond as soon as possible. We would love to hear from you. </p>
+        <p class="lead">If you have a question, please send us a message and we will respond as soon as possible. We would love to hear from you. </p>
 
 
         <form id="contact-form" asp-controller="ContactUs" asp-action="ContactUsForm" method="post">

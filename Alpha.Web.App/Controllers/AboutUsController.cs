@@ -19,7 +19,7 @@ namespace Alpha.Web.App.Controllers
             ViewBag.DescriptionHtmlMetaTag = "I am a web developer.";
         }
 
-        public async Task<ViewResult> AboutUs()
+        public async Task<ViewResult> Index()
         {
             var result =await _aboutUsService.GetByCriteria(null, null).FirstOrDefaultAsync();
             return View(result);
