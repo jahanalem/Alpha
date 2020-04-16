@@ -8,11 +8,11 @@
     ViewBag.Title = "title";
 }
 
-<div class="col-md-12">
+<div id="articlesContainer" class="col-md-12">
     @foreach (var instance in Model.ArticleViewModelList)
     {
         <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id">
-            <h1>@instance.Article.Title</h1>
+            <h3>@instance.Article.Title</h3>
         </a>
 
         <p>
