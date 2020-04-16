@@ -33,6 +33,18 @@ function convertUTCDateToLocalDate(date) {
 }
 
 $(document).ready(function () {
+    $("#searchForm").submit(function (event) {
+        var searchTerm = $("#searchBox").val();
+        if (searchTerm.trim().length > 0) {
+            return;
+        }
+
+        alert("You must enter some characters.");
+        event.preventDefault();
+    });
+});
+
+$(document).ready(function () {
 
     var key = $(".mytime").each(function (i, obj) {
         var element = $(this); // <div> or <span> element. 
