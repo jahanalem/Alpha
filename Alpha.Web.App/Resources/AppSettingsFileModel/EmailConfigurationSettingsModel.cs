@@ -17,5 +17,6 @@ namespace Alpha.Web.App.Resources.AppSettingsFileModel
         public string SMTPPassword { get; set; }
         public string SMTPDomain { get; set; }
         public string ForwardMessageTo { get; set; }
+        public string SupportTeamEmail { get; set; }
     }
 }
