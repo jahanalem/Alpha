@@ -78,7 +78,7 @@ namespace Alpha.Web.App.Controllers
                     if (!sentResult.IsCompletedSuccessfully)
                     {
                         // Sending operation is failed!
-                        //TODO
+                        //TODO:
                     }
                     return Json(new
                     {

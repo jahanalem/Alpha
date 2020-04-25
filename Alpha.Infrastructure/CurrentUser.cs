@@ -16,5 +16,7 @@
         public bool IsInRoleOfAdmins { get; set; }
 
         public string UserIp { get; set; }
+
+        public string Email { get; set; }
     }
 }

@@ -41,6 +41,7 @@ namespace Alpha.Web.App.Controllers
                 IsAuthenticated = HttpContext.User.Identity.IsAuthenticated,
                 AuthenticationType = HttpContext.User.Identity.AuthenticationType,
                 UserName = HttpContext.User.Identity.Name,
+                Email = HttpContext.User.FindFirstValue(ClaimTypes.Email),
                 UserId = userId,// var userId = _userManager.GetUserId(HttpContext.User);
                 IsInRoleOfUsers = HttpContext.User.IsInRole(RoleTypes.Users),
                 IsInRoleOfAdmins = HttpContext.User.IsInRole(RoleTypes.Admins),

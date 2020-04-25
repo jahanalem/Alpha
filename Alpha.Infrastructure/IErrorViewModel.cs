@@ -1,9 +1,11 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace Alpha.Web.App.Models
+namespace Alpha.Infrastructure
 {
-    public class ErrorViewModel : Alpha.Infrastructure.IErrorViewModel
+    public interface IErrorViewModel
     {
         public string RequestId { get; set; }
 
