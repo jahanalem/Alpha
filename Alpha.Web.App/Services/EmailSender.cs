@@ -4,8 +4,10 @@ using System.Net;
 using System.Net.Mail;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Alpha.Infrastructure;
 using Alpha.Infrastructure.Email;
 using Alpha.Web.App.Helpers;
+using Alpha.Web.App.Models;
 using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
 using Microsoft.AspNetCore.Hosting;
@@ -83,7 +85,7 @@ namespace Alpha.Web.App.Services
                 activationLink,
                 EmailTemplatesSettings.EmailConfirmation.Subject);
         }
-        public Task ForwardIncomingMessageToAdmin(string email, string senderName,string emailSubject, string message)
+        public Task ForwardIncomingMessageToAdmin(string email, string senderName, string emailSubject, string message)
         {
             var forwardMessageTo = _emailConfigurationSettings.Value.ForwardMessageTo;
             string messageBody = EmailHelper.GetEmailTemplate(_environment,
@@ -143,6 +145,23 @@ namespace Alpha.Web.App.Services
             return SendEmailAsync(emailAddress,
                 senderProvider,
                 emailSubject,
+                messageBody);
+        }
+
+        public Task SendErrorMessageToSupportTeam(IErrorViewModel errorModel)
+        {
+            var forwardMessageTo = _emailConfigurationSettings.Value.SupportTeamEmail;
+            string messageBody = EmailHelper.GetEmailTemplate(_environment,
+                _emailTemplatesSettings.Value.ErrorMessage.HtmlTemplateName);
+            messageBody = messageBody.Replace(EmailTemplatesSettings.ReplaceToken.UserEmail, errorModel.ReporterEmail)
+                .Replace(EmailTemplatesSettings.ReplaceToken.RequestId, errorModel.RequestId)
+                .Replace(EmailTemplatesSettings.ReplaceToken.TimeOfError, errorModel.TimeOfError.ToLongDateString());
+
+            var senderProvider = _emailConfigurationSettings.Value.From;
+
+            return SendEmailAsync(forwardMessageTo,
+                senderProvider,
+                EmailTemplatesSettings.SendErrorMessage.Subject,
                 messageBody);
         }
     }

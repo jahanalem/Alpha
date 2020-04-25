@@ -11,5 +11,7 @@ namespace Alpha.Infrastructure.Email
         Task SendEmailConfirmationLink(string activationLink, string userName, string emailAddress);
 
         Task ForwardIncomingMessageToAdmin(string email, string senderName, string emailSubject, string message);
+
+        Task SendErrorMessageToSupportTeam(IErrorViewModel errorModel);
     }
 }

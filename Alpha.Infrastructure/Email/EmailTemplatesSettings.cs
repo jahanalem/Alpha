@@ -27,6 +27,11 @@ namespace Alpha.Infrastructure.Email
             public const string HtmlTemplateName = "Confirm_Email.html";
         }
 
+        public static class SendErrorMessage
+        {
+            public const string Subject = "Report Error:{{RequestId}}";
+        }
+
         public static class ReplaceToken
         {
             public const string ImagesUrl = "{{imagesUrl}}";
