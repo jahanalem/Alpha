@@ -33,7 +33,7 @@ namespace Alpha.Services
                      from u in cu.DefaultIfEmpty()
                      where c.ArticleId == articleId
                      select new { Comment = c, PublicUserName = u.UserName };
-            var queryResults = await q0.ToListAsync();
+            var queryResults = await q0.OrderByDescending(t => t.Comment.CreatedDate).ToListAsync();
             foreach (var r in queryResults)
             {
                 r.Comment.PublicUserName = r.PublicUserName ?? "Anonymous";
