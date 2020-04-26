@@ -32,7 +32,7 @@ namespace Alpha.Services
                      join u in _dbContext.Users on c.UserId equals u.Id into cu
                      from u in cu.DefaultIfEmpty()
                      where c.ArticleId == articleId
-                     select new { Comment = c, PublicUserName = u.UserName };
+                     select new { Comment = c, PublicUserName = u.DisplayName };
             var queryResults = await q0.OrderByDescending(t => t.Comment.CreatedDate).ToListAsync();
             foreach (var r in queryResults)
             {
