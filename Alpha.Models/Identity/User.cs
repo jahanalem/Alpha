@@ -11,9 +11,11 @@ namespace Alpha.Models.Identity
     public class User : IdentityUser<int>
     {
         [StringLength(450)]
+        [Required]
         public string FirstName { get; set; }
 
         [StringLength(450)]
+        [Required]
         public string LastName { get; set; }
 
         [NotMapped]
