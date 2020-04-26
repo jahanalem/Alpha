@@ -35,7 +35,7 @@ namespace Alpha.Web.App.Controllers
         {
             var query = _context.Comments
                 .Include(c => c.Article)
-                .Include(c => c.Parent);
+                .Include(c => c.Parent).OrderByDescending(t => t.CreatedDate);
             List<Comment> result = await query.ToListAsync();
             return View(result);
         }
@@ -179,7 +179,7 @@ namespace Alpha.Web.App.Controllers
         }
 
         #endregion
-        
+
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<JsonResult> Save(SendCommentViewModel obj)

@@ -279,7 +279,10 @@ namespace Alpha.Web.App.Controllers
             {
                 return RedirectToAction(nameof(Login));
             }
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, 
+                info.ProviderKey, 
+                false);
+
             if (result.Succeeded)
             {
                 return Redirect(returnUrl);
@@ -289,11 +292,15 @@ namespace Alpha.Web.App.Controllers
                 User user = new User
                 {
                     Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
+                    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
+                    EmailConfirmed = true,
+                    IpAddress = GetClientIpAddress()
                 };
+
                 IdentityResult identResult = await _userManager.CreateAsync(user);
                 if (identResult.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, PolicyTypes.OrdinaryUsers);
                     identResult = await _userManager.AddLoginAsync(user, info);
                     if (identResult.Succeeded)
                     {

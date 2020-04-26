@@ -64,14 +64,14 @@ ul {
 
 
 
-.media-left, .media-right, .media-body {
+/*.media-left, .media-right, .media-body {
     display: table-cell;
     vertical-align: top;
-}
+}*/
 
-.media-left, .media > .pull-left {
+/*.media-left, .media > .pull-left {
     padding-right: 10px;
-}
+}*/
 
 .hidden {
     display: none;
