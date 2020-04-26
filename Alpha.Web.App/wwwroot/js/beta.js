@@ -69,7 +69,7 @@ $(document).on("click", "input[id^='editC_']", function (event) {
     var test = copyOfComment.clone().appendTo(jQuery.validator.format("#collapse_{0}", commentId)).addClass("hidden");
 
     var text = $(targetId)[0].innerText;
-    $(targetId).replaceWith(jQuery.validator.format("<textarea id='textarea_{0}_{1}'>", commentId, articleId) + text + "</textarea>");
+    $(targetId).replaceWith(jQuery.validator.format("<textarea  style='width: 100%' id='textarea_{0}_{1}'>", commentId, articleId) + text + "</textarea>");
     var copyOfEditButton = $("#" + clickedId);
     var cancelBtn = $("#" + clickedId).replaceWith(jQuery.validator.format("<input id='cancelEdit_{0}_{1}'type='submit' class='submitLink' value='cancel'/>", commentId, articleId));
 
@@ -166,7 +166,9 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
     var id = submitCommentId.split("_")[1];
     var commentTextId = jQuery.validator.format('#commentText_{0}', id);
     var formData = new FormData();
-    var newMessage = $(commentTextId).val();
+    var newMessage = $(commentTextId).val().trim();
+    if (newMessage === "")
+        return;
     var currentArticleId = $("#CurrentArticleId").val();
     formData.append("Dsc", newMessage);
     formData.append("ArticleId", currentArticleId);
@@ -196,7 +198,7 @@ $(document).on("click", "input[id^='submitComment_']", function (event) {
             else {
                 var newCommentTemplate = '<div class="media mt-3 w-100" id="commentNode_{{ID}}">' +
                     '<a class="pr-0" href = "#" >' +
-                    '<img class="mr-3" src="/images/comment1.png" alt="x">' +
+                    '<i class="fa fa-comment fa-2x mr-1"></i>' +
                     '</a>' +
                     '<div class="media-body w-100">' +
                     '<h5 class="mt-0 mb-1">{{USER}}</h5>' +
@@ -256,7 +258,8 @@ $(document).on("click", "a[id^='replyC_']", function (event) {
                             name: 'Dsc',
                             placeholder: 'your comment',
                             type: 'text',
-                            row: '3'
+                            row: '5',
+                            styleSheets:'width:100%'
                         }),
                     $('<input/>', { type: 'hidden', name: 'CurrentArticleId', id: 'CurrentArticleId', value: articleId }),
                     $('<input/>', { type: 'hidden', name: 'CurrentParentId', id: 'CurrentParentId', value: commentId }),

@@ -61,6 +61,7 @@ namespace Alpha.Web.App
 
             //services.ConfigureLoggerService();
             services.AddControllersWithViews();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
