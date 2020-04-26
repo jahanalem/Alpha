@@ -62,7 +62,7 @@ namespace Alpha.Web.App
 
             //services.ConfigureLoggerService();
             services.AddControllersWithViews();
-            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddRazorPages();//.AddRazorRuntimeCompilation();
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
@@ -141,7 +141,7 @@ namespace Alpha.Web.App
                 opts.Events.OnCreatingTicket = ctx =>
                 {
                     List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
-                    
+
                     tokens.Add(new AuthenticationToken()
                     {
                         Name = "TicketCreated",
