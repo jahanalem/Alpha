@@ -27,19 +27,20 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NLog;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
+using Alpha.Web.App.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Http;
 using Alpha.Web.App.Models;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Alpha.ViewModels;
 using Alpha.ViewModels.Interfaces;
 using Newtonsoft.Json;
-using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
-using Alpha.Web.App.Extensions;
-using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Alpha.Web.App
 {
@@ -131,10 +132,39 @@ namespace Alpha.Web.App
             {
                 opts.ClientId = "56074703213-u4qak3nim2ejjvdd23euf68e724qn4a7.apps.googleusercontent.com";
                 opts.ClientSecret = "NDEmt2-XKC30D09lvll4XrW6";
+
+                opts.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+                opts.ClaimActions.MapJsonKey("urn:google:locale", "locale", "string");
+
+                opts.SaveTokens = true;
+
+                opts.Events.OnCreatingTicket = ctx =>
+                {
+                    List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
+                    
+                    tokens.Add(new AuthenticationToken()
+                    {
+                        Name = "TicketCreated",
+                        Value = DateTime.UtcNow.ToString()
+                    });
+
+                    ctx.Properties.StoreTokens(tokens);
+
+                    return Task.CompletedTask;
+                };
+
             }).AddFacebook(opts =>
             {
                 opts.AppId = "520361115549717";
                 opts.AppSecret = "32fb5d66afb9042b900c69a5c65d5474";
+
+                opts.Events = new Microsoft.AspNetCore.Authentication.OAuth.OAuthEvents
+                {
+                    OnCreatingTicket = context =>
+                    {
+                        return Task.CompletedTask;
+                    }
+                };
             });
             //    .AddTwitter(opts =>
             //{

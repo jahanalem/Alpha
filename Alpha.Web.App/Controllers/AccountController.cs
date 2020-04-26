@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.InteropServices.ComTypes;
-using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Alpha.Models.Identity;
-using Alpha.ViewModels;
 using Alpha.Web.App.Helpers;
-using Alpha.Web.App.Resources.Constants;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System;
 using Alpha.Infrastructure.Email;
-using Microsoft.Extensions.Configuration;
+using Alpha.Models.Identity;
+using Alpha.ViewModels;
 using Alpha.Web.App.Extensions;
+using Alpha.Web.App.Resources.Constants;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -279,12 +280,15 @@ namespace Alpha.Web.App.Controllers
             {
                 return RedirectToAction(nameof(Login));
             }
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, 
-                info.ProviderKey, 
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey,
                 false);
 
             if (result.Succeeded)
             {
+                var picture = info.Principal.FindFirstValue("urn:google:picture");
+                var locale = info.Principal.FindFirstValue("urn:google:locale");
+
                 return Redirect(returnUrl);
             }
             else
@@ -294,7 +298,9 @@ namespace Alpha.Web.App.Controllers
                     Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
                     UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
                     EmailConfirmed = true,
-                    IpAddress = GetClientIpAddress()
+                    IpAddress = GetClientIpAddress(),
+                    FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname)
                 };
 
                 IdentityResult identResult = await _userManager.CreateAsync(user);
@@ -304,8 +310,36 @@ namespace Alpha.Web.App.Controllers
                     identResult = await _userManager.AddLoginAsync(user, info);
                     if (identResult.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, false);
-                        return Redirect(returnUrl);
+                        // If they exist, add claims to the user for:
+                        //    Given (first) name
+                        //    Locale
+                        //    Picture
+                        if (info.Principal.HasClaim(c => c.Type == ClaimTypes.GivenName))
+                        {
+                            await _userManager.AddClaimAsync(user,
+                                info.Principal.FindFirst(ClaimTypes.GivenName));
+                        }
+
+                        if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
+                        {
+                            await _userManager.AddClaimAsync(user,
+                                info.Principal.FindFirst("urn:google:locale"));
+                        }
+
+                        if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
+                        {
+                            await _userManager.AddClaimAsync(user,
+                                info.Principal.FindFirst("urn:google:picture"));
+                        }
+
+                        // Include the access token in the properties
+                        var props = new AuthenticationProperties();
+                        props.StoreTokens(info.AuthenticationTokens);
+                        props.IsPersistent = true;
+
+                        await _signInManager.SignInAsync(user, props);
+
+                        return LocalRedirect(returnUrl);
                     }
                 }
                 return AccessDenied();
@@ -344,7 +378,11 @@ namespace Alpha.Web.App.Controllers
                 {
                     Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
                     UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                    IsActive = true
+                    IsActive = true,
+                    EmailConfirmed = true,
+                    IpAddress = GetClientIpAddress(),
+                    FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
+                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname)
                 };
 
                 var email = info.Principal.FindFirst(ClaimTypes.Email).Value;
@@ -364,8 +402,13 @@ namespace Alpha.Web.App.Controllers
                     identResult = await _userManager.AddLoginAsync(user, info);
                     if (identResult.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, false);
-                        return Redirect(returnUrl);
+                        // Include the access token in the properties
+                        var props = new AuthenticationProperties();
+                        props.StoreTokens(info.AuthenticationTokens);
+                        props.IsPersistent = true;
+
+                        await _signInManager.SignInAsync(user, props);
+                        return LocalRedirect(returnUrl);
                     }
                 }
                 return AccessDenied();
