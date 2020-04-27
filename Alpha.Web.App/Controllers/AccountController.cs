@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Alpha.Infrastructure;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -267,83 +268,9 @@ namespace Alpha.Web.App.Controllers
         [AllowAnonymous]
         public IActionResult GoogleLogin(string returnUrl)
         {
-            string redirectUrl = Url.Action("GoogleResponse", "Account", new { ReturnUrl = returnUrl });
+            string redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
             return new ChallengeResult("Google", properties);
-        }
-
-        [AllowAnonymous]
-        public async Task<IActionResult> GoogleResponse(string returnUrl = "/")
-        {
-            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
-                info.ProviderKey,
-                false);
-
-            if (result.Succeeded)
-            {
-                var picture = info.Principal.FindFirstValue("urn:google:picture");
-                var locale = info.Principal.FindFirstValue("urn:google:locale");
-
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                User user = new User
-                {
-                    Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                    UserName = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                    EmailConfirmed = true,
-                    IpAddress = GetClientIpAddress(),
-                    FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname)
-                };
-
-                IdentityResult identResult = await _userManager.CreateAsync(user);
-                if (identResult.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(user, PolicyTypes.OrdinaryUsers);
-                    identResult = await _userManager.AddLoginAsync(user, info);
-                    if (identResult.Succeeded)
-                    {
-                        // If they exist, add claims to the user for:
-                        //    Given (first) name
-                        //    Locale
-                        //    Picture
-                        if (info.Principal.HasClaim(c => c.Type == ClaimTypes.GivenName))
-                        {
-                            await _userManager.AddClaimAsync(user,
-                                info.Principal.FindFirst(ClaimTypes.GivenName));
-                        }
-
-                        if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
-                        {
-                            await _userManager.AddClaimAsync(user,
-                                info.Principal.FindFirst("urn:google:locale"));
-                        }
-
-                        if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
-                        {
-                            await _userManager.AddClaimAsync(user,
-                                info.Principal.FindFirst("urn:google:picture"));
-                        }
-
-                        // Include the access token in the properties
-                        var props = new AuthenticationProperties();
-                        props.StoreTokens(info.AuthenticationTokens);
-                        props.IsPersistent = true;
-
-                        await _signInManager.SignInAsync(user, props);
-
-                        return LocalRedirect(returnUrl);
-                    }
-                }
-                return AccessDenied();
-            }
         }
 
         #endregion
@@ -353,27 +280,32 @@ namespace Alpha.Web.App.Controllers
         [AllowAnonymous]
         public IActionResult FacebookLogin(string returnUrl)
         {
-            string redirectUrl = Url.Action("FacebookResponse", "Account", new { ReturnUrl = returnUrl });
+            string redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties("Facebook", redirectUrl);
+
             return new ChallengeResult("Facebook", properties);
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> FacebookResponse(string returnUrl = "/")
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "/")
         {
             ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
-            {
                 return RedirectToAction(nameof(Login));
-            }
 
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
-            if (result.Succeeded)
-            {
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+            if (signInResult.Succeeded)
                 return Redirect(returnUrl);
-            }
             else
             {
+                var email = info.Principal.FindFirst(ClaimTypes.Email).Value;
+                if (await _userManager.FindByEmailAsync(email) != null)
+                {
+                    // The user has already registered through filling out the sign up form.
+                    // It means the user can login but without using third-party authentication.
+                    TempData["SpecialMessage"] = $"There is already {email} in the database.";
+                    return RedirectToAction("Login");
+                }
                 User user = new User
                 {
                     Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
@@ -382,26 +314,27 @@ namespace Alpha.Web.App.Controllers
                     EmailConfirmed = true,
                     IpAddress = GetClientIpAddress(),
                     FirstName = info.Principal.FindFirstValue(ClaimTypes.GivenName),
-                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname)
+                    LastName = info.Principal.FindFirstValue(ClaimTypes.Surname),
+                    LoginProvider = info.LoginProvider
                 };
-
-                var email = info.Principal.FindFirst(ClaimTypes.Email).Value;
-                var alreadyUser = await _userManager.FindByEmailAsync(email);
-                if (alreadyUser != null)
-                {
-                    // The user has already registered through filling out the sign up form.
-                    // It means the user can login but without using third-party authentication.
-                    TempData["SpecialMessage"] =
-                        $"There is already {email} in the database. You can login with it through entering password.";
-                    return RedirectToAction("Login");
-                }
-
                 IdentityResult identResult = await _userManager.CreateAsync(user);
                 if (identResult.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, PolicyTypes.OrdinaryUsers);
                     identResult = await _userManager.AddLoginAsync(user, info);
                     if (identResult.Succeeded)
                     {
+                        if (info.LoginProvider == "Google")
+                        {
+                            await _userManager.AddClaimAsync(user, info.Principal.FindFirst(AdditionalClaimTypes.Locale));
+                            await _userManager.AddClaimAsync(user, info.Principal.FindFirst(AdditionalClaimTypes.Picture));
+                        }
+                        else if (info.LoginProvider == "Facebook")
+                        {
+                            var identifier = info.Principal.FindFirstValue(ClaimTypes.NameIdentifier);
+                            var thumbnailUrl = $"https://graph.facebook.com/{identifier}/picture?type=album";
+                            await _userManager.AddClaimAsync(user, new Claim(AdditionalClaimTypes.Picture, thumbnailUrl));
+                        }
                         // Include the access token in the properties
                         var props = new AuthenticationProperties();
                         props.StoreTokens(info.AuthenticationTokens);

@@ -209,6 +209,15 @@ span .fa-tag {
 .fa .fa-search {
     color: green;
 }
+.fa-green-48 {
+    font-size: 48px !important;
+    color: green !important;
+}
+
+.commentUserName{
+    font-size:13px;
+    font-weight:700;
+}
 /* default styles here for older browsers. 
        I tend to go for a 600px - 960px width max but using percentages
     */
