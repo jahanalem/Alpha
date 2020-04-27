@@ -39,6 +39,8 @@ namespace Alpha.Models.Identity
 
         public string IpAddress { set; get; }
 
+        public string LoginProvider { get; set; }
+
         public bool IsActive { get; set; } = true;
 
         [NotMapped]

@@ -29,6 +29,8 @@ namespace Alpha.Models
         [NotMapped]
         public virtual string PublicUserName { get; set; }
 
+        [NotMapped]
+        public virtual string UserPictureUrl { get; set; }
         /// <summary>
         /// Description: توضیحات
         /// </summary>
