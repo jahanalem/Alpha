@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpha.Infrastructure", "Alp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpha.ViewModels", "Alpha.ViewModels\Alpha.ViewModels.csproj", "{EECD2CFA-51CD-4C4C-A6E0-B5CFB6D0599C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alpha.LoggerService", "Alpha.LoggerService\Alpha.LoggerService.csproj", "{99E0CD49-ED5C-4312-B036-87A4365D609B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alpha.LoggerService", "Alpha.LoggerService\Alpha.LoggerService.csproj", "{99E0CD49-ED5C-4312-B036-87A4365D609B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2A7FBA4B-A039-47FE-8781-E949B79AE0B1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
