@@ -60,6 +60,8 @@ namespace Alpha.Web.App
             services.ConfigureCors();
             services.ConfigureIISIntegration();
 
+            services.AddMvc().AddRazorRuntimeCompilation();
+
             //services.ConfigureLoggerService();
             services.AddControllersWithViews();
             services.AddRazorPages();//.AddRazorRuntimeCompilation();
