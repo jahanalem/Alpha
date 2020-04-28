@@ -79,6 +79,7 @@
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="wwwroot\applogs\internal_logs\internallog.txt" />
+    <None Include="wwwroot\Policy\CookiePolicy.html" />
   </ItemGroup>
 
 </Project>
