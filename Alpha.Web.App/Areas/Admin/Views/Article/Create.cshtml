@@ -1,5 +1,6 @@
 ﻿@using Alpha.Infrastructure
 @using Alpha.Models
+@using Alpha.Web.App.Areas.Admin
 @model Alpha.ViewModels.ArticleViewModel
 
 @{
@@ -12,7 +13,7 @@
 <hr />
 <div class="row">
     <div class="col-12">
-        <form asp-controller="Article" asp-action="Create" method="post">
+        <form asp-controller="Article" asp-action="Create" asp-area="@AreaConstants.AdminArea" method="post">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="">
