@@ -34,13 +34,6 @@ using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
 using Alpha.Web.App.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Http;
-using Alpha.Web.App.Models;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Alpha.ViewModels;
-using Alpha.ViewModels.Interfaces;
-using Newtonsoft.Json;
 
 namespace Alpha.Web.App
 {
@@ -60,11 +53,11 @@ namespace Alpha.Web.App
             services.ConfigureCors();
             services.ConfigureIISIntegration();
 
-            services.AddMvc().AddRazorRuntimeCompilation();
+            //services.AddMvc().AddRazorRuntimeCompilation();
 
             //services.ConfigureLoggerService();
             services.AddControllersWithViews();
-            services.AddRazorPages();//.AddRazorRuntimeCompilation();
+            services.AddRazorPages();
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
