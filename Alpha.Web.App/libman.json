@@ -9,6 +9,10 @@
     {
       "library": "jquery-validate@1.19.1",
       "destination": "wwwroot/lib/jquery-validate/"
+    },
+    {
+      "library": "tinymce@5.2.2",
+      "destination": "wwwroot/lib/tinymce/"
     }
   ]
 }
