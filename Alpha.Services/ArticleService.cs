@@ -26,6 +26,11 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.Extensions.Options;
 
+using HtmlAgilityPack;
+using System.Web;
+using System.Text.RegularExpressions;
+using Alpha.Infrastructure.Convertors;
+
 namespace Alpha.Services
 {
     public class ArticleService : BaseService<IArticleRepository, Article>, IArticleService
@@ -194,6 +199,7 @@ namespace Alpha.Services
             {
                 try
                 {
+                    viewModel.Article.DescriptionAsPlainText = viewModel.Article.Description.ToPlainText();
                     var articleId = await _unitOfWork.Article.AddOrUpdateAsync(viewModel.Article);
 
                     foreach (var tag in deletedList)
@@ -220,6 +226,7 @@ namespace Alpha.Services
 
         public virtual async Task<SearchResultsViewModel> Search(string search, int pageNumber = 1, int itemsNum = 10)
         {
+
             if (string.IsNullOrEmpty(search))
                 return null;
             int itemsPerPage = itemsNum;
@@ -230,14 +237,14 @@ namespace Alpha.Services
             pr = pr.Or(a =>
                 a.Title.ToLower().Contains(searchValue) ||
                 a.Summary.ToLower().Contains(searchValue) ||
-                a.Description.ToLower().Contains(searchValue));
+                a.DescriptionAsPlainText.ToLower().Contains(searchValue));
 
             foreach (var term in search.ToLower().Split(' '))
             {
                 string temp = term.Trim();
                 pr = pr.Or(a => a.Title.ToLower().Contains(temp) ||
                               a.Summary.ToLower().Contains(temp) ||
-                              a.Description.ToLower().Contains(temp));
+                              a.DescriptionAsPlainText.ToLower().Contains(temp));
             }
 
             pr = pr.And(a => a.IsActive);

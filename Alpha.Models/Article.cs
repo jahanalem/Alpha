@@ -33,6 +33,8 @@ namespace Alpha.Models
         [Required]
         public virtual string Description { get; set; }
 
+        public virtual string DescriptionAsPlainText { get; set; }
+
         /// <summary>
         /// RateCounter: رتبه
         /// </summary>
