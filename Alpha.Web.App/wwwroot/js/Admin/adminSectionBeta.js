@@ -13,6 +13,7 @@ function tinymce_getContentLength() {
     return tinymce.get(tinymce.activeEditor.id).contentDocument.body.innerText.length;
 }
 
+/*
 tinymce.init({
     selector: 'textarea#summaryId',
     max_chars: 255, // max. allowed chars
@@ -49,7 +50,7 @@ tinymce.init({
         }
     }
 });
-
+*/
 
 
 
