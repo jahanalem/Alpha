@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div id="mailSentSuccessfully" class="modal in" style="display: block;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Sending report failed!</h6>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Unfortunately, submitting your report failed.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-info" role="button" data-dismiss="modal">Return</a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+@*<div class="container-fluid">
+        <div>
+            @if (TempData["ErrorReport_Sent_Failed"] != null)
+            {
+                var message = (string)TempData["ErrorReport_Sent_Failed"];
+                <div class="alert alert-sucess">
+                    <strong>@message</strong>
+                </div>
+            }
+            <div>
+                @Html.ActionLink("Back to Home", "Index", "Home")
+            </div>
+        </div>
+    </div>*@

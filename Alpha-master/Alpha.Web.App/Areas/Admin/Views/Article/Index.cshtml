@@ -1,0 +1,89 @@
+﻿@using Alpha.Models
+@using Alpha.ViewModels
+@model Alpha.ViewModels.ArticleTagListViewModel
+
+@{
+    ViewData["Title"] = "Articles";
+}
+
+<h2>Articles</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@if (Model.ArticleViewModelList.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.Title)
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.RateCounter)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.LikeCounter)
+                    </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.IsPublished)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.IsActive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.IsActiveNewComment)
+                </th>
+                <th>
+
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.CreatedDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleViewModelList.FirstOrDefault().Article.ModifiedDate)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ArticleViewModel item in Model.ArticleViewModelList)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Article.Title)
+                    </td>
+
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.Article.RateCounter)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Article.LikeCounter)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Article.IsPublished)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Article.IsActive)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Article.IsActiveNewComment)
+                    </td>
+                    <td>
+                        <LocalDate utc="@item.Article.CreatedDate"></LocalDate>
+                    </td>
+                    <td>
+                        <LocalDate utc="@item.Article.ModifiedDate"></LocalDate>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Article.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Article.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Article.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+}
+else
+{
+    <div>There is no Data!</div>
+}
