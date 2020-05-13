@@ -1,0 +1,66 @@
+﻿@using Alpha.ViewModels
+@model Alpha.ViewModels.SignupUserViewModel
+
+@{
+    ViewData["Title"] = "Signup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="signupContainer" class="row">
+
+    <aside class="col-sm-4">
+    </aside> <!-- col.// -->
+
+    <aside class="col-sm-4">
+        <div class="card  mb-2 mt-2">
+            <article class="card-body">
+                <a asp-action="Login" class="float-right btn btn-outline-primary">Sign in</a>
+                <h4 class="card-title mb-4 mt-1">Sign up</h4>
+                <p>
+                    @*<a href="" class="btn btn-block btn-outline-info"> <i class="fa fa-twitter"></i>  sign up via Twitter</a>*@
+                    <a asp-action="FacebookLogin" class="btn btn-block btn-outline-primary"> <i class="fa fa-facebook-f"></i>  sign up via facebook</a>
+                    <a asp-action="GoogleLogin" class="btn btn-block btn-outline-primary"> <i class="fa fa-google"></i>  sign up via Google</a>
+                </p>
+                <hr>
+                <div class="text-danger" asp-validation-summary="All"></div>
+                <form asp-action="Signup" method="post" id="signupForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+                    <div class="form-group">
+                        <input asp-for="FirstName" placeholder="first name" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="LastName" placeholder="last name" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="UserName" placeholder="user name" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Email" class="form-control" placeholder="Email" type="email" required />
+                    </div> <!-- form-group// -->
+                    <div class="form-group">
+                        <input asp-for="Password" class="form-control" placeholder="password" type="password"
+                               minlength="4" maxlength="8" required />
+                    </div> <!-- form-group// -->
+                    <div class="form-group">
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="confirm password" type="password"
+                               data-rule-equalto="#Password" minlength="4" maxlength="8" required />
+                        <input type="checkbox" onclick="togglePasswordVisibility()">Show Password
+                    </div> <!-- form-group// -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block"> sign up </button>
+                            </div> <!-- form-group// -->
+                        </div>
+                    </div> <!-- .row// -->
+                </form>
+            </article>
+        </div> <!-- card.// -->
+
+    </aside> <!-- col.// -->
+
+    <aside class="col-sm-4">
+    </aside>
+
+</div>
