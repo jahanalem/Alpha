@@ -1,0 +1,42 @@
+﻿@using Alpha.Infrastructure.PaginationUtility
+@using Alpha.Models
+@using Alpha.ViewModels
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model Alpha.ViewModels.Searches.SearchResultsViewModel
+
+@{
+    ViewBag.Title = "title";
+}
+
+
+@if (Model != null && Model.Articles.Any())
+{
+    <div class="col-md-12">
+        @foreach (var instance in Model.Articles)
+        {
+            <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Id">
+                <h1>@instance.Title</h1>
+            </a>
+
+            <p>
+                @Html.Raw(instance.Summary)
+            </p>
+            <div>
+                <span class="badge-pill">Posted @instance.CreatedDate</span>
+            </div>
+            <hr>
+        }
+        @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+    </div>
+}
+else
+{
+    <div class="col-md-12">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Not Found!</strong> Sorry we couldn't find any results matching "@ViewBag.SearchTerm"
+            <button onclick="location.href='\Home'" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+}

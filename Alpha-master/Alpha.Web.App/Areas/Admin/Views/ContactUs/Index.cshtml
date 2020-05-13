@@ -1,0 +1,61 @@
+﻿@using Alpha.ViewModels
+@model ContactUsListViewModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<h2>Contact Us</h2>
+
+@if (Model.ContactUsList.Any())
+{
+    <p>
+        @*<a asp-action="Create">Create New</a>*@
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ContactUsList.FirstOrDefault().Email)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ContactUsList.FirstOrDefault().Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ContactUsList.FirstOrDefault().CreatedDate)
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ContactUsList)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        <LocalDate utc="@item.CreatedDate"></LocalDate>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+}
+else
+{
+    <div>There is no Data!</div>
+}
+

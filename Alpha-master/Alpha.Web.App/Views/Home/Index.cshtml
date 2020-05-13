@@ -1,0 +1,36 @@
+﻿<div class="row">
+
+    <!-- Post Content Column -->
+    <div class="col-lg-8">
+        <!-- Preview Image -->
+        <div class="hidden homePageImageContainer">
+            <img class="img-fluid rounded" src="~/images/HomePhoto.png" alt="C#.NET" />
+        </div>
+
+        <hr>
+        <!-- Post Content -->
+
+        <div class="container-fluid">
+            @await Component.InvokeAsync("ArticleList")
+            <br />
+        </div>
+    </div>
+
+    <!-- Sidebar Widgets Column -->
+    <div class="col-md-4">
+        <!-- Categories Widget -->
+        <div class="card my-4">
+            @await Component.InvokeAsync("TagList")
+        </div>
+
+        <!-- Side Widget -->
+        <div class="card my-4">
+            <h5 class="card-header">
+                The website is currently worked on!
+            </h5>
+            <div class="card-body">
+                The articles are just for test.
+            </div>
+        </div>
+    </div>
+</div>

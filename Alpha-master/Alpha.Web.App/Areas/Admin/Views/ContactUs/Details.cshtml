@@ -1,0 +1,26 @@
+﻿@using Alpha.Models
+@model ContactUs
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div class="container">
+    <div class="row">
+        <label>Email:</label><br />
+        <p>@Model.Email</p>
+    </div>
+    <div class="row">
+        <label>Full Name:</label><br />
+        <p>@Model.FirstName @Model.LastName</p>
+    </div>
+    <div class="row">
+        <label>Title:</label><br />
+        <p>@Model.Title</p>
+    </div>
+    <div class="row">
+        <label>Message:</label><br />
+        <p>@Model.Description</p>
+    </div>
+</div>
