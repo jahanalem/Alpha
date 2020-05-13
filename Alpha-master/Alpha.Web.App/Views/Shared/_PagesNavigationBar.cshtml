@@ -1,0 +1,52 @@
+﻿@using Alpha.Infrastructure.PaginationUtility
+@using Alpha.Web.App.Resources.Constants
+@model Pagination
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @{
+            var totalPages = Model.PagingInfo.TotalPages;
+            var pageSize = Model.PagingInfo.ItemsPerPage;
+            int m = -(pageSize - 1) / 2;
+            int p = pageSize + m;
+            var currentPage = Model.PagingInfo.CurrentPage;
+            var start = currentPage + m;
+            if (start <= 0) { start = 1; }
+            var end = currentPage + p;
+            if (end > totalPages) { end = totalPages; }
+            var previousPage = start - 1;
+            if (previousPage <= 0) { previousPage = 1; }
+            var nextPage = end + 1;
+            string pageNumberStatus = string.Empty;// or active
+            string nextPageButtonStatus = string.Empty; // or disabled
+            string previousPageButtonStatus = string.Empty; // or disabled
+            if (nextPage > totalPages) { nextPage = totalPages; }
+
+
+
+            if (currentPage == start) { previousPageButtonStatus = "disabled"; } else { previousPageButtonStatus = string.Empty; }
+            <li class="page-item @previousPageButtonStatus">
+                <a class="page-link" href="@Model.Url.UpdatePageNumber(previousPage)" title="" tabindex="-1">Previous</a>
+            </li>
+            for (int pageNumber = start; pageNumber <= end; pageNumber++)
+            {
+                if (pageNumber == currentPage) { pageNumberStatus = "active"; }
+                else { pageNumberStatus = string.Empty; }
+
+                <li class="page-item @pageNumberStatus">
+                    <a class="page-link" href="@Model.Url.UpdatePageNumber(pageNumber)">@pageNumber</a>
+                </li>
+            }
+            if (currentPage == end) { nextPageButtonStatus = "disabled"; }
+            else { nextPageButtonStatus = string.Empty; }
+
+            <li class="page-item @nextPageButtonStatus">
+                @*<pageLink asp-area="@Model.TargetArea" asp-controller="@Model.TargetController" asp-action="@Model.TargetAction" asp-route-pagenumber="@nextPage">nextPage</pageLink>*@
+                <a class="page-link" href="@Model.Url.UpdatePageNumber(nextPage)">nextPage</a>
+            </li>
+        }
+    </ul>
+</nav>

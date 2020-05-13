@@ -1,0 +1,16 @@
+﻿@using Alpha.Models
+@using Alpha.ViewModels
+@model Alpha.ViewModels.ArticleTagListViewModel
+
+@{
+    ViewData["Title"] = "FilterByTag";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "title";
+}
+
+@await Html.PartialAsync("_ArticleList", Model)
+
+@*Excluded!!!!*@
