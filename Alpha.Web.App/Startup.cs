@@ -61,8 +61,12 @@ namespace Alpha.Web.App
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+                options.UseMySql(Configuration["ConnectionStrings:DataAccessMySqlProvider"],
+                b => b.MigrationsAssembly("Alpha.DataAccess")));
 
             #region Repositories and Services
 
