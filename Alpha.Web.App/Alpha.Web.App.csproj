@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Compile Remove="Components\ArticleTagListViewComponent.cs" />
+    <Compile Remove="DesignTimeDbContextFactory.cs" />
     <Compile Remove="Utilities\Pagination.cs" />
     <Compile Remove="Utilities\PagingInfo.cs" />
   </ItemGroup>
@@ -54,6 +55,7 @@
     <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.6.2" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.23" />
   </ItemGroup>
 

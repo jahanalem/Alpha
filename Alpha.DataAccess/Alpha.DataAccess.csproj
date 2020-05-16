@@ -6,8 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="Migrations-SqlServer\**" />
+    <Compile Remove="Migrations\DomainModelMsSqlServer\**" />
     <EmbeddedResource Remove="Migrations-SqlServer\**" />
+    <EmbeddedResource Remove="Migrations\DomainModelMsSqlServer\**" />
     <None Remove="Migrations-SqlServer\**" />
+    <None Remove="Migrations\DomainModelMsSqlServer\**" />
   </ItemGroup>
 
   <ItemGroup>
