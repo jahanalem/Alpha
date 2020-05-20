@@ -6,8 +6,15 @@
 
   <ItemGroup>
     <Compile Remove="Migrations-SqlServer\**" />
+    <Compile Remove="Migrations\DomainModelMsSqlServer\**" />
     <EmbeddedResource Remove="Migrations-SqlServer\**" />
+    <EmbeddedResource Remove="Migrations\DomainModelMsSqlServer\**" />
     <None Remove="Migrations-SqlServer\**" />
+    <None Remove="Migrations\DomainModelMsSqlServer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Migrations\DomainModelMsSqlServer\ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,12 +30,18 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Alpha.Infrastructure\Alpha.Infrastructure.csproj" />
     <ProjectReference Include="..\Alpha.Models\Alpha.Models.csproj" />
     <ProjectReference Include="..\Alpha.ViewModels\Alpha.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\DomainModelMySql\" />
   </ItemGroup>
 
 </Project>
