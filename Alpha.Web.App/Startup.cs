@@ -34,6 +34,7 @@ using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
 using Alpha.Web.App.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication;
+using Alpha.Web.App.Models;
 
 namespace Alpha.Web.App
 {
