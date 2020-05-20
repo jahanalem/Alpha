@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Alpha.DataAccess.Migrations.DomainModelMySql
+namespace Alpha.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200515231101_Init-MySql")]
-    partial class InitMySql
+    [Migration("20200520115254_MySql_Init")]
+    partial class MySql_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
