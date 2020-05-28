@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Alpha.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200315014757_Add_IpAddress")]
-    partial class Add_IpAddress
+    [Migration("20200527192341_MicrosoftSql_Init")]
+    partial class MicrosoftSql_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.2")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -52,6 +52,9 @@ namespace Alpha.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ArticleCategoryId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -59,11 +62,24 @@ namespace Alpha.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("DescriptionAsPlainText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DescriptionHtmlMetaTag")
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsActiveNewComment")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("KeywordsHtmlMetaTag")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LikeCounter")
                         .HasColumnType("int");
@@ -84,14 +100,51 @@ namespace Alpha.DataAccess.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<string>("TitleHtmlMetaTag")
+                        .HasColumnType("nvarchar(70)")
+                        .HasMaxLength(70);
+
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ArticleCategoryId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Article");
+                });
+
+            modelBuilder.Entity("Alpha.Models.ArticleCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(26)")
+                        .HasMaxLength(26);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("ArticleCategory");
                 });
 
             modelBuilder.Entity("Alpha.Models.ArticleLike", b =>
@@ -392,6 +445,7 @@ namespace Alpha.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
 
@@ -405,6 +459,7 @@ namespace Alpha.DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasMaxLength(450);
 
@@ -416,6 +471,9 @@ namespace Alpha.DataAccess.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("nvarchar(256)")
@@ -718,9 +776,21 @@ namespace Alpha.DataAccess.Migrations
 
             modelBuilder.Entity("Alpha.Models.Article", b =>
                 {
+                    b.HasOne("Alpha.Models.ArticleCategory", null)
+                        .WithMany("Articles")
+                        .HasForeignKey("ArticleCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Alpha.Models.Identity.User", null)
                         .WithMany("Articles")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Alpha.Models.ArticleCategory", b =>
+                {
+                    b.HasOne("Alpha.Models.ArticleCategory", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("Alpha.Models.ArticleLike", b =>
@@ -764,7 +834,8 @@ namespace Alpha.DataAccess.Migrations
                 {
                     b.HasOne("Alpha.Models.Article", "Article")
                         .WithMany("Comments")
-                        .HasForeignKey("ArticleId");
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Alpha.Models.Comment", "Parent")
                         .WithMany("Replies")

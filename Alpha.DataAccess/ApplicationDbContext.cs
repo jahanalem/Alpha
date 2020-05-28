@@ -31,6 +31,8 @@ namespace Alpha.DataAccess
         public virtual DbSet<Rating> Ratings { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
 
+        public virtual DbSet<ArticleCategory> ArticleCategories { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // it should be placed here, otherwise it will rewrite the following settings!
@@ -91,6 +93,7 @@ namespace Alpha.DataAccess
             modelBuilder.Entity<ProjectTag>().ToTable("ProjectTag");
             modelBuilder.Entity<Rating>().ToTable("Rating");
             modelBuilder.Entity<Tag>().ToTable("Tag");
+            modelBuilder.Entity<ArticleCategory>().ToTable("ArticleCategory").HasMany(e => e.Articles).WithOne().OnDelete(DeleteBehavior.Cascade);
         }
 
         public static async Task CreateAdminAccount(IServiceProvider serviceProvider, IConfiguration configuration)
@@ -113,7 +116,11 @@ namespace Alpha.DataAccess
                 User user = new User
                 {
                     Email = email,
-                    UserName = userName
+                    UserName = userName,
+                    IsActive = true,
+                    FirstName = "Said Roohullah",
+                    LastName = "Allem",
+                    EmailConfirmed = true
                 };
                 var result = userManager.CreateAsync(user, password);
                 if (result.IsCompletedSuccessfully)
