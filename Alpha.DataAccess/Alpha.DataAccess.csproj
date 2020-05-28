@@ -6,15 +6,14 @@
 
   <ItemGroup>
     <Compile Remove="Migrations-SqlServer\**" />
-    <Compile Remove="Migrations\DomainModelMsSqlServer\**" />
     <EmbeddedResource Remove="Migrations-SqlServer\**" />
-    <EmbeddedResource Remove="Migrations\DomainModelMsSqlServer\**" />
     <None Remove="Migrations-SqlServer\**" />
-    <None Remove="Migrations\DomainModelMsSqlServer\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Migrations\DomainModelMsSqlServer\ApplicationDbContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\MS_20200527192341_MicrosoftSql_Init.cs" />
+    <Compile Remove="Migrations\MS_20200527192341_MicrosoftSql_Init.Designer.cs" />
+    <Compile Remove="Migrations\MS_ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,10 +37,6 @@
     <ProjectReference Include="..\Alpha.Infrastructure\Alpha.Infrastructure.csproj" />
     <ProjectReference Include="..\Alpha.Models\Alpha.Models.csproj" />
     <ProjectReference Include="..\Alpha.ViewModels\Alpha.ViewModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\DomainModelMySql\" />
   </ItemGroup>
 
 </Project>

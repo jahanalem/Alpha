@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Compile Remove="Components\ArticleTagListViewComponent.cs" />
-    <Compile Remove="DesignTimeDbContextFactory.cs" />
     <Compile Remove="Utilities\Pagination.cs" />
     <Compile Remove="Utilities\PagingInfo.cs" />
   </ItemGroup>
@@ -26,6 +25,10 @@
   <ItemGroup>
     <Content Remove="Views\Article\ShowArticles.cshtml" />
     <Content Remove="Views\Shared\_ArticleList.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="migrations.sql" />
   </ItemGroup>
 
   <ItemGroup>
