@@ -14,11 +14,11 @@ namespace Alpha.Web.App.AppTagHelpers
         {
             output.TagName = "span";// Replaces <LocalDate> with <span> tag
             output.Attributes.SetAttribute("class", "mytime");
-            if (Utc != null) 
+            if (Utc != null)
                 output.Attributes.Add("utc", Utc.Value.ToString("o"));
             else
             {
-                output.Attributes.Add("utc",string.Empty);
+                output.Attributes.Add("utc", null);
             }
             // DateTime x = TimeZoneInfo.ConvertTimeFromUtc(timeUtc, TimeZoneInfo.Local);
             // output.Content.SetContent(xxx);

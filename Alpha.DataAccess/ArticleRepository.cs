@@ -17,9 +17,9 @@ namespace Alpha.DataAccess
             _context = context;
         }
 
-        public override Task<int> AddOrUpdateAsync(Article entity)
+        public override async Task<int> AddOrUpdateAsync(Article entity)
         {
-            return base.AddOrUpdateAsync(entity);
+            return await base.AddOrUpdateAsync(entity);
         }
     }
 }

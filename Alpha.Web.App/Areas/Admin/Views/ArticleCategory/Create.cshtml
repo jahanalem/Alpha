@@ -1,0 +1,44 @@
+﻿@model Alpha.ViewModels.ArticleCategoryViewModel
+
+<h4>Article Category</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Category.Title" class="control-label"></label>
+                <input asp-for="Category.Title" class="form-control" />
+                <span asp-validation-for="Category.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input checked class="form-check-input" asp-for="Category.IsActive" /> @Html.DisplayNameFor(model => model.Category.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="my-1 mr-2" for="parentCatSelected">Parent Category</label>
+                <select asp-for="@Model.Category.ParentId" class="custom-select my-1 mr-sm-2">
+                    <option value="-1" selected>root...</option>
+                    @if (Model != null && Model.Parents.Any())
+                    {
+                        foreach (var pCat in Model.Parents)
+                        {
+                            <option value="@pCat.Id">@pCat.Title</option>
+                        }
+                    }
+                </select>
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
