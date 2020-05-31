@@ -27,18 +27,21 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         private readonly IArticleService _articleService;
         private readonly IArticleTagService _articleTagService;
         private readonly ITagService _tagService;
+        private readonly IArticleCategoryService _articleCategoryService;
         private IOptions<AppSettingsModel> _appSettings;
 
         public ArticleController(IArticleService articleService,
             IArticleTagService articleTagService,
             ITagService tagService,
-            IOptions<AppSettingsModel> appSettings
+            IOptions<AppSettingsModel> appSettings,
+            IArticleCategoryService articleCategoryService
             )
         {
             _articleService = articleService;
             _articleTagService = articleTagService;
             _tagService = tagService;
             _appSettings = appSettings;
+            _articleCategoryService = articleCategoryService;
         }
         public async Task<IActionResult> Index(int? tagId = null, int pageNumber = 1)
         {
@@ -90,7 +93,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             }
             var articleViewModel = new ArticleViewModel()
             {
-                AllTags = tags
+                Article = new Article(),
+                AllTags = tags,
+                CategoryList = await _articleCategoryService.GetByCriteria(c => c.IsActive).ToListAsync()
             };
             //StringLengthAttribute strLenAttr = typeof(Article).GetProperty("Summary")?.GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
             //if (strLenAttr != null)
