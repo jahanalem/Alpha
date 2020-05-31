@@ -108,9 +108,16 @@ namespace Alpha.DataAccess
 
         public virtual async Task<int> AddOrUpdateAsync(TEntity entity)
         {
-            context.Entry(entity).State = entities.AddOrUpdate(entity);
-            await context.SaveChangesAsync();
-            return context.Entry(entity).Entity.Id;
+            try
+            {
+                context.Entry(entity).State = entities.AddOrUpdate(entity);
+                await context.SaveChangesAsync();
+                return context.Entry(entity).Entity.Id;
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
         }
         public virtual async Task<int> AddOrUpdateAsync(TEntity entity,
             Expression<Func<TEntity, bool>> predicate)

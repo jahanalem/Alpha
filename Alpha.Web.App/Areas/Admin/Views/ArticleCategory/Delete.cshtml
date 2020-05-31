@@ -1,0 +1,52 @@
+﻿@model Alpha.ViewModels.ArticleCategoryViewModel
+
+<h4>Delete</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="@Model.Category.Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Category.Title" class="control-label"></label>
+                <input disabled asp-for="Category.Title" class="form-control" />
+                <span asp-validation-for="Category.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input disabled checked class="form-check-input" asp-for="Category.IsActive" /> @Html.DisplayNameFor(model => model.Category.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="my-1 mr-2" for="parentCatSelected">Parent Category</label>
+                <select disabled asp-for="@Model.Category.ParentId" class="custom-select my-1 mr-sm-2">
+                    <option value="-1" selected>root...</option>
+                    @if (Model != null && Model.Parents.Any())
+                    {
+                        foreach (var pCat in Model.Parents)
+                        {
+                            if (pCat.ParentId == Model.Category.ParentId && pCat.ParentId != null)
+                            {
+                                <option value="@pCat.Id" selected>@pCat.Title</option>
+                            }
+                            else
+                            {
+                                <option value="@pCat.Id">@pCat.Title</option>
+                            }
+                        }
+                    }
+                </select>
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Delete" class="btn btn-danger" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
