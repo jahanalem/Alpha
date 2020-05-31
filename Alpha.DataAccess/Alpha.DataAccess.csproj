@@ -14,6 +14,9 @@
     <Compile Remove="Migrations\MS_20200527192341_MicrosoftSql_Init.cs" />
     <Compile Remove="Migrations\MS_20200527192341_MicrosoftSql_Init.Designer.cs" />
     <Compile Remove="Migrations\MS_ApplicationDbContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\My_20200527155206_MySql_Init.cs" />
+    <Compile Remove="Migrations\My_20200527155206_MySql_Init.Designer.cs" />
+    <Compile Remove="Migrations\My_ApplicationDbContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
