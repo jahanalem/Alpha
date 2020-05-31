@@ -20,5 +20,8 @@ namespace Alpha.ViewModels
         /// </summary>
         //[BindRequired]
         public List<Tag> AllTags { get; set; }
+
+        //public ArticleCategory Category { get; set; }
+        public List<ArticleCategory> CategoryList { get; set; }
     }
 }
