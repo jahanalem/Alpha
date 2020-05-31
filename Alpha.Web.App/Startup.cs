@@ -54,7 +54,7 @@ namespace Alpha.Web.App
             services.ConfigureCors();
             services.ConfigureIISIntegration();
 
-            //services.AddMvc().AddRazorRuntimeCompilation();
+            services.AddMvc().AddRazorRuntimeCompilation();
 
             //services.ConfigureLoggerService();
             services.AddControllersWithViews();
@@ -62,13 +62,14 @@ namespace Alpha.Web.App
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"],
-            //    b => b.MigrationsAssembly("Alpha.DataAccess")));
-
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(Configuration["ConnectionStrings:DefaultConnection"],
+            //https://neelbhatt.com/2018/02/27/use-dbcontextpooling-to-improve-the-performance-net-core-2-1-feature/
+            services.AddDbContextPool<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"],
                 b => b.MigrationsAssembly("Alpha.DataAccess")));
+
+            //services.AddDbContextPool<ApplicationDbContext>(options =>
+            //    options.UseMySql(Configuration["ConnectionStrings:DefaultConnection"],
+            //    b => b.MigrationsAssembly("Alpha.DataAccess")));
 
             #region Repositories and Services
 
@@ -93,6 +94,9 @@ namespace Alpha.Web.App
 
             services.AddTransient<IContactUsRepository, ContactUsRepository>();
             services.AddTransient<IContactUsService, ContactUsService>();
+
+            services.AddTransient<IArticleCategoryRepository, ArticleCategoryRepository>();
+            services.AddTransient<IArticleCategoryService, ArticleCategoryService>();
 
             #endregion
 
