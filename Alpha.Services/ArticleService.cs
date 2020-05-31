@@ -38,6 +38,7 @@ namespace Alpha.Services
         private IArticleRepository _articleRepository;
         private IArticleTagRepository _articleTagRepository;
         private IArticleTagService _articleTagService;
+        private IArticleCategoryService _articleCategoryService;
         private ITagRepository _tagRepository;
         private IUnitOfWork _unitOfWork;
         private IUrlHelper _urlHelper;
@@ -46,6 +47,7 @@ namespace Alpha.Services
             IArticleRepository articleRepository,
             IArticleTagRepository articleTagRepository,
             IArticleTagService articleTagService,
+            IArticleCategoryService articleCategoryService,
             ITagRepository tagRepository, IUrlHelper urlHelper)
             : base(articleRepository)
         {
@@ -53,6 +55,7 @@ namespace Alpha.Services
             _articleTagRepository = articleTagRepository;
             _articleTagService = articleTagService;
             _tagRepository = tagRepository;
+            _articleCategoryService = articleCategoryService;
             _unitOfWork = uow;
             _urlHelper = urlHelper;
         }
@@ -119,6 +122,7 @@ namespace Alpha.Services
             var vm = new ArticleViewModel();
             vm.Article = await FindByIdAsync(articleId);
             vm.Tags = GetTagsByArticleId(articleId);
+            vm.CategoryList = await _articleCategoryService.GetByCriteria(c => c.IsActive).ToListAsync();
             //vm.AllOfTags = _tagRepository.GetAll().Where(c => c.IsActive == true).ToList();
             return vm;
         }

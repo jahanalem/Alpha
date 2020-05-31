@@ -5,7 +5,7 @@ namespace Alpha.Models
 {
     public class Tag : Entity
     {
-        [Range(1, 4)]
+        [Range(1, 10)]
         public virtual int Size { get; set; }
 
         [Required]

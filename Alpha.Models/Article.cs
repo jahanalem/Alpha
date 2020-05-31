@@ -13,6 +13,9 @@ namespace Alpha.Models
         }
         public virtual int? UserId { get; set; }
 
+        [Display(Name = "Category")]
+        public virtual int? ArticleCategoryId { get; set; }
+
         /// <summary>
         /// Title = عنوان
         /// </summary>
