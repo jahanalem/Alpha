@@ -42,11 +42,11 @@ namespace Alpha.Infrastructure
         {
             StringBuilder output = new StringBuilder();
             output.Append("<ul>");
-            var commentsWithNullParent = items.Where(p => p.ParentId == null).OrderByDescending(p=>p.CreatedDate).ToList();
+            var commentsWithNullParent = items.Where(p => p.ParentId == null).OrderByDescending(p => p.CreatedDate).ToList();
             foreach (var item in commentsWithNullParent)
             {
                 output.Append("<li>");
-               
+
                 output.Append($"<h5 id=\"commentNode_{item.Id}\"  class='mt-0'>Commenter Name</h5>");
                 output.Append($"<div id=\"collapse_{item.Id}\" class=''>");
                 output.Append($"<div class=\"card\" id=\"cardId_{item.Id}\">");
@@ -64,7 +64,11 @@ namespace Alpha.Infrastructure
                 output.Append($"<div class=\"collapse\" id=\"replyComment_{item.Id}\">");// open_div_commentReply
                 output.Append("</div>");// close_div_commentReply
                 output.Append("</div>");// close_div_comment-meta
+
+
                 CreateComments(items, item, item.Id, output, row);
+
+
                 output.Append("</div>");
                 output.Append("</li>");
                 //output.Append(result);
@@ -79,7 +83,7 @@ namespace Alpha.Infrastructure
             if (count > 0)
             {
                 output.Append("<ul>");
-                foreach (var item in items.Where(p => p.ParentId == parentId).OrderByDescending(p=>p.CreatedDate).ToList())
+                foreach (var item in items.Where(p => p.ParentId == parentId).OrderByDescending(p => p.CreatedDate).ToList())
                 {
                     output.Append("<li>");
                     string collapseId = string.Format("collapse_{0}", item.Id);
@@ -91,25 +95,31 @@ namespace Alpha.Infrastructure
                     output.Append("</a>");
                     //string str = string.Format("<h5 class=\"{0}\">Commenter Name</h5>", "mt-0");
                     //output.Append(str);
-                    
+
                     output.Append($"<div class=\"collapse\" id=\"{collapseId}\">"); // open div collapse_
                     output.Append($"<div class=\"card\" id=\"cardId_{item.Id}\">");// open div cardId_
                     output.Append(string.Format("<p>{0}</p>", item.Description));
-                    
+
                     output.Append("</div>"); // close div cardId_
                     output.Append($"<div class=\"comment-meta\" id=\"commentId_{item.Id}\">");// open_div_comment-meta
                     output.Append($"<span><input id=\"deleteC_{item.Id}_{item.ArticleId}\" type='submit' class='submitLink' value='delete'/></span>");
-                    
+
                     output.Append($"<span><input id=\"editC_{item.Id}_{item.ArticleId}\" type='submit' class='submitLink' value='edit' /></span>");
                     output.Append($"<span>");
-                    
+
                     output.Append($"<a id=\"replyC_{item.Id}_{item.ArticleId}\" class=\"\" role=\"button\" data-toggle=\"collapse\" href=\"#replyComment_{item.Id}\" aria-expanded=\"false\" aria-controls=\"collapseExample\">reply</a>");
                     output.Append($"</span>");
                     output.Append($"<div class=\"collapse\" id=\"replyComment_{item.Id}\">");// open_div_commentReply
                     output.Append("</div>");// close_div_commentReply
                     output.Append("</div>");// close_div_comment-meta
+
+
+
                     row = row + 1;
                     CreateComments(items, item, item.Id, output, row);
+
+
+
                     output.Append("</div>");
                     output.Append("</li>");
                 }
@@ -122,6 +132,23 @@ namespace Alpha.Infrastructure
         {
             output.Append("<li>");
 
+        }
+
+        public static int CountDirectChildrenOf(this List<ArticleCategory> tree, ArticleCategory item, int counter = 0)
+        {
+            foreach (var node in tree)
+            {
+                if (node.ParentId == item.Id)
+                {
+                    ++counter;
+                }
+            }
+            //if (item.ParentId != null)
+            //{
+            //    var nextItem = tree.FirstOrDefault(c => c.Id == item.ParentId);
+            //    CountDirectChildrenOf(tree, nextItem, ++counter);
+            //}
+            return counter;
         }
 
     }

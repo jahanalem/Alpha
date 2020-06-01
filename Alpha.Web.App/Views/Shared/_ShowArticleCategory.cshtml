@@ -1,0 +1,32 @@
+﻿@using Alpha.Infrastructure
+@using Alpha.ViewModels
+@model Alpha.ViewModels.RecursionArticleCategory
+
+
+@if (Model.ArticleCategories.Any(c => c.ParentId == Model.ParentId))
+{
+    var count = Model.ArticleCategories.Count(p => p.ParentId == Model.ParentId);
+    if (count > 0)
+    {
+        <ul class="submenu">
+            @foreach (ArticleCategory child in Model.ArticleCategories.Where(c => c.ParentId == Model.ParentId))
+            {
+                <li class="subitem">
+                    <a href="#">
+                        @child.Title @if (Model.ArticleCategories.CountDirectChildrenOf(child) > 0)
+                    {<span class="plus"></span>}
+                    </a>
+                   
+                        @await Html.PartialAsync("_ShowArticleCategory",
+                            new RecursionArticleCategory
+                            {
+                                ArticleCategories = Model.ArticleCategories,
+                                Item = child,
+                                ParentId = child.Id
+                            })
+                   
+                </li>
+            }
+        </ul>
+    }
+}
