@@ -7,6 +7,7 @@ using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Services;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using Alpha.ViewModels.Searches;
 using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
@@ -63,7 +64,7 @@ namespace Alpha.Web.App.Components
             }
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(SearchResultsViewModel model = null)
         {
             var key = $"TotalItems-TagId-{tagId}";
             if (TempData[key] == null)
@@ -71,7 +72,7 @@ namespace Alpha.Web.App.Components
                 TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
             }
 
-            var result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
+            ArticleTagListViewModel result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
             var x = Url.Action(niceUrl);
             result.Pagination.Init(new Pagination
             {
