@@ -259,7 +259,7 @@ $(document).on("click", "a[id^='replyC_']", function (event) {
                             placeholder: 'your comment',
                             type: 'text',
                             row: '5',
-                            styleSheets:'width:100%'
+                            styleSheets: 'width:100%'
                         }),
                     $('<input/>', { type: 'hidden', name: 'CurrentArticleId', id: 'CurrentArticleId', value: articleId }),
                     $('<input/>', { type: 'hidden', name: 'CurrentParentId', id: 'CurrentParentId', value: commentId }),
@@ -419,5 +419,35 @@ $(document).ready(function () {
                 }
             });
         }
+    });
+});
+
+
+
+// Menu
+
+$(function () {
+    $("#button1").click(function () {
+        if ($("#cats").css("left") == "-300px") {
+            $("#cats").css("left", "0");
+
+            $("#topmenu ul").slideUp();
+        } else {
+            $("#cats").css("left", "-300px");
+        }
+    });
+});
+$(function () {
+    $("#button2").click(function () {
+        $("#topmenu ul").slideToggle();
+        $("#cats").css("left", "-300px");
+    });
+});
+
+$(document).ready(function () {
+    $("#cats .plus").click(function (event) {
+        $(this).toggleClass("rotated-plus");
+        $(this).parent().siblings("ul").slideToggle();
+        event.preventDefault();
     });
 });

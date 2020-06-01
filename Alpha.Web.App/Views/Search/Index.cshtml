@@ -11,22 +11,62 @@
 
 @if (Model != null && Model.Articles.Any())
 {
-    <div class="col-md-12">
-        @foreach (var instance in Model.Articles)
-        {
-            <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Id">
-                <h1>@instance.Title</h1>
-            </a>
+    <div class="row">
+        <div id="content" class="col-xs-12 col-lg-9">
+            <div class="row">
+                @foreach (var instance in Model.Articles)
+                {
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-6 list-item">
+                        <article id="@instance.Id">
+                            <div class="">
+                                <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Id" class="">
+                                    <img src="/images/art-logo.svg" class="image-responsive">
+                                    <span class="et_overlay et_pb_inline_icon" data-icon=""></span>
+                                </a>
+                            </div>
+                            <!-- .et_pb_image_container -->
+                            <h2 class="entry-title">
+                                <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Id">@instance.Title</a>
+                            </h2>
 
-            <p>
-                @Html.Raw(instance.Summary)
-            </p>
-            <div>
-                <span class="badge-pill">Posted @instance.CreatedDate</span>
+                            <p class="post-meta">
+                                by
+                                <span class="author vcard">
+                                    <a href="#" title="Posts by Said Rohullah Allem" rel="author">S.R Allem</a>
+                                </span> | <span class="published"><LocalDate utc="@instance.CreatedDate"></LocalDate></span>
+                            </p>
+                            <div class="post-content">
+                                <div class="article-summary">
+                                    <p>
+                                        @Html.Raw(instance.Summary)
+                                    </p>
+                                </div>
+                    
+                            </div>
+                            <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Id" class="more-link">read more</a>
+                        </article>
+                    </div>
+                }
             </div>
-            <hr>
-        }
-        @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+            <div class="row col-xs-12 col-lg-9">
+                @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+            </div>
+        </div>
+
+        <aside id="sidebar" class="col-xs-12 col-lg-3">
+            <div class="card my-4">
+                @await Component.InvokeAsync("TagList")
+            </div>
+
+            @*<div class="card my-4">
+            <h5 class="card-header">
+                The website is currently worked on!
+            </h5>
+            <div class="card-body">
+                The articles are just for test.
+            </div>
+        </div>*@
+        </aside>
     </div>
 }
 else

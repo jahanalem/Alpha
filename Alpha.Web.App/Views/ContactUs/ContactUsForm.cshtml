@@ -5,9 +5,7 @@
 @{
     ViewData["Title"] = "ContactUsForm";
 }
-<style type="text/css">
- 
-</style>
+
 
 <div id="contactUsFormContainer" class="row">
 
@@ -28,9 +26,9 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="form_name">Firstname</label>
+                            <label for="form_name">Firstname *</label>
                             <input asp-for="@Model.FirstName" type="text" name="FirstName"
-                                   maxlength="25" class="form-control" placeholder="Please enter your firstname">
+                                   maxlength="25" required class="form-control" placeholder="Please enter your firstname">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -38,7 +36,7 @@
                         <div class="form-group">
                             <label for="form_lastname">Lastname *</label>
                             <input asp-for="@Model.LastName" type="text" name="LastName"
-                                   maxlength="25" class="form-control" placeholder="Please enter your lastname">
+                                   maxlength="25" required class="form-control" placeholder="Please enter your lastname">
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>

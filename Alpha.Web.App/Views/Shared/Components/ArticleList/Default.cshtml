@@ -8,43 +8,60 @@
     ViewBag.Title = "title";
 }
 
-<div id="articlesContainer" class="col-md-12">
+<div id="articleListComponent" class="row">
     @foreach (var instance in Model.ArticleViewModelList)
     {
-        <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id">
-            <h3>@instance.Article.Title</h3>
-        </a>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-6">
+            <article id="@instance.Article.Id">
+                <div class="">
+                    <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id" class="">
+                        <img src="/images/art-logo.svg" class="image-responsive">
+                        <span class="et_overlay et_pb_inline_icon" data-icon=""></span>
+                    </a>
+                </div>
+                <!-- .et_pb_image_container -->
+                <h2 class="entry-title">
+                    <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id">@instance.Article.Title</a>
+                </h2>
 
-        <p>
-            @Html.Raw(instance.Article.Summary)
-        </p>
-        <div>
-            <span class="badge-pill"><LocalDate utc="@instance.Article.CreatedDate"></LocalDate></span>
-            <div class="float-right">
-                @foreach (var tag in instance.Tags)
-                {
-                    if (tag != null)
-                    {
-
-                        <a asp-controller="Article" asp-action="Index" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
-                            @if (Model.TagId == tag.Id)
+                <p class="post-meta">
+                    by
+                    <span class="author vcard">
+                        <a href="#" title="Posts by Said Rohullah Allem" rel="author">S.R Allem</a>
+                    </span> | <span class="published"><LocalDate utc="@instance.Article.CreatedDate"></LocalDate></span>
+                </p>
+                <div class="post-content">
+                    <div class="article-summary">
+                        <p>
+                            @Html.Raw(instance.Article.Summary)
+                        </p>
+                    </div>
+                    <div class="float-right">
+                        @foreach (var tag in instance.Tags)
+                        {
+                            if (tag != null)
                             {
-                                <span class="badge badge-success">@tag.Title</span>
-                            }
-                            else
-                            {
-                                <span class="badge badge-dark">@tag.Title</span>
-                            }
 
-                        </a>
-                    }
-                }
-            </div>
+                                <a asp-controller="Article" asp-action="Index" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
+                                    @if (Model.TagId == tag.Id)
+                                    {
+                                        <span class="badge badge-success">@tag.Title</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-dark">@tag.Title</span>
+                                    }
+
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+                <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id" class="more-link">read more</a>
+            </article>
         </div>
-        <br />
-        <hr>
     }
-
-
-    @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+    <div class="col-xs-12 col-lg-9">
+        @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+    </div>
 </div>
