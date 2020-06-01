@@ -49,15 +49,13 @@
     <!-- Custom styles for this template -->
 
     <link href="~/css/gcodes.css" rel="stylesheet" />
-    <link href="~/css/blog-post.css" rel="stylesheet" />
 </head>
 
 <body>
 
 
     <header class="mainheader">
-        <img src="images/menu.png" id="button1" />
-        <!-- <img src="images/menu.png" id="button2" /> -->
+        <img src="/images/menu.png" id="button1" />
         <div id="cats">
             <div class="search-section">
 
@@ -79,32 +77,8 @@
                     <li class="item"><a asp-controller="Home" asp-action="Index">Home</a></li>
                     <li class="item">
                         <a href="#">Categories<span class="plus"></span></a>
-                        <ul class="submenu">
-                            <li class="subitem">
-                                <a href="#">ASP.NET<span class="plus"></span></a>
-                                <ul class="submenu">
-                                    <li class="subitem"><a href="#">.NET core</a></li>
-                                    <li class="subitem"><a href="#">.NET 5</a></li>
-                                </ul>
-                            </li>
-                            <li class="subitem"><a href="#">C#</a></li>
-                            <li class="subitem"><a href="#">Design Patterns</a></li>
-                            <li class="subitem">
-                                <a href="#">Database<span class="plus"></span></a>
-                                <ul class="submenu">
-                                    <li class="subitem"><a href="#">SQL Server</a></li>
-                                    <li class="subitem"><a href="#">MySQL</a></li>
-                                </ul>
-                            </li>
-                            <li class="subitem">
-                                <a href="#">Client Side<span class="plus"></span></a>
-                                <ul class="submenu">
-                                    <li class="subitem"><a href="#">Javascript</a></li>
-                                    <li class="subitem"><a href="#">Jquery</a></li>
-                                    <li class="subitem"><a href="#">HTML and CSS</a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                        @await Component.InvokeAsync("ArticleCategory")
+                        
 
                     </li>
                     <li class="item"><a asp-controller="AboutUs" asp-action="Index" asp-area="">About</a></li>
