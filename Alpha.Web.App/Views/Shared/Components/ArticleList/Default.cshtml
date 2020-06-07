@@ -25,10 +25,7 @@
                 </h2>
 
                 <p class="post-meta">
-                    by
-                    <span class="author vcard">
-                        <a href="#" title="Posts by Said Rohullah Allem" rel="author">S.R Allem</a>
-                    </span> | <span class="published"><LocalDate utc="@instance.Article.CreatedDate"></LocalDate></span>
+                   <span class="published"><LocalDate utc="@instance.Article.CreatedDate"></LocalDate></span>
                 </p>
                 <div class="post-content">
                     <div class="article-summary">
@@ -36,7 +33,7 @@
                             @Html.Raw(instance.Article.Summary)
                         </p>
                     </div>
-                    <div class="float-right">
+                    <div class="tags-in-articles float-right">
                         @foreach (var tag in instance.Tags)
                         {
                             if (tag != null)
