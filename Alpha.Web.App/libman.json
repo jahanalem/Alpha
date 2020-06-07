@@ -14,5 +14,10 @@
       "library": "tinymce@5.2.2",
       "destination": "wwwroot/lib/tinymce/"
     }
-  ]
+  ,
+{
+  "library": "twitter-bootstrap@4.5.0",
+  "destination": "wwwroot/lib/twitter-bootstrap/"
+}
+]
 }
