@@ -51,7 +51,8 @@ $(document).ready(function () {
         var utc = element.attr("utc"); // "2018-12-28T02:36:13.6774675Z"
         var d = new Date(utc);
 
-        var l = convertUTCDateToLocalDate(d).toLocaleString();//d.toLocaleString(); // Runs client side, so will be client's local time!
+        var l = convertUTCDateToLocalDate(d).toLocaleString({},
+            { month: "long", day: "2-digit", year: "numeric" });//d.toLocaleString(); // Runs client side, so will be client's local time!
         element.text(l);
 
     });
