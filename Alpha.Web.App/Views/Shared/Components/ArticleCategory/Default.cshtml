@@ -2,5 +2,5 @@
 @model List<ArticleCategory>
 
 
-    @await Html.PartialAsync("_ShowArticleCategory", 
-        new RecursionArticleCategory { ArticleCategories = Model, ParentId = null })
+@await Html.PartialAsync("_ShowArticleCategory",
+    new RecursionArticleCategory { ArticleCategories = Model, ParentId = null })
