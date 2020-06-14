@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
+﻿using System.Threading.Tasks;
 using Alpha.Infrastructure.PaginationUtility;
-using Alpha.Services;
 using Alpha.Services.Interfaces;
-using Alpha.ViewModels;
 using Alpha.ViewModels.Searches;
 using Alpha.Web.App.Resources.AppSettingsFileModel;
-using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 
 namespace Alpha.Web.App.Components
 {
@@ -23,10 +14,12 @@ namespace Alpha.Web.App.Components
     {
         private readonly IArticleService _articleService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private int pageNumber = 1;
-        private int? tagId = null;
-        private string niceUrl = string.Empty;
         private IOptions<AppSettingsModel> _appSettings;
+        private string _niceUrl = string.Empty;
+        private int _pageNumber = 1;
+        private int? _tagId;
+        private int? _artCatId;
+
         public ArticleListViewComponent(IArticleService articleService,
             IHttpContextAccessor httpContextAccessor,
             IOptions<AppSettingsModel> appSettings)
@@ -37,54 +30,47 @@ namespace Alpha.Web.App.Components
             //var result = 1;
             if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
             {
-                string queryString = (_httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.PageNumber]);
-                string tId = (_httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.TagId]);
+                string queryString = _httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.PageNumber];
+                string tId = _httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.TagId];
+                //string artCatId = _httpContextAccessor.HttpContext.Request.Query[QueryStringParameters.ArtCatId];
                 if (queryString == null && tId == null)
                 {
                     var routeValues = _httpContextAccessor.HttpContext.Request.RouteValues;
-                    if (routeValues["tagId"] != null)
-                    {
-                        tagId = int.Parse(routeValues["tagId"].ToString());
-                    }
-                    if (routeValues["pageNumber"] != null)
-                    {
-                        pageNumber = int.Parse(routeValues["pageNumber"].ToString());
-                    }
-                }
-                if (queryString != null)
-                {
-                    Int32.TryParse(queryString, out pageNumber);
+                    if (routeValues["tagId"] != null) _tagId = int.Parse(routeValues["tagId"].ToString());
+                    if (routeValues["pageNumber"] != null) _pageNumber = int.Parse(routeValues["pageNumber"].ToString());
+                   // if (routeValues["artCatId"] != null) _artCatId = int.Parse(routeValues["artCatId"].ToString());
                 }
 
-                if (tId != null)
-                {
-                    tagId = int.Parse(tId);
-                }
-                ViewBag.PageNumber = pageNumber;
+                if (queryString != null) int.TryParse(queryString, out _pageNumber);
+
+                if (tId != null) _tagId = int.Parse(tId);
+                ViewBag.PageNumber = _pageNumber;
             }
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(SearchResultsViewModel model = null)
+        public async Task<IViewComponentResult> InvokeAsync(ViewModels.ArticleTagListViewModel model = null)
         {
-            var key = $"TotalItems-TagId-{tagId}";
-            if (TempData[key] == null)
+            if (model == null)
             {
-                TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
+                var key = $"TotalItems-TagId-{_tagId}";
+                if (TempData[key] == null) TempData[key] = await _articleService.FilterByTag(_tagId).CountAsync();
+
+                model =
+                    await _articleService.FilterByTagAsync(_tagId, _pageNumber, _appSettings.Value.DefaultItemsPerPage);
+                var x = Url.Action(_niceUrl);
+                model.Pagination.Init(new Pagination
+                {
+                    PagingInfo = new PagingInfo
+                    {
+                        TotalItems = int.Parse(TempData[key].ToString()),
+                        ItemsPerPage = _appSettings.Value.DefaultItemsPerPage, // PagingInfo.DefaultItemsPerPage,
+                        CurrentPage = _pageNumber
+                    },
+                    Url = Url.Action("Index", "Article", new { tagId = _tagId, pageNumber = _pageNumber })
+                });
             }
 
-            ArticleTagListViewModel result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
-            var x = Url.Action(niceUrl);
-            result.Pagination.Init(new Pagination
-            {
-                PagingInfo = new PagingInfo
-                {
-                    TotalItems = int.Parse(TempData[key].ToString()),
-                    ItemsPerPage = _appSettings.Value.DefaultItemsPerPage,// PagingInfo.DefaultItemsPerPage,
-                    CurrentPage = pageNumber
-                },
-                Url = Url.Action(action: "Index", controller: "Article", new { tagId = tagId, pageNumber = pageNumber })
-            });
-            return View(result);
+            return View(model);
         }
     }
 }

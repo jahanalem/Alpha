@@ -8,5 +8,6 @@ namespace Alpha.Infrastructure.PaginationUtility
     {
         public const string PageNumber = "pageNumber";
         public const string TagId = "tagId";
+        //public const string ArtCatId = "artCatId";
     }
 }
