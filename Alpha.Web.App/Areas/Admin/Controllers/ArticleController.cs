@@ -43,6 +43,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             _appSettings = appSettings;
             _articleCategoryService = articleCategoryService;
         }
+
+        [Route("Admin/Article/pageNumber/{pageNumber:int}")]
+        [Route("Admin/Article/")]
         public async Task<IActionResult> Index(int? tagId = null, int pageNumber = 1)
         {
             var key = $"admin_TotalItems-TagId-{tagId}";
