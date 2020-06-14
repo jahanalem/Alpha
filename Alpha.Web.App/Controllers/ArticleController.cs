@@ -43,7 +43,6 @@ namespace Alpha.Web.App.Controllers
         [Route("Article/artCatId/{artCatId:int}/pageNumber/{pageNumber:int}")]
         [Route("Article/artCatId/{artCatId:int}")]
         [Route("Article/tagId/{tagId:int}/pageNumber/{pageNumber:int}")]
-
         public async Task<IActionResult> Index(int? artCatId = null, int? tagId = null, int pageNumber = 1)
         {
             var key = $"TotalItems-TagId-{tagId}-artCatId-{artCatId}";
