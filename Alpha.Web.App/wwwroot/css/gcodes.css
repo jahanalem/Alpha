@@ -77,9 +77,8 @@ a {
 
 #footer {
     position: absolute;
-    bottom: 0;
+    bottom: -6rem;
     width: 100%;
-    
 }
 #page-container {
     position: relative;
