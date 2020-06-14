@@ -11,16 +11,26 @@ namespace Alpha.Services.Interfaces
 {
     public interface IArticleService : IBaseService<Article>
     {
-        //Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber, int pageSize,
+        // Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber, int pageSize,
         //    IArticleRepository articleRepository, IArticleTagRepository articleTagRepository);
         List<Tag> GetTagsByArticleId(int articleId);
+
         Task<List<ArticleViewModel>> GetAllOfArticleViewModel();
+
         Task<ArticleViewModel> GetArticleById(int articleId);
 
         IQueryable<Article> FilterByTag(int? tagId);
-        Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber, int items);
+
+        IQueryable<Article> FilterByCategory(int? catId);
+
+        Task<ArticleTagListViewModel> FilterByCriteriaAsync(int tagId, int artCatId, int pageNumber = 1, int items = 10);
+
+        Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber = 1, int items = 10);
+
+        Task<ArticleTagListViewModel> FilterByCategoryAsync(int? artCatId, int pageNumber = 1, int items = 10);
 
         Task<int> InsertAsync(ArticleViewModel viewModel);
+
         Task<List<Tag>> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList);
 
         Task<SearchResultsViewModel> Search(string search, int pageNumber, int items);

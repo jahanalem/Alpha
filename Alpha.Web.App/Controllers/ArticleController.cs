@@ -18,10 +18,11 @@ namespace Alpha.Web.App.Controllers
     {
         private readonly IArticleService _articleService;
         private IOptions<AppSettingsModel> _appSettings;
+
         public ArticleController(IArticleService articleService,
             IOptions<AppSettingsModel> appSettings)
         {
-            _articleService = articleService;
+            this._articleService = articleService;
             _appSettings = appSettings;
         }
 
@@ -36,18 +37,44 @@ namespace Alpha.Web.App.Controllers
 
         // GET: Article
         [HttpGet]
-        public async Task<IActionResult> Index(int? tagId = null, int pageNumber = 1)
+        [Route("Article/pageNumber/{pageNumber:int}")]
+        [Route("Article/artCatId/{artCatId:int}/tagId/{tagId:int}/pageNumber/{pageNumber:int}")]
+        [Route("Article/artCatId/{artCatId:int}/tagId/{tagId:int}")]
+        [Route("Article/artCatId/{artCatId:int}/pageNumber/{pageNumber:int}")]
+        [Route("Article/artCatId/{artCatId:int}")]
+        [Route("Article/tagId/{tagId:int}/pageNumber/{pageNumber:int}")]
+
+        public async Task<IActionResult> Index(int? artCatId = null, int? tagId = null, int pageNumber = 1)
         {
-            var key = $"TotalItems-TagId-{tagId}";
+            var key = $"TotalItems-TagId-{tagId}-artCatId-{artCatId}";
 
             if (TempData[key] == null)
             {
-                TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
+                if (tagId != null)
+                    TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
+                else if (artCatId != null)
+                    TempData[key] = await _articleService.FilterByCategory(artCatId).CountAsync();
             }
 
-            var result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
+            string url = string.Empty;
+            ArticleTagListViewModel result = null;
+            if (tagId != null && artCatId != null)
+            {
+                url = Url.Action(action: "Index", controller: "Article", new { artCatId = artCatId, tagId = tagId, pageNumber = pageNumber });
+                result = await _articleService.FilterByCriteriaAsync(tagId.Value, artCatId.Value, pageNumber, _appSettings.Value.DefaultItemsPerPage);
+            }
+            else if (tagId != null)
+            {
+                url = Url.Action(action: "Index", controller: "Article", new { tagId = tagId, pageNumber = pageNumber });
+                result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
+            }
+            else if (artCatId != null)
+            {
+                url = Url.Action(action: "Index", controller: "Article", new { artCatId = artCatId, pageNumber = pageNumber });
+                result = await _articleService.FilterByCategoryAsync(artCatId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
+            }
 
-            result.Pagination.Init(new Pagination
+            result?.Pagination?.Init(new Pagination
             {
                 PagingInfo = new PagingInfo
                 {
@@ -55,7 +82,7 @@ namespace Alpha.Web.App.Controllers
                     ItemsPerPage = _appSettings.Value.DefaultItemsPerPage, //PagingInfo.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
-                Url = Url.Action(action: "Index", controller: "Article", new { tagId = tagId, pageNumber = pageNumber })
+                Url = url
             });
 
             TempData.Keep(key);
