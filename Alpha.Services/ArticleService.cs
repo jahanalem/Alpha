@@ -78,7 +78,67 @@ namespace Alpha.Services
             return query;
         }
 
-        public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber, int items = 10)
+        public IQueryable<Article> FilterByCategory(int? catId)
+        {
+            IQueryable<Article> query;
+            if (catId != null)
+            {
+                query = _articleRepository.Instance()
+                    .Where(c => c.ArticleCategoryId == catId && c.IsActive && c.IsPublished);
+            }
+            else
+            {
+                query = _articleRepository.Instance().Where(c => c.IsActive && c.IsPublished);
+            }
+
+            return query;
+        }
+
+        public IQueryable<Article> FilterByCriteriaQueryable(int tagId, int artCatId)
+        {
+            IQueryable<Article> query = _articleRepository.Instance()
+               .Where(c => c.IsActive && c.IsPublished && c.ArticleCategoryId == artCatId)
+               .Join(_articleTagRepository.Instance().Where(x => x.TagId == tagId), a => a.Id, at => at.ArticleId,
+                   (a, at) => a);
+
+            return query;
+        }
+
+        public async Task<ArticleTagListViewModel> FilterByCriteriaAsync(int tagId, int artCatId, int pageNumber = 1, int items = 10)
+        {
+            var itemsPerPage = items;
+            var articleViewModelList = new List<ArticleViewModel>();
+
+            IQueryable<Article> query = FilterByCriteriaQueryable(tagId, artCatId);
+
+            var articleList = await query.OrderByDescending(k => k.CreatedDate)
+                .Skip((pageNumber - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ToListAsync();
+
+            foreach (var article in articleList)
+            {
+                var tags = _articleTagService.GetTagsByArticleId(article.Id);
+                articleViewModelList.Add(new ArticleViewModel
+                {
+                    Article = article,
+                    Tags = tags,
+                });
+            }
+
+            var result = new ArticleTagListViewModel
+            {
+                ArticleViewModelList = articleViewModelList,
+                TagId = tagId
+            };
+            if (tagId != null)
+            {
+                //result.Pagination.QueryStrings.TryAdd(QueryStringParameters.TagId, tagId.Value.ToString());// = new Dictionary<string, string> { { "tagId", tagId.Value.ToString() } };
+            }
+            return result;
+        }
+
+        public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber = 1, int items = 10)
         {
             var itemsPerPage = items;
             var articleViewModelList = new List<ArticleViewModel>();
@@ -109,6 +169,37 @@ namespace Alpha.Services
             {
                 //result.Pagination.QueryStrings.TryAdd(QueryStringParameters.TagId, tagId.Value.ToString());// = new Dictionary<string, string> { { "tagId", tagId.Value.ToString() } };
             }
+            return result;
+        }
+
+        public async Task<ArticleTagListViewModel> FilterByCategoryAsync(int? artCatId, int pageNumber = 1, int items = 10)
+        {
+            var itemsPerPage = items;
+            var articleViewModelList = new List<ArticleViewModel>();
+
+            IQueryable<Article> query = FilterByCategory(artCatId);
+
+            var articleList = await query.OrderByDescending(k => k.CreatedDate)
+                .Skip((pageNumber - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ToListAsync();
+
+            foreach (var article in articleList)
+            {
+                var tags = _articleTagService.GetTagsByArticleId(article.Id);
+                articleViewModelList.Add(new ArticleViewModel
+                {
+                    Article = article,
+                    Tags = tags,
+                });
+            }
+
+            var result = new ArticleTagListViewModel
+            {
+                ArticleViewModelList = articleViewModelList,
+                TagId = null
+            };
+
             return result;
         }
 

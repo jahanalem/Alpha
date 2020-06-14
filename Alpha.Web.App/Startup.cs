@@ -276,7 +276,16 @@ namespace Alpha.Web.App
             {
                 endpoints.MapControllerRoute("areasDefault", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller}/{action}/{id?}");
-                endpoints.MapControllerRoute(name: "articleformat", pattern: "{controller=Article}/{action}/tagId/{tagId?}/pageNumber/{pageNumber}");
+
+
+                //endpoints.MapControllerRoute(name: "article tag", pattern: "{controller=Article}/{action}/tagId/{tagId?}/pageNumber/{pageNumber}");
+                //endpoints.MapControllerRoute(name: "article cat without page", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}");
+                //endpoints.MapControllerRoute(name: "article cat", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}/pageNumber/{pageNumber}");
+                //endpoints.MapControllerRoute(name: "article cat and tag", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}/tagId/{tagId?}/pageNumber/{pageNumber}");
+
+
+                endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{tagId?}/{artCatId?}/{pageNumber?}");
+                
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{id?}");
                 //endpoints.MapAreaControllerRoute("areasDefault","Admin", "{controller=Home}/{action=Index}/{id?}");
