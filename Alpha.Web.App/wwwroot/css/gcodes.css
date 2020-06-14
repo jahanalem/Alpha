@@ -25,11 +25,7 @@
     padding: 0;
 }
 
-.wrapper {
-    display: block;
-    margin: 0 auto;
-    max-width: 90%; /*1280px;*/
-}
+
 
 /* .row:after {
     content: ' ';
@@ -70,6 +66,24 @@ input, select, textarea {
 
 a {
     text-decoration: none;
+}
+
+.wrapper {
+    display: block;
+    margin: 0 auto;
+    max-width: 90%; /*1280px;*/
+    padding-bottom: 2.5rem; /* Footer height */
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    
+}
+#page-container {
+    position: relative;
+    min-height: 100vh;
 }
 
 .mainheader {
@@ -297,6 +311,7 @@ a {
     flex-wrap: wrap;
     justify-content: start;
     margin-top: 6.25rem;
+    padding-bottom: 6.7rem;
 }
 
     #content > div {
@@ -994,7 +1009,7 @@ submitLink:focus {
         margin: 0 auto;
         margin-top: -1rem;
         width: 100%;
-        z-index: 1;
+        z-index: 4;
     }
 
     #logo {

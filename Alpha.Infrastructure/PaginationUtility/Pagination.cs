@@ -19,7 +19,7 @@ namespace Alpha.Infrastructure.PaginationUtility
             var pageNumber = QueryStringParameters.PageNumber;
             var pos = url.IndexOf(pageNumber, StringComparison.Ordinal);
             url = url.Remove(pos + pageNumber.Length);
-            url = $"{url}={value}";
+            url = $"{url}/{value}";
             return url;
         }
     }
