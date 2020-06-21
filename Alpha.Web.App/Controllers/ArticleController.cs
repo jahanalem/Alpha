@@ -5,6 +5,7 @@ using Alpha.DataAccess.Interfaces;
 using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Models;
 using Alpha.Services;
+using Alpha.Services.Extensions;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
 using Alpha.Web.App.Resources.AppSettingsFileModel;
@@ -18,12 +19,13 @@ namespace Alpha.Web.App.Controllers
     {
         private readonly IArticleService _articleService;
         private IOptions<AppSettingsModel> _appSettings;
-
-        public ArticleController(IArticleService articleService,
+        private IArticleTagService _articleTagService;
+        public ArticleController(IArticleService articleService, IArticleTagService articleTagService,
             IOptions<AppSettingsModel> appSettings)
         {
             this._articleService = articleService;
             _appSettings = appSettings;
+            _articleTagService = articleTagService;
         }
 
         [HttpGet]
@@ -49,29 +51,15 @@ namespace Alpha.Web.App.Controllers
 
             if (TempData[key] == null)
             {
-                if (tagId != null)
-                    TempData[key] = await _articleService.FilterByTag(tagId).CountAsync();
-                else if (artCatId != null)
-                    TempData[key] = await _articleService.FilterByCategory(artCatId).CountAsync();
+                TempData[key] = await _articleService.FilterByCriteria(tagId, artCatId).CountAsync();
             }
 
-            string url = string.Empty;
-            ArticleTagListViewModel result = null;
-            if (tagId != null && artCatId != null)
-            {
-                url = Url.Action(action: "Index", controller: "Article", new { artCatId = artCatId, tagId = tagId, pageNumber = pageNumber });
-                result = await _articleService.FilterByCriteriaAsync(tagId.Value, artCatId.Value, pageNumber, _appSettings.Value.DefaultItemsPerPage);
-            }
-            else if (tagId != null)
-            {
-                url = Url.Action(action: "Index", controller: "Article", new { tagId = tagId, pageNumber = pageNumber });
-                result = await _articleService.FilterByTagAsync(tagId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
-            }
-            else if (artCatId != null)
-            {
-                url = Url.Action(action: "Index", controller: "Article", new { artCatId = artCatId, pageNumber = pageNumber });
-                result = await _articleService.FilterByCategoryAsync(artCatId, pageNumber, _appSettings.Value.DefaultItemsPerPage);
-            }
+            var result = await _articleService
+                 .FilterByCriteria(tagId, artCatId)
+                 .Slice(pageNumber, _appSettings.Value.DefaultItemsPerPage)
+                 .MapToViewModel(_articleTagService, tagId);
+
+            string url = Url.Action(action: "Index", controller: "Article", new { artCatId, tagId, pageNumber });
 
             result?.Pagination?.Init(new Pagination
             {
@@ -85,6 +73,7 @@ namespace Alpha.Web.App.Controllers
             });
 
             TempData.Keep(key);
+
             return View(result);
         }
     }
