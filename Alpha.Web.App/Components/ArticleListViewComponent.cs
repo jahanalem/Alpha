@@ -53,7 +53,8 @@ namespace Alpha.Web.App.Components
             if (model == null)
             {
                 var key = $"TotalItems-TagId-{_tagId}";
-                if (TempData[key] == null) TempData[key] = await _articleService.FilterByTag(_tagId).CountAsync();
+                if (TempData[key] == null) 
+                    TempData[key] = await _articleService.FilterByTag(_tagId).CountAsync();
 
                 model =
                     await _articleService.FilterByTagAsync(_tagId, _pageNumber, _appSettings.Value.DefaultItemsPerPage);
