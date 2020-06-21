@@ -24,7 +24,7 @@ namespace Alpha.DataAccess.Interfaces
         Task<int> AddOrUpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> FindByIdAsync(TId id, params Expression<Func<TEntity, object>>[] includeProperties);
 
-        IQueryable<TEntity> FetchByCriteria(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
+        IQueryable<TEntity> FetchByCriteria(Expression<Func<TEntity, bool>> predicate = null, params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<TEntity> FindAsync(object primaryKey);
 
