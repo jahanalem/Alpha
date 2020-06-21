@@ -30,6 +30,7 @@ using HtmlAgilityPack;
 using System.Web;
 using System.Text.RegularExpressions;
 using Alpha.Infrastructure.Convertors;
+using Alpha.Services.Extensions;
 
 namespace Alpha.Services
 {
@@ -60,9 +61,80 @@ namespace Alpha.Services
             _urlHelper = urlHelper;
         }
 
+        public IQueryable<Article> FilterByCriteria(int? tagId = null, int? catId = null)
+        {
+            IQueryable<Article> query = null;
+
+            var articleViewModelList = new List<ArticleViewModel>();
+
+            if (catId != null && tagId != null)
+            {
+                query = FilterByCriteriaQueryableAsync(tagId.Value, catId.Value).Result;
+            }
+            else if (catId != null && tagId == null)
+            {
+                query = FilterByCategoryAsync(catId.Value).Result;
+            }
+            else if (catId == null && tagId != null)
+            {
+                query = FilterByTag(tagId.Value);
+            }
+            else
+            {
+                query = _articleRepository.FetchByCriteria(c => c.IsActive && c.IsPublished);
+            }
+
+
+            return query;
+        }
+
+        //private ArticleTagListViewModel MapToViewModel(List<Article> articleList, int? tagId)
+        //{
+        //    var articleViewModelList = new List<ArticleViewModel>();
+        //    foreach (var article in articleList)
+        //    {
+        //        var tags = _articleTagService.GetTagsByArticleId(article.Id);
+        //        articleViewModelList.Add(new ArticleViewModel
+        //        {
+        //            Article = article,
+        //            Tags = tags,
+        //        });
+        //    }
+
+        //    var result = new ArticleTagListViewModel
+        //    {
+        //        ArticleViewModelList = articleViewModelList,
+        //        TagId = tagId
+        //    };
+
+        //    return result;
+        //}
+
+        public async Task<IQueryable<Article>> FilterByCriteriaQueryableAsync(int tagId, int catId)
+        {
+            List<ArticleCategory> selectedCategories = await _articleCategoryService.GetSelfAndDescendants(catId);
+            IQueryable<Article> query1 = GetArticlesByCategories(selectedCategories);
+            IQueryable<Article> query = query1
+               .Where(c => c.IsActive && c.IsPublished)
+               .Join(_articleTagRepository.Instance().Where(x => x.TagId == tagId), a => a.Id, at => at.ArticleId,
+                   (a, at) => a);
+
+            return query;
+        }
+
+        private async Task<IQueryable<Article>> FilterByCategoryAsync(int catId)
+        {
+            List<ArticleCategory> selectedCategories = await _articleCategoryService.GetSelfAndDescendants(catId);
+            IQueryable<Article> query1 = GetArticlesByCategories(selectedCategories);
+
+            var query = query1.Where(c => c.IsActive && c.IsPublished);
+
+            return query;
+        }
+
         public IQueryable<Article> FilterByTag(int? tagId)
         {
-            IQueryable<Article> query;
+            IQueryable<Article> query = null;
             if (tagId != null)
             {
                 query = _articleRepository.Instance()
@@ -72,71 +144,37 @@ namespace Alpha.Services
             }
             else
             {
-                query = _articleRepository.Instance().Where(c => c.IsActive && c.IsPublished);
+                query = _articleRepository.FetchByCriteria(a => a.IsActive && a.IsPublished);
             }
+            return query;
+        }
+
+
+        private IQueryable<Article> FilterByTag(IQueryable<Article> query, int tagId)
+        {
+            query = query
+                .Join(_articleTagRepository.Instance()
+                .Where(x => x.TagId == tagId), a => a.Id, at => at.ArticleId, (a, at) => a);
 
             return query;
         }
 
-        public IQueryable<Article> FilterByCategory(int? catId)
+
+        public IQueryable<Article> GetArticlesByCategories(List<ArticleCategory> categories, bool isArticleActive = true, bool isArticlePublished = true)
         {
             IQueryable<Article> query;
-            if (catId != null)
+            var pr = PredicateBuilder.False<Article>();
+            foreach (var cat in categories)
             {
-                query = _articleRepository.Instance()
-                    .Where(c => c.ArticleCategoryId == catId && c.IsActive && c.IsPublished);
+                pr = pr.Or(p => p.ArticleCategoryId == cat.Id);
             }
-            else
-            {
-                query = _articleRepository.Instance().Where(c => c.IsActive && c.IsPublished);
-            }
+            pr = pr.And(a => a.IsActive == isArticleActive);
+            pr = pr.And(a => a.IsPublished == isArticlePublished);
+            query = _articleRepository.FetchByCriteria(pr);
 
             return query;
         }
 
-        public IQueryable<Article> FilterByCriteriaQueryable(int tagId, int artCatId)
-        {
-            IQueryable<Article> query = _articleRepository.Instance()
-               .Where(c => c.IsActive && c.IsPublished && c.ArticleCategoryId == artCatId)
-               .Join(_articleTagRepository.Instance().Where(x => x.TagId == tagId), a => a.Id, at => at.ArticleId,
-                   (a, at) => a);
-
-            return query;
-        }
-
-        public async Task<ArticleTagListViewModel> FilterByCriteriaAsync(int tagId, int artCatId, int pageNumber = 1, int items = 10)
-        {
-            var itemsPerPage = items;
-            var articleViewModelList = new List<ArticleViewModel>();
-
-            IQueryable<Article> query = FilterByCriteriaQueryable(tagId, artCatId);
-
-            var articleList = await query.OrderByDescending(k => k.CreatedDate)
-                .Skip((pageNumber - 1) * itemsPerPage)
-                .Take(itemsPerPage)
-                .ToListAsync();
-
-            foreach (var article in articleList)
-            {
-                var tags = _articleTagService.GetTagsByArticleId(article.Id);
-                articleViewModelList.Add(new ArticleViewModel
-                {
-                    Article = article,
-                    Tags = tags,
-                });
-            }
-
-            var result = new ArticleTagListViewModel
-            {
-                ArticleViewModelList = articleViewModelList,
-                TagId = tagId
-            };
-            if (tagId != null)
-            {
-                //result.Pagination.QueryStrings.TryAdd(QueryStringParameters.TagId, tagId.Value.ToString());// = new Dictionary<string, string> { { "tagId", tagId.Value.ToString() } };
-            }
-            return result;
-        }
 
         public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber = 1, int items = 10)
         {
@@ -176,8 +214,9 @@ namespace Alpha.Services
         {
             var itemsPerPage = items;
             var articleViewModelList = new List<ArticleViewModel>();
+            var catList = await _articleCategoryService.GetSelfAndDescendants(artCatId.Value);
 
-            IQueryable<Article> query = FilterByCategory(artCatId);
+            IQueryable<Article> query = GetArticlesByCategories(catList);//FilterByCategory(artCatId);
 
             var articleList = await query.OrderByDescending(k => k.CreatedDate)
                 .Skip((pageNumber - 1) * itemsPerPage)
@@ -372,5 +411,6 @@ namespace Alpha.Services
 
             return result;
         }
+
     }
 }

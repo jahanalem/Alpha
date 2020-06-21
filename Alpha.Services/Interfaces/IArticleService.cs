@@ -21,13 +21,14 @@ namespace Alpha.Services.Interfaces
 
         IQueryable<Article> FilterByTag(int? tagId);
 
-        IQueryable<Article> FilterByCategory(int? catId);
+        //IQueryable<Article> FilterByCategory(int? catId);
 
-        Task<ArticleTagListViewModel> FilterByCriteriaAsync(int tagId, int artCatId, int pageNumber = 1, int items = 10);
+        IQueryable<Article> FilterByCriteria(int? tagId = null, int? catId = null);
+        //Task<ArticleTagListViewModel> FilterByCriteriaAsync(int? tagId, int? artCatId, int pageNumber = 1, int items = 10);
 
         Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber = 1, int items = 10);
 
-        Task<ArticleTagListViewModel> FilterByCategoryAsync(int? artCatId, int pageNumber = 1, int items = 10);
+        //Task<ArticleTagListViewModel> FilterByCategoryAsync(int? artCatId, int pageNumber = 1, int items = 10);
 
         Task<int> InsertAsync(ArticleViewModel viewModel);
 

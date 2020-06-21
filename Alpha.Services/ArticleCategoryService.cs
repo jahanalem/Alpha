@@ -3,6 +3,7 @@ using Alpha.DataAccess.UnitOfWork;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,6 +36,33 @@ namespace Alpha.Services
                 ParentId = model.Category.ParentId
             };
             return await base.AddOrUpdateAsync(ac);
+        }
+
+        public async Task<List<ArticleCategory>> GetSelfAndDescendants(int id)
+        {
+            var result = new List<ArticleCategory>();
+            var root = await _articleCategoryRepository.FetchByCriteria(c => c.Id == id && c.IsActive).SingleOrDefaultAsync();
+            result.Add(root);
+            return await GetDescendantsRecursive(id, result);
+        }
+
+        private async Task<List<ArticleCategory>> GetDescendantsRecursive(int id, List<ArticleCategory> result)
+        {
+            var node = await _articleCategoryRepository.FetchByCriteria(c => c.Id == id && c.IsActive).SingleOrDefaultAsync();
+            if (node != null)
+            {
+                //result.Add(node);
+                var list = await _articleCategoryRepository.FetchByCriteria(c => c.ParentId == node.Id && c.IsActive).ToListAsync();
+                foreach (var n in list)
+                {
+                    result.Add(n);
+                    if (n.ParentId != null)
+                    {
+                        await GetDescendantsRecursive(n.Id, result);
+                    }
+                }
+            }
+            return result;
         }
     }
 }
