@@ -34,7 +34,7 @@ namespace Alpha.Web.App.Controllers
             _configuration = config;
             ViewBag.TitleHtmlMetaTag = "Contact Us";
             ViewBag.DescriptionHtmlMetaTag = "You can contact me by this page.";
-            _emailConfigurationSettings = emailConfigurationSettings;
+            this._emailConfigurationSettings = emailConfigurationSettings;
         }
 
         [HttpGet, AllowAnonymous]

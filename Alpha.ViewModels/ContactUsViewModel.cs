@@ -4,6 +4,8 @@ using System.Text;
 using Alpha.Infrastructure.Captcha;
 using Alpha.Models;
 using Alpha.ViewModels.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json.Converters;
 
 
 namespace Alpha.ViewModels
@@ -15,5 +17,8 @@ namespace Alpha.ViewModels
         public virtual string Email { get; set; }
         public virtual string Description { get; set; }
         public virtual string Title { get; set; }
+
+        public virtual IFormFile Attachment { get; set; }
+
     }
 }

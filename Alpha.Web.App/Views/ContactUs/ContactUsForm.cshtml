@@ -18,7 +18,7 @@
         <p class="lead">If you have a question, please send us a message and we will respond as soon as possible. We would love to hear from you. </p>
 
 
-        <form id="contact-form" asp-controller="ContactUs" asp-action="ContactUsForm" method="post">
+        <form id="contact-form" asp-controller="ContactUs" asp-action="ContactUsForm" enctype="multipart/form-data" method="post">
 
             <div class="messages"></div>
             <div class="controls">
@@ -89,6 +89,15 @@
                             <br />
                             @Html.TextBoxFor(m => m.Result, new { @class = "form-control", @required = "required" })
 
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="form_message">Select the file to upload </label>
+                            <input asp-for="@Model.Attachment" name="Attachment" type="file" class="form-control" />
+
+                            <div id="progress"></div>
+                            @*<label asp-for="@Model.Attachment" id="button1">Select</label>*@
                         </div>
                     </div>
                     <div class="col-md-12">
