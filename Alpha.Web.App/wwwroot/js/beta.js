@@ -306,8 +306,8 @@ $(document).ready(function () {
 });
 
 // CONTACT FORM
-/*
 
+/*
 $(document).ready(function () {
     document.getElementById("submitContactForm").disabled = true;
     var form = document.getElementById("contact-form");
@@ -359,6 +359,9 @@ $(document).ready(function () {
             //if (!$form.valid()) return false;
             form.submitContactForm.disabled = true;
 
+
+            
+            
             //var formAction = $(this).attr("action");
 
             var firstNumber = $("#FirstNumber").val();
@@ -375,13 +378,13 @@ $(document).ready(function () {
                 return;
             }
 
-
+            //const conForm = document.querySelector("#contact-form");
             var firstName = $("#FirstName").val();
             var lastName = $("#LastName").val();
             var email = $("#Email").val();
             var title = $("#Title").val();
             var description = $("#Description").val();
-
+            var attachmentfile = $("#Attachment");
 
             var formData = new FormData();
             formData.append("FirstName", firstName);
@@ -392,6 +395,7 @@ $(document).ready(function () {
             formData.append("FirstNumber", firstNumber);
             formData.append("SecondNumber", secondNumber);
             formData.append("Result", captchaResult);
+            formData.append("Attachment", attachmentfile);
 
             $.ajax({
                 type: form.method,
@@ -427,34 +431,134 @@ $(document).ready(function () {
 
 */
 
+//function uploadFileHandler() {
+
+//    const upload = document.querySelector("#Attachment");
+//    //const progress = document.querySelector("#progress");
+//    //const form = document.querySelector("#contact-form");
+//    const files = upload.files;
+//    const block = addProgressBlock(files[0]);
+//    const xhr = new window.XMLHttpRequest();
+//    xhr.upload.addEventListener("progress",
+//        function (event) {
+//            const progressDiv = block.querySelector(".progress-bar div");
+//            const progressSpan = block.querySelector("span");
+//            //progress.innerHTML = "progress" + event.loaded + " bytes sent.<br />";
+//            if (event.lengthComputable) {
+//                const percent = ((event.loaded / event.total) * 100).toFixed(1);
+//                progressSpan.innerHTML = percent + "%";
+//                progressDiv.style.width = percent + "%";
+
+//                if (percent === 100) {
+//                    var x = formData;
+//                }
+
+//                //let percent = parseInt((event.loaded / event.total) * 100);
+//                //progress.innerHTML += "progress: " + percent + "% sent.";
+//            }
+//        }, false);
+
+//    return xhr;
+//}
 
 
 
 // Test upload file
 
-const upload = document.querySelector("#Attachment");
-const progress = document.querySelector("#progress");
-const form = document.querySelector("#contact-form");
-upload.addEventListener("change", function () {
 
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/ContactUs/ContactUsForm/");
-    const formData = new FormData(form);
 
-    xhr.addEventListener("load", function() {
-        console.log(xhr.responseText);
+
+var ContactForm = {
+    id:new Date().getTime(),
+    xhr: new XMLHttpRequest(),
+    aborted: false,
+    form: document.querySelector("#contact-form"),
+    attachment: document.querySelector("#Attachment"),
+    progressArea: document.querySelector("#progress-area")
+
+};
+var cForm = ContactForm;
+$(document).ready(function () {
+    
+    //const attachment = cForm.attachment;//document.querySelector("#Attachment");
+    const progress = document.querySelector("#progress");
+    //const form = cForm.form;// document.querySelector("#contact-form");
+    if (cForm.attachment) {
+
+        cForm.form.addEventListener("submit",
+            function (submitEvent) {
+                submitEvent.preventDefault();
+                //cForm = Object.create(ContactForm);
+                const files = cForm.attachment.files;
+                //const xhr = new XMLHttpRequest();
+                cForm.xhr.open("POST", "/ContactUs/ContactUsForm/");
+                const formData = new FormData(cForm.form);
+
+                cForm.xhr.addEventListener("load",
+                    function () {
+                        console.log(cForm.xhr.responseText);
+                    });
+
+
+                const block = addProgressBlock(files[0]);
+
+                cForm.xhr.upload.addEventListener("progress",
+                    function (event) {
+                        const progressDiv = block.querySelector(".progress-bar div");
+                        const progressSpan = block.querySelector("span");
+                        //progress.innerHTML = "progress" + event.loaded + " bytes sent.<br />";
+                        if (event.lengthComputable) {
+                            const percent = ((event.loaded / event.total) * 100).toFixed(1);
+                            progressSpan.innerHTML = percent + "%";
+                            progressDiv.style.width = percent + "%";
+
+                            //let percent = parseInt((event.loaded / event.total) * 100);
+                            //progress.innerHTML += "progress: " + percent + "% sent.";
+                        }
+                    });
+
+                cForm.xhr.addEventListener("abort", function () {
+                    cForm.xhr.onreadystatechange = null;
+                    cForm.aborted = true;
+                    cForm.attachment.files = null;
+                    cForm.progressArea.innerHTML = null;
+                });
+                if (cForm.aborted) {
+                   
+                    cForm = null;
+                    cForm.xhr = null;
+                    cForm = ContactForm;
+                    return false;
+                }
+                cForm.xhr.send(formData);
+
+                
+            });
+    }
+
+
+    var cancelUpload = document.querySelector("#cancelUpload");
+    cancelUpload.addEventListener("click", function () {
+        cForm.xhr.abort();
     });
 
-    xhr.upload.addEventListener("progress", function(event) {
-        progress.innerHTML = "progress" + event.loaded + " bytes sent.<br />";
-        if (event.lengthComputable) {
-            let percent = parseInt((event.loaded / event.total) * 100);
-            progress.innerHTML += "progress: " + percent + "% sent.";
-        }
-    });
-
-    xhr.send(formData);
 });
+
+
+
+function addProgressBlock(file) {
+
+    const html = `<label>file: ${file.name}</label>
+                    <div class="progress-bar">
+                         <div class="progress-bar progress-bar-striped active" style="width: 0%;"></div>
+                         <span>0%</span>
+                    </div>`;
+    const block = document.createElement("div");
+    block.setAttribute("class", "progress-block");
+    block.innerHTML = html;
+    cForm.progressArea.appendChild(block);
+    return block;
+}
 
 // Menu
 

@@ -6,6 +6,77 @@
     ViewData["Title"] = "ContactUsForm";
 }
 
+<style type="text/css">
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+    }
+
+    /*#upload-area {
+        text-align: center;
+        background-color: #7fa;
+        padding: 50px;
+    }
+
+    #upload-area p {
+        font-size: 48px;
+        margin-bottom: 40px;
+    }*/
+
+    #Attachment {
+        display: none;
+    }
+
+    #btnUploadAttachment {
+        padding: 5px 10px;
+        background: #eee;
+        cursor: pointer;
+        border-radius: 5px;
+        border: 1px solid #bbb;
+    }
+
+        #btnUploadAttachment:hover {
+            background-color: #ddd;
+        }
+
+    #progress-area {
+        padding: 5px;
+    }
+
+    .progress-block {
+        margin-bottom: 5px;
+    }
+
+        .progress-block label {
+            line-height: 1.6;
+        }
+
+    .progress-bar {
+        height: 26px;
+        border: 1px solid whitesmoke;
+        background-color: whitesmoke;
+        position: relative;
+        width: 100%;
+    }
+
+        .progress-bar span {
+            position: absolute;
+            left: calc(50% - 30px);
+            top: 2px;
+        }
+
+        .progress-bar div {
+            background-color: blue;
+            height: 100%;
+        }
+</style>
 
 <div id="contactUsFormContainer" class="row">
 
@@ -93,13 +164,31 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="form_message">Select the file to upload </label>
-                            <input asp-for="@Model.Attachment" name="Attachment" type="file" class="form-control" />
+                            <div id="upload-area">
 
-                            <div id="progress"></div>
-                            @*<label asp-for="@Model.Attachment" id="button1">Select</label>*@
+                                <label id="btnUploadAttachment" asp-for="@Model.Attachment" class="custom-file-upload">
+                                    <i class="fa fa-cloud-upload"></i>Upload file
+                                </label>
+                                <input asp-for="@Model.Attachment"
+                                       name="Attachment"
+                                       type="file"
+                                       class="form-control" />
+                                <button id="cancelUpload">cancel</button>
+                            </div>
+                            <div id="progress-area">
+                                @*<div id="progress-block">
+                                        <label>file:file1.txt</label>
+                                        <div class="progress-bar">
+                                            <div style="width: 18%;"></div>
+                                            <span>18%</span>
+                                        </div>
+                                    </div>*@
+                            </div>
+                            @*<div id="progress"></div>*@
                         </div>
                     </div>
+
+
                     <div class="col-md-12">
                         <input id="submitContactForm" type="submit" class="btn btn-success btn-send" value="Send message">
                     </div>
