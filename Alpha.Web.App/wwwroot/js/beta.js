@@ -469,7 +469,6 @@ $(document).ready(function () {
 
 
 var ContactForm = {
-    id:new Date().getTime(),
     xhr: new XMLHttpRequest(),
     aborted: false,
     form: document.querySelector("#contact-form"),
@@ -477,87 +476,105 @@ var ContactForm = {
     progressArea: document.querySelector("#progress-area")
 
 };
-var cForm = ContactForm;
-$(document).ready(function () {
-    
-    //const attachment = cForm.attachment;//document.querySelector("#Attachment");
-    const progress = document.querySelector("#progress");
-    //const form = cForm.form;// document.querySelector("#contact-form");
-    if (cForm.attachment) {
 
-        cForm.form.addEventListener("submit",
+var myContactForm = Object.create(ContactForm);
+
+$(document).ready(function () {
+    if (myContactForm.attachment) {
+
+        myContactForm.form.addEventListener("submit",
             function (submitEvent) {
                 submitEvent.preventDefault();
-                //cForm = Object.create(ContactForm);
-                const files = cForm.attachment.files;
+                //myContactForm = Object.create(ContactForm);
+                const files = myContactForm.attachment.files;
                 //const xhr = new XMLHttpRequest();
-                cForm.xhr.open("POST", "/ContactUs/ContactUsForm/");
-                const formData = new FormData(cForm.form);
+                myContactForm.xhr.open("POST", "/ContactUs/ContactUsForm/");
+                const formData = new FormData(myContactForm.form);
 
-                cForm.xhr.addEventListener("load",
+                myContactForm.xhr.addEventListener("load",
                     function () {
-                        console.log(cForm.xhr.responseText);
-                    });
+                        if ((myContactForm.xhr.status >= 200 && myContactForm.xhr.status < 300) || myContactForm.xhr.status === 304) {
+                            var result = JSON.parse(myContactForm.xhr.responseText);
+                            var messageAlert = 'alert-' + result.type;
+                            var messageText = result.message;
+
+                            var alertBox = '<div class="alert ' +
+                                messageAlert +
+                                ' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                                messageText +
+                                '</div>';
+
+                            if (messageAlert && messageText) {
+                                $('#contact-form').find('.messages').html(alertBox);
+                                $('#contact-form')[0].reset();
+                            }
 
 
-                const block = addProgressBlock(files[0]);
-
-                cForm.xhr.upload.addEventListener("progress",
-                    function (event) {
-                        const progressDiv = block.querySelector(".progress-bar div");
-                        const progressSpan = block.querySelector("span");
-                        //progress.innerHTML = "progress" + event.loaded + " bytes sent.<br />";
-                        if (event.lengthComputable) {
-                            const percent = ((event.loaded / event.total) * 100).toFixed(1);
-                            progressSpan.innerHTML = percent + "%";
-                            progressDiv.style.width = percent + "%";
-
-                            //let percent = parseInt((event.loaded / event.total) * 100);
-                            //progress.innerHTML += "progress: " + percent + "% sent.";
+                            console.log(myContactForm.xhr.responseText);
+                        } else {
+                            console.log("Status: " + myContactForm.xhr.status);
                         }
                     });
 
-                cForm.xhr.addEventListener("abort", function () {
-                    cForm.xhr.onreadystatechange = null;
-                    cForm.aborted = true;
-                    cForm.attachment.files = null;
-                    cForm.progressArea.innerHTML = null;
-                });
-                if (cForm.aborted) {
-                   
-                    cForm = null;
-                    cForm.xhr = null;
-                    cForm = ContactForm;
-                    return false;
-                }
-                cForm.xhr.send(formData);
+                const block = addProgressBlock(files[0]);
+                myContactForm.xhr.upload.addEventListener("progress",
+                    function (event) {
 
-                
+                        if (block != null) {
+                            const progressDiv = block.querySelector(".progress-bar div");
+                            const progressSpan = block.querySelector("span");
+                            //progress.innerHTML = "progress" + event.loaded + " bytes sent.<br />";
+                            if (event.lengthComputable) {
+                                const percent = ((event.loaded / event.total) * 100).toFixed(1);
+                                progressSpan.innerHTML = percent + "%";
+                                progressDiv.style.width = percent + "%";
+
+                                //let percent = parseInt((event.loaded / event.total) * 100);
+                                //progress.innerHTML += "progress: " + percent + "% sent.";
+                            }
+                        }
+                    });
+
+                myContactForm.xhr.addEventListener("abort", function () {
+                    myContactForm.xhr.onreadystatechange = null;
+                    myContactForm.attachment.files = null;
+                    myContactForm.attachment = null;
+                    myContactForm.progressArea.innerHTML = null;
+                    myContactForm.aborted = false;
+                    myContactForm.xhr = null;
+                    document.querySelector("#Attachment").value = null;
+                    myContactForm = Object.create(ContactForm);
+                    return false;
+                });
+
+                myContactForm.xhr.send(formData);
+
             });
     }
 
 
     var cancelUpload = document.querySelector("#cancelUpload");
     cancelUpload.addEventListener("click", function () {
-        cForm.xhr.abort();
+        myContactForm.xhr.abort();
     });
 
 });
 
 
-
 function addProgressBlock(file) {
-
-    const html = `<label>file: ${file.name}</label>
+    if (file != null) {
+        const html = `<label>file: ${file.name}</label>
                     <div class="progress-bar">
                          <div class="progress-bar progress-bar-striped active" style="width: 0%;"></div>
                          <span>0%</span>
                     </div>`;
-    const block = document.createElement("div");
-    block.setAttribute("class", "progress-block");
-    block.innerHTML = html;
-    cForm.progressArea.appendChild(block);
-    return block;
+        const block = document.createElement("div");
+        block.setAttribute("class", "progress-block");
+        block.innerHTML = html;
+        myContactForm.progressArea.appendChild(block);
+        return block;
+    }
+    return null;
 }
 
 // Menu
