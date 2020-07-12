@@ -98,7 +98,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_name">Firstname *</label>
-                            <input asp-for="@Model.FirstName" type="text" name="FirstName"
+                            <input asp-for="@Model.FirstName" type="text" name="FirstName" value="Ahmad"
                                    maxlength="25" required class="form-control" placeholder="Please enter your firstname">
                             <div class="help-block with-errors"></div>
                         </div>
@@ -106,7 +106,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_lastname">Lastname *</label>
-                            <input asp-for="@Model.LastName" type="text" name="LastName"
+                            <input asp-for="@Model.LastName" type="text" name="LastName" value="Alem"
                                    maxlength="25" required class="form-control" placeholder="Please enter your lastname">
                             <div class="help-block with-errors"></div>
                         </div>
@@ -116,7 +116,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_email">Email *</label>
-                            <input asp-for="@Model.Email" type="email" name="Email"
+                            <input asp-for="@Model.Email" type="email" name="Email" value="s.r.alem@gmail.com"
                                    class="form-control" placeholder="Please enter your email *"
                                    required data-error="Valid email is required.">
                             <div class="help-block with-errors"></div>
@@ -132,7 +132,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label> Title*</label>
-                            <input asp-for="@Model.Title" type="text" name="Title" required maxlength="50" class="form-control" placeholder="title *" />
+                            <input value="My title" asp-for="@Model.Title" type="text" name="Title" required maxlength="50" class="form-control" placeholder="title *" />
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
