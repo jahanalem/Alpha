@@ -358,14 +358,14 @@ namespace Alpha.Services
             }
         }
 
-        public virtual async Task<SearchResultsViewModel> Search(string search, int pageNumber = 1, int itemsNum = 10)
+        public virtual async Task<SearchResultsViewModel> Search(string searchTerm, int? pageNumber = 1, int? itemsNum = 10)
         {
 
-            if (string.IsNullOrEmpty(search))
+            if (string.IsNullOrEmpty(searchTerm))
                 return null;
-            int itemsPerPage = itemsNum;
 
-            var searchValue = search.Trim().ToLower();
+
+            var searchValue = searchTerm.Trim().ToLower();
 
             var pr = PredicateBuilder.False<Article>();
             pr = pr.Or(a =>
@@ -373,7 +373,7 @@ namespace Alpha.Services
                 a.Summary.ToLower().Contains(searchValue) ||
                 a.DescriptionAsPlainText.ToLower().Contains(searchValue));
 
-            foreach (var term in search.ToLower().Split(' '))
+            foreach (var term in searchTerm.ToLower().Split(' '))
             {
                 string temp = term.Trim();
                 pr = pr.Or(a => a.Title.ToLower().Contains(temp) ||
@@ -388,28 +388,72 @@ namespace Alpha.Services
             // EF.Functions.Like(a.Title.ToLower(), $"%{searchValue}%"))
             var totalItems = await query.CountAsync();
 
-            var articles = await query.Skip(pageNumber - 1).Take(itemsPerPage).ToListAsync();
-
-            var pagination = new Pagination
+            var result = new SearchResultsViewModel();
+            if (itemsNum != null && pageNumber != null)
             {
-                PagingInfo = new PagingInfo
+                int itemsPerPage = itemsNum.Value;
+                List<Article> articles = SortedList(await query.Skip(pageNumber.Value - 1).Take(itemsPerPage).ToListAsync(), searchValue);
+
+
+                var pagination = new Pagination
                 {
-                    TotalItems = totalItems,
-                    ItemsPerPage = itemsPerPage,
-                    CurrentPage = pageNumber
-                },
-                Url = _urlHelper.Action(action: "Index",
-                    controller: "Search",
-                    new { search = search.Trim(), pageNumber = pageNumber })
-            };
+                    PagingInfo = new PagingInfo
+                    {
+                        TotalItems = totalItems,
+                        ItemsPerPage = itemsPerPage,
+                        CurrentPage = pageNumber.Value
+                    },
+                    Url = _urlHelper.Action(action: "Index",
+                        controller: "Search",
+                        new { search = searchTerm.Trim(), pageNumber = pageNumber })
+                };
 
-            var result = new SearchResultsViewModel
+                result = new SearchResultsViewModel
+                {
+                    Articles = articles,
+                    Pagination = pagination
+                };
+            }
+            else
             {
-                Articles = articles,
-                Pagination = pagination
-            };
-
+                var articles = SortedList(await query.ToListAsync(), searchValue);
+                result = new SearchResultsViewModel
+                {
+                    Articles = articles
+                };
+            }
             return result;
+        }
+
+        private List<Article> SortedList(List<Article> articles, string searchValue)
+        {
+            List<Article> firstSortedList = new List<Article>();
+            List<Article> secondSortedList = new List<Article>();
+            List<Article> thirdSortedList = new List<Article>();
+            foreach (var item in articles)
+            {
+                var t = item.Title.ToLower();
+                var s = item.Summary.ToLower();
+                if (t.Contains(searchValue))
+                {
+                    firstSortedList.Add(item);
+                }
+                else if (s.Contains(searchValue))
+                {
+                    secondSortedList.Add(item);
+                }
+                else
+                {
+                    thirdSortedList.Add(item);
+                }
+            }
+            var final = firstSortedList.Concat(secondSortedList).Concat(thirdSortedList).ToList();
+            return final;
+        }
+
+        public virtual async Task<SearchResultsViewModel> Search(string searchTerm)
+        {
+            return await Search(searchTerm, null, null);
         }
 
     }

@@ -80,6 +80,7 @@ a {
     bottom: -6rem;
     width: 100%;
 }
+
 #page-container {
     position: relative;
     min-height: 100vh;
@@ -414,8 +415,8 @@ a {
     width: 6rem;
 }
 
-.tags-in-articles{
-    padding-bottom:1rem;
+.tags-in-articles {
+    padding-bottom: 1rem;
 }
 
 
@@ -597,8 +598,8 @@ a {
     color: green;
     cursor: pointer;
     text-decoration: none;
-    padding-left:3px;
-    padding-right:3px;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
     .submitLink:hover {
@@ -1075,8 +1076,47 @@ submitLink:focus {
     } */
 }
 
-/* ------------------------------------------------------------------------------------------------------------------------------- */
+#searchForm {
+    position: relative;
+}
 
+#search-result-body {
+    position: absolute;
+    top: 45px;
+    left: 16px;
+    width: 300px;
+    max-width: 300px;
+    overflow: hidden;
+    background-color: whitesmoke;
+}
+
+#search-result-body a {
+    padding: 0;
+}
+
+#number-of-search-results {
+}
+
+#search-results {
+    display: none;
+    max-height: 20rem;
+    overflow-y: scroll;
+}
+   
+    #search-results article {
+        border-bottom: 1px solid green;
+    }
+
+.searchResult-Summary {
+    font-size: 9px;
+}
+
+.searchResult-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: blue;
+}
+/* ------------------------------------------------------------------------------------------------------------------------------- */
 @media screen and (min-width: 1140px) {
     #cats {
         width: 82%;

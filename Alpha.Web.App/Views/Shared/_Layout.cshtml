@@ -59,7 +59,14 @@
 
                     <form id="searchForm" asp-controller="Search" asp-action="Index" class="form-inline" role="search">
                         <div class="input-group">
-                            <input id="searchBox" type="search" class="form-control" placeholder="Search" name="search">
+                            <input id="searchBox" type="search" class="form-control" autocomplete="off" placeholder="Search" name="search">
+                            <div id="search-result-body">
+                               
+                                <div id="number-of-search-results"></div>
+                                <div id="search-results">
+
+                                </div>
+                            </div>
                             @*<span class="input-group-append">
                                     <button id="submitSearch" class="btn btn-outline-secondary border border-left-0" type="submit">
                                         <i class="fa fa-search"></i>
@@ -109,8 +116,8 @@
             </div>
         </header>
 
-      
-       
+
+
         <main class="wrapper">
             <div>
                 <div id="render_body" class="container-fluid">
@@ -119,10 +126,10 @@
             </div>
 
         </main>
-       
-       
-       
-        
+
+
+
+
         @*<div class="clearfix"></div>*@
         <footer id="footer" class="pt-5 pb-1 bg-dark">
             <div class="container justify-content-center">

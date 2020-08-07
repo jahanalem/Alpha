@@ -56,18 +56,18 @@ namespace Alpha.Web.App
 
             services.AddMvc().AddRazorRuntimeCompilation();
 
-            //services.ConfigureLoggerService();
+            // services.ConfigureLoggerService();
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-            //https://neelbhatt.com/2018/02/27/use-dbcontextpooling-to-improve-the-performance-net-core-2-1-feature/
+            // https://neelbhatt.com/2018/02/27/use-dbcontextpooling-to-improve-the-performance-net-core-2-1-feature/
             services.AddDbContextPool<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"],
                 b => b.MigrationsAssembly("Alpha.DataAccess")));
 
-            //services.AddDbContextPool<ApplicationDbContext>(options =>
+            // services.AddDbContextPool<ApplicationDbContext>(options =>
             //    options.UseMySql(Configuration["ConnectionStrings:DefaultConnection"],
             //    b => b.MigrationsAssembly("Alpha.DataAccess")));
 
@@ -227,6 +227,8 @@ namespace Alpha.Web.App
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".less"] = "plain/text";
 
+            // call an ASP.NET Core web API with JavaScript, using the Fetch API: UseDefaultFiles(), UseStaticFiles()
+            app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 ContentTypeProvider = provider
@@ -254,14 +256,12 @@ namespace Alpha.Web.App
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            //app.ConfigureExceptionHandler(logger);
+            // app.ConfigureExceptionHandler(logger);
             app.ConfigureCustomExceptionMiddleware();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-
-            app.UseCors("CorsPolicy");
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -269,6 +269,10 @@ namespace Alpha.Web.App
             });
 
             app.UseRouting();
+
+            // The call to UseCors must be placed after UseRouting, but before UseAuthorization
+            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/?view=aspnetcore-3.1#middleware-order
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 
@@ -278,19 +282,19 @@ namespace Alpha.Web.App
                 endpoints.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller}/{action}/{id?}");
 
 
-                //endpoints.MapControllerRoute(name: "article tag", pattern: "{controller=Article}/{action}/tagId/{tagId?}/pageNumber/{pageNumber}");
-                //endpoints.MapControllerRoute(name: "article cat without page", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}");
-                //endpoints.MapControllerRoute(name: "article cat", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}/pageNumber/{pageNumber}");
-                //endpoints.MapControllerRoute(name: "article cat and tag", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}/tagId/{tagId?}/pageNumber/{pageNumber}");
+                // endpoints.MapControllerRoute(name: "article tag", pattern: "{controller=Article}/{action}/tagId/{tagId?}/pageNumber/{pageNumber}");
+                // endpoints.MapControllerRoute(name: "article cat without page", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}");
+                // endpoints.MapControllerRoute(name: "article cat", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}/pageNumber/{pageNumber}");
+                // endpoints.MapControllerRoute(name: "article cat and tag", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}/tagId/{tagId?}/pageNumber/{pageNumber}");
 
 
                 endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{tagId?}/{artCatId?}/{pageNumber?}");
                 
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{id?}");
-                //endpoints.MapAreaControllerRoute("areasDefault","Admin", "{controller=Home}/{action=Index}/{id?}");
+                // endpoints.MapAreaControllerRoute("areasDefault","Admin", "{controller=Home}/{action=Index}/{id?}");
             });
-            //SeedData.EnsurePopulated(app);
+            // SeedData.EnsurePopulated(app);
         }
     }
 }
