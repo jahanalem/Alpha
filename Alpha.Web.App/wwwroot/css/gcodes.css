@@ -728,6 +728,50 @@ submitLink:focus {
 
 
 
+#searchForm {
+    position: relative;
+}
+
+#search-result-body {
+    z-index: 100;
+    position: absolute;
+    top: 43px;
+    left: 16px;
+    width: 300px;
+    max-width: 300px;
+    overflow: hidden;
+    background-color: whitesmoke;
+}
+
+    #search-result-body a {
+        padding: 0;
+    }
+
+#number-of-search-results {
+}
+
+#search-results {
+    display: none;
+    max-height: 20rem;
+    overflow-y: scroll;
+}
+
+    #search-results article {
+        border-bottom: 1px solid green;
+    }
+
+.searchResult-Summary {
+    font-size: 9px;
+}
+
+.searchResult-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: blue;
+}
+
+
+
 @media only screen and (max-device-width: 359px) {
     /* styles for mobile browsers smaller than 480px; (iPhone) */
     #content {
@@ -779,6 +823,12 @@ submitLink:focus {
 }
 
 @media screen and (min-width: 360px) {
+    #search-result-body {
+        width: 270px;
+    }
+    .page-item.active .page-link{
+        z-index:1;
+    }
     #aboutUsContainer {
         margin-top: 6rem;
     }
@@ -1076,46 +1126,6 @@ submitLink:focus {
     } */
 }
 
-#searchForm {
-    position: relative;
-}
-
-#search-result-body {
-    position: absolute;
-    top: 45px;
-    left: 16px;
-    width: 300px;
-    max-width: 300px;
-    overflow: hidden;
-    background-color: whitesmoke;
-}
-
-#search-result-body a {
-    padding: 0;
-}
-
-#number-of-search-results {
-}
-
-#search-results {
-    display: none;
-    max-height: 20rem;
-    overflow-y: scroll;
-}
-   
-    #search-results article {
-        border-bottom: 1px solid green;
-    }
-
-.searchResult-Summary {
-    font-size: 9px;
-}
-
-.searchResult-title {
-    font-size: 1rem;
-    font-weight: bold;
-    color: blue;
-}
 /* ------------------------------------------------------------------------------------------------------------------------------- */
 @media screen and (min-width: 1140px) {
     #cats {
