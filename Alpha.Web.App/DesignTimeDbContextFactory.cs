@@ -23,8 +23,8 @@ namespace Alpha.Web.App
             var connectionString = configuration.GetValue<string>("ConnectionStrings:DefaultConnection");//.GetConnectionString("DataAccessMySqlProvider");
             //string connectionString = configuration.GetSection("ConnectionStrings").GetSection("DefaultConnection").Value;
 
-            //builder.UseSqlServer(connectionString);
-            builder.UseMySql(connectionString);
+            builder.UseSqlServer(connectionString);
+            //builder.UseMySql(connectionString); // Pomelo.EntityFrameworkCore.MySql
             return new ApplicationDbContext(builder.Options);
         }
     }
