@@ -25,8 +25,9 @@ namespace Alpha.Web.App.Services
         private IWebHostEnvironment _environment;
         private IHttpContextAccessor _httpContextAccessor;
         private IOptions<DomainAndUrlSettingsModel> _domainAndUrlSettings;
-        private IOptions<EmailConfigurationSettingsModel> _emailConfigurationSettings;//
+        private IOptions<EmailConfigurationSettingsModel> _emailConfigurationSettings;
         private IOptions<EmailTemplatesSettingsModel> _emailTemplatesSettings;
+
         public EmailSender(IConfiguration configuration,
             IWebHostEnvironment environment,
             IHttpContextAccessor httpContextAccessor,
@@ -85,6 +86,7 @@ namespace Alpha.Web.App.Services
                 activationLink,
                 EmailTemplatesSettings.EmailConfirmation.Subject);
         }
+
         public Task ForwardIncomingMessageToAdmin(string email, string senderName, string emailSubject, string message)
         {
             var forwardMessageTo = _emailConfigurationSettings.Value.ForwardMessageTo;
@@ -102,6 +104,7 @@ namespace Alpha.Web.App.Services
                 messageBody);
 
         }
+
         public Task SendResetPasswordLink(string activationLink, string userName, string emailAddress)
         {
             string messageBody = EmailHelper.GetEmailTemplate(_environment,

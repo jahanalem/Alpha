@@ -35,6 +35,7 @@ using Alpha.Web.App.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication;
 using Alpha.Web.App.Models;
+using Microsoft.Extensions.Options;
 
 namespace Alpha.Web.App
 {
@@ -100,6 +101,15 @@ namespace Alpha.Web.App
 
             #endregion
 
+            #region appsettings.json file
+
+            services.Configure<AppSettingsModel>(Configuration.GetSection("appSettings"));
+            services.Configure<DomainAndUrlSettingsModel>(Configuration.GetSection("DomainAndUrlSettings"));
+            services.Configure<EmailConfigurationSettingsModel>(Configuration.GetSection("EmailConfigurationSettings"));
+            services.Configure<EmailTemplatesSettingsModel>(Configuration.GetSection("EmailTemplatesSettings"));
+
+            #endregion
+
             #region Security, Authorization, Authentication
 
             services.AddIdentity<User, Role>(opts =>
@@ -135,8 +145,10 @@ namespace Alpha.Web.App
             });
             services.AddAuthentication().AddGoogle(opts =>
             {
-                opts.ClientId = "56074703213-u4qak3nim2ejjvdd23euf68e724qn4a7.apps.googleusercontent.com";
-                opts.ClientSecret = "NDEmt2-XKC30D09lvll4XrW6";
+                IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
+
+                opts.ClientId = googleAuthNSection["ClientId"];
+                opts.ClientSecret = googleAuthNSection["ClientSecret"];
 
                 opts.ClaimActions.MapJsonKey("picture", "picture", "url");
                 opts.ClaimActions.MapJsonKey("locale", "locale", "string");
@@ -160,8 +172,9 @@ namespace Alpha.Web.App
 
             }).AddFacebook(opts =>
             {
-                opts.AppId = "520361115549717";
-                opts.AppSecret = "32fb5d66afb9042b900c69a5c65d5474";
+                IConfigurationSection facebookAuthNSection = Configuration.GetSection("Authentication:Facebook");
+                opts.AppId = facebookAuthNSection["AppId"];
+                opts.AppSecret = facebookAuthNSection["AppSecret"];
 
                 opts.ClaimActions.MapJsonKey("picture", "picture", "url");
                 opts.ClaimActions.MapJsonKey("locale", "locale", "string");
@@ -202,15 +215,6 @@ namespace Alpha.Web.App
 
             services.AddTransient<CurrentUserInformation>();
 
-            #endregion
-
-            #region appsettings.json file
-
-            services.Configure<AppSettingsModel>(Configuration.GetSection("appSettings"));
-            services.Configure<DomainAndUrlSettingsModel>(Configuration.GetSection("DomainAndUrlSettings"));
-            services.Configure<EmailConfigurationSettingsModel>(Configuration.GetSection("EmailConfigurationSettings"));
-            //EmailTemplatesSettingsModel
-            services.Configure<EmailTemplatesSettingsModel>(Configuration.GetSection("EmailTemplatesSettings"));
             #endregion
         }
 
@@ -285,7 +289,7 @@ namespace Alpha.Web.App
 
 
                 endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{tagId?}/{artCatId?}/{pageNumber?}");
-                
+
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{id?}");
                 //endpoints.MapAreaControllerRoute("areasDefault","Admin", "{controller=Home}/{action=Index}/{id?}");
