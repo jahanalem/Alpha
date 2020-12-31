@@ -34,6 +34,7 @@ namespace Alpha.Services.Interfaces
 
         Task<List<Tag>> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList);
 
-        Task<SearchResultsViewModel> Search(string search, int pageNumber, int items);
+        Task<SearchResultsViewModel> Search(string search, int? pageNumber, int? items);
+        Task<SearchResultsViewModel> Search(string searchTerm);
     }
 }
