@@ -455,3 +455,86 @@ $(document).ready(function () {
 
 
 
+$(document).ready(function () {
+    const searchTerm = document.querySelector("#searchBox");
+    const results = document.querySelector("#number-of-search-results");
+    const main = document.querySelector("#search-results");
+
+
+    $("#searchForm").mouseout(function () {
+        main.style.display = 'none';
+        results.style.display = 'none';
+    });
+    $("#searchForm").mouseover(function () {
+        main.style.display = 'block';
+        results.style.display = 'block';
+    });
+
+
+
+    let ready = true;
+    let lastValue = "";
+
+    searchTerm.addEventListener("keyup", handle);
+    async function handle() {
+        if (!ready) {
+            return;
+        } else {
+            ready = false;
+        }
+        if (this.value.trim() === "") {
+            main.innerHTML = "";
+            main.style.display = 'none';
+            results.innerHTML = "";
+            ready = true;
+            return;
+        }
+        lastValue = this.value;
+        const find = encodeURIComponent(this.value);
+        const uri = "/search/SearchLive?find=" + find;
+        const response1 = await fetch(uri, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => response.json()
+            .then(data => displayData(data)));
+
+        //if (response1.ok) {
+        //    let jsonData = await response1.json();
+        //    displayData(jsonData);
+        //} else {
+        //    displayData(`Error: ${response1.status}: ${response1.statusText}`);
+        //}
+
+        ready = true;
+        if (this.value != lastValue) {
+            handle.call(this);
+        }
+    }
+
+    function displayData(items) {
+        main.style.display = 'block';
+        var articles = items;
+        if (articles != null && articles.length > 0) {
+            let html = "";
+            for (let article of articles) {
+                html += `<article class="card w-100">
+                            <div class="card-body">
+                               <a href="/Article/Show?Id=${article.Id}">
+                                  <h6 class="card-title searchResult-title">${article.Title}</h6>
+                               </a>
+                               <p class="card-text searchResult-Summary">${article.Summary}</p>
+                            </div>
+                         </article>`;
+            }
+            main.innerHTML = html;
+            results.innerHTML = articles.length + " Result(s) found.";
+        } else {
+            main.innerHTML = "";
+            main.style.display = 'none';
+            results.innerHTML = "Not found";
+        }
+    }
+});
