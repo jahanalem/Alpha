@@ -1,0 +1,71 @@
+﻿@using Alpha.Infrastructure.PaginationUtility
+@using Alpha.Models
+@using Alpha.ViewModels
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model Alpha.ViewModels.ArticleTagListViewModel
+
+@{
+    ViewBag.Title = "title";
+}
+
+<div id="articleListComponent" class="row">
+    @if (Model.ArticleViewModelList.Any())
+    {
+        foreach (var instance in Model.ArticleViewModelList)
+        {
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-6">
+                <article id="@instance.Article.Id">
+                    <div class="">
+                        <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id" class="">
+                            <img src="/images/art-logo.svg" class="image-responsive">
+                            <span class="et_overlay et_pb_inline_icon" data-icon=""></span>
+                        </a>
+                    </div>
+                    <!-- .et_pb_image_container -->
+                    <h2 class="entry-title">
+                        <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id">@instance.Article.Title</a>
+                    </h2>
+
+                    <p class="post-meta">
+                        <span class="published"><LocalDate utc="@instance.Article.CreatedDate"></LocalDate></span>
+                    </p>
+                    <div class="post-content">
+                        <div class="article-summary">
+                            <p>
+                                @Html.Raw(instance.Article.Summary)
+                            </p>
+                        </div>
+                        <div class="tags-in-articles float-right">
+                            @foreach (var tag in instance.Tags)
+                            {
+                                if (tag != null)
+                                {
+
+                                    <a asp-controller="Article" asp-action="Index" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
+                                        @if (Model.TagId == tag.Id)
+                                        {
+                                            <span class="badge badge-success">@tag.Title</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-dark">@tag.Title</span>
+                                        }
+
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id" class="more-link">read more</a>
+                </article>
+            </div>
+        }
+        <div class="col-xs-12 col-lg-9">
+            @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+        </div>
+    }
+    else
+    {
+
+    }
+</div>

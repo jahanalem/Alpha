@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations-SqlServer\**" />
+    <EmbeddedResource Remove="Migrations-SqlServer\**" />
+    <None Remove="Migrations-SqlServer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\MS_20200527192341_MicrosoftSql_Init.cs" />
+    <Compile Remove="Migrations\MS_20200527192341_MicrosoftSql_Init.Designer.cs" />
+    <Compile Remove="Migrations\MS_ApplicationDbContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\My_20200527155206_MySql_Init.cs" />
+    <Compile Remove="Migrations\My_20200527155206_MySql_Init.Designer.cs" />
+    <Compile Remove="Migrations\My_ApplicationDbContextModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.12.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Alpha.Infrastructure\Alpha.Infrastructure.csproj" />
+    <ProjectReference Include="..\Alpha.Models\Alpha.Models.csproj" />
+    <ProjectReference Include="..\Alpha.ViewModels\Alpha.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

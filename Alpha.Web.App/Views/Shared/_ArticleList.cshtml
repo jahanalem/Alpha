@@ -1,0 +1,49 @@
+﻿@using Alpha.Infrastructure.PaginationUtility
+@using Alpha.Models
+@using Alpha.ViewModels
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model Alpha.ViewModels.ArticleTagListViewModel
+
+@{
+    ViewBag.Title = "title";
+}
+
+    <div class="col-md-12">
+        @foreach (var instance in Model.ArticleViewModelList)
+        {
+            <a asp-action="Show" asp-controller="Article" asp-route-Id="@instance.Article.Id">
+                <h1>@instance.Article.Title</h1>
+            </a>
+
+            <p>
+                @Html.Raw(instance.Article.Summary)
+            </p>
+            <div>
+                <span class="badge-pill">Posted 2012-08-02 20:47:04</span>
+                <div class="float-right">
+                    @foreach (var tag in instance.Tags)
+                    {
+                        if (tag != null)
+                        {
+
+                            <a asp-controller="Article" asp-action="Index" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
+                                @if (Model.TagId == tag.Id)
+                                {
+                                    <span class="badge badge-info">@tag.Title</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-dark">@tag.Title</span>
+                                }
+
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+            <hr>
+        }
+
+
+        @await Html.PartialAsync("_PagesNavigationBar", Model.Pagination)
+    </div>

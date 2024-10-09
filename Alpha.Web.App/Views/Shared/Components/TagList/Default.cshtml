@@ -1,0 +1,21 @@
+﻿@using Alpha.Models
+@model List<Tag>
+<h5 class="card-header"><span class="fa fa-tag mr-1"> </span>Tags</h5>
+<div class="card-body">
+    <div id="tagList" class="row">
+        @{
+            <div class="col-lg-12">
+                <ul class="list-unstyled mb-0">
+                    @foreach (var tag in Model)
+                    {
+                        <li>
+                            <a class="btn btn-sm btn-success" asp-action="Index" asp-controller="Article" asp-route-tagId="@tag.Id" asp-route-pageNumber="1" title="@tag.Description">
+                                <span class="fa fa-tag mr-1"> </span>@tag.Title
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>

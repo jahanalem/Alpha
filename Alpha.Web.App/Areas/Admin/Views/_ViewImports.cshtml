@@ -1,0 +1,8 @@
+﻿@using Alpha.Web.App.AppTagHelpers
+@using Microsoft.AspNetCore.Authorization
+@addTagHelper Alpha.Web.App.Infrastructure.*, Alpha.Web.App
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Alpha.Web.App
+@addTagHelper Alpha.Web.App.AppTagHelpers.LocalDateTagHelper, Alpha.Web.App
+@addTagHelper Alpha.Web.App.AppTagHelpers.EditTagHelper, Alpha.Web.App
+@inject IAuthorizationService AuthorizationService

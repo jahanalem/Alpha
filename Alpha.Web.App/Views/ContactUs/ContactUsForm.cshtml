@@ -1,0 +1,113 @@
+﻿@using Alpha.ViewModels
+
+@model ContactUsViewModel
+
+@{
+    ViewData["Title"] = "ContactUsForm";
+}
+
+
+<div id="contactUsFormContainer" class="row">
+
+    <div class="col-xl-8 offset-xl-2 py-5">
+
+        <h1>
+            Contact Us
+        </h1>
+
+        <p class="lead">If you have a question, please send us a message and we will respond as soon as possible. We would love to hear from you. </p>
+
+
+        <form id="contact-form" asp-controller="ContactUs" asp-action="ContactUsForm" method="post">
+
+            <div class="messages"></div>
+            <div class="controls">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="form_name">Firstname *</label>
+                            <input asp-for="@Model.FirstName" type="text" name="FirstName"
+                                   maxlength="25" required class="form-control" placeholder="Please enter your firstname">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="form_lastname">Lastname *</label>
+                            <input asp-for="@Model.LastName" type="text" name="LastName"
+                                   maxlength="25" required class="form-control" placeholder="Please enter your lastname">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="form_email">Email *</label>
+                            <input asp-for="@Model.Email" type="email" name="Email"
+                                   class="form-control" placeholder="Please enter your email *"
+                                   required data-error="Valid email is required.">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label> Title*</label>
+                            <input asp-for="@Model.Title" type="text" name="Title" required maxlength="50" class="form-control" placeholder="title *" />
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="form_message">Message *</label>
+                            <textarea asp-for="@Model.Description" name="Description"
+                                      class="form-control" placeholder="Message for me *" rows="4"
+                                      required maxlength="1024" data-error="Please, leave us a message."></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @{
+                                var firstNumber = new Random(DateTime.Now.Millisecond).Next(1, 10);
+                                var secondNumber = new Random(DateTime.Now.Millisecond / 2).Next(1, 20);
+
+                                <input name="FirstNumber" asp-for="@Model.FirstNumber" value="@firstNumber" type="hidden" />
+                                <input asp-for="@Model.SecondNumber" value="@secondNumber" type="hidden" />
+                                <label>@firstNumber <span>+</span> @secondNumber<span>=</span></label>
+                            }
+                            <br />
+                            @Html.TextBoxFor(m => m.Result, new { @class = "form-control", @required = "required" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <input id="submitContactForm" type="submit" class="btn btn-success btn-send" value="Send message">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-muted">
+                            <strong>*</strong> These fields are required.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <!-- /.8 -->
+
+</div>
+<!-- /.row-->

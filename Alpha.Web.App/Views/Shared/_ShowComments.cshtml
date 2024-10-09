@@ -1,0 +1,49 @@
+﻿@using Alpha.ViewModels
+
+
+@model Alpha.ViewModels.RecursionComment
+
+
+@if (Model.Comments.Any(c => c.ParentId == Model.ParentId))
+{
+    foreach (var childComment in Model.Comments.Where(c => c.ParentId == Model.ParentId))
+    {
+        <div class="media" id="commentNode_@childComment.Id">
+            @if (string.IsNullOrEmpty(childComment.UserPictureUrl))
+            {
+                <i class="fa fa-comment-o fa-green-48 mr-1"></i>
+            }
+            else
+            {
+                <img width="48" height="48" src="@Url.Content(childComment.UserPictureUrl)" class="mr-1" />
+            }
+
+            <div class="media-body">
+                <span class="mt-0 mb-1 commentUserName">@childComment.PublicUserName</span>
+                <div id="collapse_@childComment.Id">
+                    <div id="cardId_@childComment.Id">
+                        <p>@childComment.Description</p>
+                    </div>
+                    @if (Model.CurrentUserInfo.IsAuthenticated)
+                    {
+                        <div class="comment-meta" id="commentId_@childComment.Id">
+                            @if (Model.CurrentUserInfo.UserId == childComment.UserId)
+                            {
+                                <span><input id='@($"deleteC_{childComment.Id}_{childComment.ArticleId}")' type='submit' class='submitLink' value='delete' /></span>
+                                <span><input id='@($"editC_{childComment.Id}_{childComment.ArticleId}")' type='submit' class='submitLink' value='edit' /></span>
+                            }
+
+                            <span>
+                                <a id="@($"replyC_{childComment.Id}_{childComment.ArticleId}")" class="" role="button" data-toggle="collapse" href="#replyComment_@childComment.Id" aria-expanded="false" aria-controls="collapseExample">reply</a>
+                            </span>
+
+                            <div id="replyComment_@childComment.Id" class="collapse"></div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        @await Html.PartialAsync("_ShowComments", new RecursionComment { Comments = Model.Comments, ParentId = childComment.Id, CurrentUserInfo = Model.CurrentUserInfo })
+    }
+}
