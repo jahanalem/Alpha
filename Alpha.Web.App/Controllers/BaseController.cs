@@ -1,14 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Security.Claims;
-using Alpha.Infrastructure;
+﻿using Alpha.Infrastructure;
 using Alpha.Web.App.Models;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Alpha.Web.App.Controllers
 {

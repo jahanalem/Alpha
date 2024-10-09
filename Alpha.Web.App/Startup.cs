@@ -1,41 +1,40 @@
-using System;
-using System.IO;
 using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.DataAccess.UnitOfWork;
 using Alpha.Infrastructure;
-using Alpha.Models.Identity;
-using Alpha.Services;
 using Alpha.Infrastructure.Email;
 using Alpha.LoggerService;
+using Alpha.Models.Identity;
+using Alpha.Services;
+using Alpha.Services.Interfaces;
 using Alpha.Web.App.CustomTokenProviders;
+using Alpha.Web.App.Extensions;
 using Alpha.Web.App.GlobalErrorHandling.Extensions;
+using Alpha.Web.App.Models;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
+using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
 using Alpha.Web.App.Resources.Constants;
 using Alpha.Web.App.Services;
-using Alpha.Web.App.Resources.AppSettingsFileModel;
-using Alpha.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using NLog;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
-using Alpha.Web.App.Extensions;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Authentication;
-using Alpha.Web.App.Models;
-using Microsoft.Extensions.Options;
 
 namespace Alpha.Web.App
 {
@@ -294,7 +293,7 @@ namespace Alpha.Web.App
                 endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{id?}");
                 //endpoints.MapAreaControllerRoute("areasDefault","Admin", "{controller=Home}/{action=Index}/{id?}");
             });
-            //SeedData.EnsurePopulated(app);
+            SeedData.EnsurePopulated(app);
         }
     }
 }

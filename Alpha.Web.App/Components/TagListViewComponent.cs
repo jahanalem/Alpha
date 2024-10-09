@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
+﻿using Alpha.DataAccess.Interfaces;
 using Alpha.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Components
 {

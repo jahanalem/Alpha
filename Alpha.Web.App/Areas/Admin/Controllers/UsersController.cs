@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
+﻿using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Models.Identity;
 using Alpha.Services;
+using Alpha.ViewModels;
 using Alpha.Web.App.Controllers;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
+using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Dynamic.Core;
-using Alpha.Infrastructure;
-using Alpha.Infrastructure.PaginationUtility;
-using Alpha.ViewModels;
-using Alpha.Web.App.Resources.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Alpha.Web.App.Resources.AppSettingsFileModel;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {

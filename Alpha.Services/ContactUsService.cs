@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
+﻿using Alpha.DataAccess.Interfaces;
 using Alpha.Infrastructure.Email;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using System.Threading.Tasks;
 
 namespace Alpha.Services
 {

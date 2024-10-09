@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Alpha.Models.Identity;
+﻿using Alpha.Models.Identity;
+using System.Collections.Generic;
 
 namespace Alpha.ViewModels
 {

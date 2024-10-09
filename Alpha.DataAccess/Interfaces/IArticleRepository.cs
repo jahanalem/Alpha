@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Alpha.Models;
-using Alpha.ViewModels;
+﻿using Alpha.Models;
 
 namespace Alpha.DataAccess.Interfaces
 {

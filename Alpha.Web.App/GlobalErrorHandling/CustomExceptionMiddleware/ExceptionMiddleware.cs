@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Alpha.LoggerService;
+﻿using Alpha.LoggerService;
 using Alpha.Models.GlobalErrorHandling;
 using Microsoft.AspNetCore.Http;
+using System;
+using System.Diagnostics;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.GlobalErrorHandling.CustomExceptionMiddleware
 {

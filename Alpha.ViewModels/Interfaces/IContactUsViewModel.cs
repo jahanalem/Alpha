@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Alpha.Infrastructure.Captcha;
+﻿using Alpha.Infrastructure.Captcha;
 
 namespace Alpha.ViewModels.Interfaces
 {

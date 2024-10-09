@@ -1,17 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
-using Alpha.Infrastructure.PaginationUtility;
-using Alpha.Models;
-using Alpha.Services;
+﻿using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Services.Extensions;
 using Alpha.Services.Interfaces;
-using Alpha.ViewModels;
 using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {

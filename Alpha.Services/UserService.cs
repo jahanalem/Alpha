@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using Alpha.Infrastructure;
+using Alpha.Models.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Alpha.Infrastructure;
-using Alpha.Models.Identity;
-using Alpha.ViewModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Alpha.Services
 {

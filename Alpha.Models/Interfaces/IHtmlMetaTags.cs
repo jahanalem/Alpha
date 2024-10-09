@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Alpha.Models.Interfaces
+﻿namespace Alpha.Models.Interfaces
 {
     public interface IHtmlMetaTags
     {

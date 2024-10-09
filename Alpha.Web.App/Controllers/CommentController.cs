@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
+﻿using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.Infrastructure;
 using Alpha.Models;
@@ -14,7 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {

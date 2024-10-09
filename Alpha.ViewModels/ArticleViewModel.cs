@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Alpha.Models;
+﻿using Alpha.Models;
+using System.Collections.Generic;
 //using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Alpha.ViewModels
@@ -8,7 +8,7 @@ namespace Alpha.ViewModels
     {
         //[BindRequired]// Microsoft.AspNetCore.Mvc.Core
         public Article Article { get; set; }
-        
+
         /// <summary>
         /// Just only related tags
         /// </summary>

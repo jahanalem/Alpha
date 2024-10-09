@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Alpha.DataAccess.Interfaces;
-using Alpha.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Alpha.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
+using System.Threading.Tasks;
 
 namespace Alpha.DataAccess.UnitOfWork
 {

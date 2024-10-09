@@ -1,12 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text.Encodings.Web;
-using Alpha.Web.App.Helpers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
-using System.Linq;
-using System;
+﻿using Alpha.Infrastructure;
 using Alpha.Infrastructure.Email;
 using Alpha.Models.Identity;
 using Alpha.ViewModels;
@@ -20,7 +12,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Alpha.Infrastructure;
 
 namespace Alpha.Web.App.Controllers
 {

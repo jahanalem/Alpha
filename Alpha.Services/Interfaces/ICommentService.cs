@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Alpha.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Alpha.Models;
 
 namespace Alpha.Services.Interfaces
 {

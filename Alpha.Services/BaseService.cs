@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Alpha.DataAccess.Interfaces;
+using Alpha.Models;
+using Alpha.Services.Interfaces;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
-using Alpha.Infrastructure;
-using Alpha.Models;
-using Alpha.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Alpha.Services
 {
@@ -85,7 +80,7 @@ namespace Alpha.Services
                 if (itemsPerPage > 0 && pageNumber > 0)
                 {
                     return _repository.FetchByCriteria(predicate, includeProperties)
-                        .OrderByDescending(c=>c.CreatedDate)
+                        .OrderByDescending(c => c.CreatedDate)
                         .Skip((pageNumber.Value - 1) * itemsPerPage.Value).Take(itemsPerPage.Value);
                 }
             }

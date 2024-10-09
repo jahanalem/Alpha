@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Alpha.Infrastructure.Email
+﻿namespace Alpha.Infrastructure.Email
 {
     public static class EmailTemplatesSettings
     {

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Alpha.Models;
+using System.Collections.Generic;
 using System.Linq;
-using Alpha.Models;
 
 namespace Alpha.Infrastructure
 {

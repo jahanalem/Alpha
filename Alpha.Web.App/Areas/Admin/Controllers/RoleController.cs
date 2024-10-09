@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Alpha.Models.Identity;
+﻿using Alpha.Models.Identity;
 using Alpha.ViewModels;
 using Alpha.Web.App.Controllers;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {
@@ -33,7 +33,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         public IActionResult Create() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Create([Required]string name)
+        public async Task<IActionResult> Create([Required] string name)
         {
             if (ModelState.IsValid)
             {

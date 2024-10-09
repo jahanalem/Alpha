@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using Alpha.Models;
-using Alpha.ViewModels;
+﻿using Alpha.Models;
 
 namespace Alpha.Services.Interfaces
 {

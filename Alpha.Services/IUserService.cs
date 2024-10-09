@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Alpha.Models.Identity;
-using Alpha.ViewModels;
+﻿using Alpha.Models.Identity;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Alpha.Services
 {

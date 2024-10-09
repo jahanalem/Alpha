@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
-using Alpha.Infrastructure.PaginationUtility;
+﻿using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Services.Interfaces;
-using Alpha.ViewModels.Searches;
 using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Components
 {
@@ -38,7 +37,7 @@ namespace Alpha.Web.App.Components
                     var routeValues = _httpContextAccessor.HttpContext.Request.RouteValues;
                     if (routeValues["tagId"] != null) _tagId = int.Parse(routeValues["tagId"].ToString());
                     if (routeValues["pageNumber"] != null) _pageNumber = int.Parse(routeValues["pageNumber"].ToString());
-                   // if (routeValues["artCatId"] != null) _artCatId = int.Parse(routeValues["artCatId"].ToString());
+                    // if (routeValues["artCatId"] != null) _artCatId = int.Parse(routeValues["artCatId"].ToString());
                 }
 
                 if (queryString != null) int.TryParse(queryString, out _pageNumber);
@@ -53,7 +52,7 @@ namespace Alpha.Web.App.Components
             if (model == null)
             {
                 var key = $"TotalItems-TagId-{_tagId}";
-                if (TempData[key] == null) 
+                if (TempData[key] == null)
                     TempData[key] = await _articleService.FilterByTag(_tagId).CountAsync();
 
                 model =

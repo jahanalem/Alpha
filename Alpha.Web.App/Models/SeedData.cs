@@ -2,7 +2,6 @@
 using Alpha.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 
@@ -15,7 +14,7 @@ namespace Alpha.Web.App.Models
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-                
+
                 context.Database.Migrate();
                 if (!context.AboutUs.Any())
                 {

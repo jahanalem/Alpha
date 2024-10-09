@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Mail;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Alpha.Infrastructure;
+﻿using Alpha.Infrastructure;
 using Alpha.Infrastructure.Email;
 using Alpha.Web.App.Helpers;
-using Alpha.Web.App.Models;
 using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Alpha.Web.App.Resources.AppSettingsFileModel.EmailTemplates;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Mail;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Services
 {

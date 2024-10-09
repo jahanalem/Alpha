@@ -1,12 +1,6 @@
-﻿using System;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+﻿using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Hosting;
-using Alpha.Web.App.Resources.Constants;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 
 
 namespace Alpha.Web.App.Helpers

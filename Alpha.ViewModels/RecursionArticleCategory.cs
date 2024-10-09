@@ -1,7 +1,5 @@
-﻿using System;
+﻿using Alpha.Models;
 using System.Collections.Generic;
-using System.Text;
-using Alpha.Models;
 
 namespace Alpha.ViewModels
 {

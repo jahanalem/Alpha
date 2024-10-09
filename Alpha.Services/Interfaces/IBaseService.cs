@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Alpha.Models;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Alpha.DataAccess.Interfaces;
-using Alpha.Models;
 
 namespace Alpha.Services.Interfaces
 {
@@ -25,7 +23,7 @@ namespace Alpha.Services.Interfaces
             params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<TEntity> FindByIdAsync(int? id, params Expression<Func<TEntity, object>>[] includeProperties);
-        
+
         Task<int> CreateAsync(TEntity entity);
 
         Task<TEntity> FindAsync(object primaryKey);

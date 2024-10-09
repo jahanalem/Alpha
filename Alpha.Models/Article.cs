@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Alpha.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Alpha.Models.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alpha.Models
 {
@@ -43,6 +44,7 @@ namespace Alpha.Models
         /// </summary>
         [Range(0, 10)]
         [Display(Name = "Rating")]
+        [Column(TypeName = "decimal(18, 2)")]
         public virtual decimal? RateCounter { get; set; } = 0;
 
 

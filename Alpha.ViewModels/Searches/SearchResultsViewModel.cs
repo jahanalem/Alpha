@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Alpha.Infrastructure.PaginationUtility;
+﻿using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Models;
+using System.Collections.Generic;
 
 namespace Alpha.ViewModels.Searches
 {

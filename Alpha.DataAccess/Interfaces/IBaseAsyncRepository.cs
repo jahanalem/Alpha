@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Alpha.Models;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Alpha.Models;
 
 namespace Alpha.DataAccess.Interfaces
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Alpha.Infrastructure.Captcha
+﻿namespace Alpha.Infrastructure.Captcha
 {
     public class NumericCaptcha
     {

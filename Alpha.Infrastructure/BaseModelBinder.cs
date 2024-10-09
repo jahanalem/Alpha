@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
+using System.Threading.Tasks;
 
 namespace Alpha.Infrastructure
 {
@@ -18,15 +18,15 @@ namespace Alpha.Infrastructure
             //ICollection<string> propertyNames = bindingContext.PropertyMetadata.Keys;
             //foreach (var propertyName in propertyNames)
             //{
-                //string value = GetValue(bindingContext, propertyName);
-                //value = HttpUtility.HtmlDecode(value);
-                //if (bindingContext.PropertyMetadata[propertyName].ModelType.Name == "Boolean")
-                //{
-                //    if (value.ToLower() == "true,false" || value.ToLower() == "false,true")
-                //        value = HttpContext.Current.Request.Form.GetValues(propertyName).First();
-                //}
-                //model.SetPropertyValue(propertyName, value);
-           // }
+            //string value = GetValue(bindingContext, propertyName);
+            //value = HttpUtility.HtmlDecode(value);
+            //if (bindingContext.PropertyMetadata[propertyName].ModelType.Name == "Boolean")
+            //{
+            //    if (value.ToLower() == "true,false" || value.ToLower() == "false,true")
+            //        value = HttpContext.Current.Request.Form.GetValues(propertyName).First();
+            //}
+            //model.SetPropertyValue(propertyName, value);
+            // }
             return model;
         }
 

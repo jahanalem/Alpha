@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using Alpha.Models.Identity;
+﻿using Alpha.Models.Identity;
 using Alpha.ViewModels;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -27,7 +27,7 @@ namespace Alpha.Web.App.Controllers
         }
 
         public ViewResult Index() => View(userManager.Users);
-        
+
         public ViewResult Create() => View();
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserViewModel model)

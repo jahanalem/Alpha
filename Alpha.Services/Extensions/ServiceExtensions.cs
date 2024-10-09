@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Alpha.Models;
+﻿using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Alpha.Services.Extensions
 {
@@ -27,7 +24,7 @@ namespace Alpha.Services.Extensions
             IArticleTagService articleTagService,
             int? tagId = null)
         {
-            var articles =await query.ToListAsync();
+            var articles = await query.ToListAsync();
             var articleViewModelList = new List<ArticleViewModel>();
             foreach (var article in articles)
             {

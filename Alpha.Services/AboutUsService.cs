@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Alpha.DataAccess.Interfaces;
+﻿using Alpha.DataAccess.Interfaces;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 

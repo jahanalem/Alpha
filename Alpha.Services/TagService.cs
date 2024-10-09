@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using Alpha.DataAccess.Interfaces;
+﻿using Alpha.DataAccess.Interfaces;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
-using Alpha.ViewModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace Alpha.Services
 {
@@ -28,6 +20,6 @@ namespace Alpha.Services
         //    };
         //    return viewM;
         //}
-       
+
     }
 }

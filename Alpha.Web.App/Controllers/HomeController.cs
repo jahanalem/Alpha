@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Alpha.Infrastructure.Email;
 using Alpha.LoggerService;
-using Microsoft.AspNetCore.Mvc;
 //using Microsoft.Extensions.Logging;
 using Alpha.Web.App.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Fluent;
-using Alpha.Infrastructure.Email;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Globalization;
 
 //using ILogger = Microsoft.Extensions.Logging.ILogger;
 

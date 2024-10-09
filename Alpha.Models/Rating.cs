@@ -1,4 +1,5 @@
 ﻿using Alpha.Models.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alpha.Models
 {
@@ -20,6 +21,7 @@ namespace Alpha.Models
         /// <summary>
         /// Rate: رتبه
         /// </summary>
+        [Column(TypeName = "decimal(18, 2)")]
         public virtual decimal? Rate { get; set; }
 
         /// <summary>

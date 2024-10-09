@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Alpha.Models.Identity;
+using System;
 using System.Collections.Generic;
-using Alpha.Models.Identity;
 
 namespace Alpha.Models
 {

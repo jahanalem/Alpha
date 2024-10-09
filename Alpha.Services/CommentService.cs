@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
+﻿using Alpha.DataAccess;
 using Alpha.DataAccess.Interfaces;
 using Alpha.Models;
 using Alpha.Models.Identity;
 using Alpha.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 namespace Alpha.Services
 {
     public class CommentService : BaseService<ICommentRepository, Comment>, ICommentService

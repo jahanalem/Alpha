@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Alpha.Infrastructure.PaginationUtility;
+﻿using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
@@ -13,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
 {

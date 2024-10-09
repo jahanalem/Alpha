@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using System.Text.Json;
-using Alpha.Services.Interfaces;
+﻿using Alpha.Services.Interfaces;
 using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using NLog.Targets;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Alpha.Models.Identity;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Alpha.Models.Identity;
-using Microsoft.AspNetCore.Identity;
 
 namespace Alpha.Infrastructure
 {
@@ -13,7 +13,7 @@ namespace Alpha.Infrastructure
             IdentityResult result = await base.ValidateAsync(manager, user);
 
             List<IdentityError> errors = result.Succeeded ? new List<IdentityError>() : result.Errors.ToList();
-            
+
             //if (!user.Email.ToLower().EndsWith("@example.com"))
             //{
             //    errors.Add(new IdentityError

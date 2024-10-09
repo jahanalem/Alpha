@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Alpha.Infrastructure.PaginationUtility;
+﻿using Alpha.Infrastructure.PaginationUtility;
 using Alpha.Models;
-using QueryString = Microsoft.AspNetCore.Http.QueryString;
+using System.Collections.Generic;
 
 
 namespace Alpha.ViewModels

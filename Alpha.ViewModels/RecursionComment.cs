@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Alpha.Infrastructure;
+﻿using Alpha.Infrastructure;
 using Alpha.Models;
+using System.Collections.Generic;
 
 namespace Alpha.ViewModels
 {

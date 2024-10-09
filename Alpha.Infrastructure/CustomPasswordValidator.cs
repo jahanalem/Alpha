@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Alpha.Models.Identity;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Alpha.Models.Identity;
-using Microsoft.AspNetCore.Identity;
 
 namespace Alpha.Infrastructure
 {

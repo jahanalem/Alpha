@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
-using Alpha.Models;
+﻿using Alpha.Models;
 using Alpha.ViewModels;
 using Alpha.ViewModels.Searches;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Alpha.Services.Interfaces
 {

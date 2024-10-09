@@ -1,10 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
-using Alpha.Services.Interfaces;
+﻿using Alpha.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -21,7 +18,7 @@ namespace Alpha.Web.App.Controllers
 
         public async Task<ViewResult> Index()
         {
-            var result =await _aboutUsService.GetByCriteria(null, null).FirstOrDefaultAsync();
+            var result = await _aboutUsService.GetByCriteria(null, null).FirstOrDefaultAsync();
             return View(result);
         }
     }

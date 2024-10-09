@@ -1,14 +1,9 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
-using Alpha.Infrastructure;
+﻿using Alpha.DataAccess.Interfaces;
 using Alpha.Services.Interfaces;
-using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Components
 {
@@ -35,7 +30,7 @@ namespace Alpha.Web.App.Components
 
         public async Task<IViewComponentResult> InvokeAsync(int Id)
         {
-            var comments = await _commentService.GetComments(Id); 
+            var comments = await _commentService.GetComments(Id);
             //var comments = await _commentRepository.FetchByCriteria(c => c.ArticleId == Id).ToListAsync();
             return View(comments);
         }

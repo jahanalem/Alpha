@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Alpha.Models;
+﻿using Alpha.Models;
 using Alpha.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 
 namespace Alpha.DataAccess
 {
@@ -57,7 +57,7 @@ namespace Alpha.DataAccess
                 builder.HasOne(userLogin => userLogin.User).WithMany(user => user.Logins).HasForeignKey(userLogin => userLogin.UserId);
                 builder.ToTable("UserLogin");
             });
-            
+
             modelBuilder.Entity<User>(builder =>
             {
                 builder.ToTable("User"); //.HasMany(e => e.Comments).WithOne().OnDelete(DeleteBehavior.Cascade);
@@ -77,8 +77,8 @@ namespace Alpha.DataAccess
             modelBuilder.Entity<AboutUs>().ToTable("AboutUs");
 
             modelBuilder.Entity<Article>().ToTable("Article")
-                .HasMany(a=>a.Comments)
-                .WithOne(a=>a.Article)
+                .HasMany(a => a.Comments)
+                .WithOne(a => a.Article)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ArticleLike>().ToTable("ArticleLike");

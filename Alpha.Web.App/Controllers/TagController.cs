@@ -1,9 +1,8 @@
-﻿using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
+﻿using Alpha.DataAccess.Interfaces;
 using Alpha.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -22,7 +21,7 @@ namespace Alpha.Web.App.Controllers
             return View(await _tagRepository.FetchByCriteria(null).ToListAsync());
         }
 
-        
+
 
         #region Details of Tag
 

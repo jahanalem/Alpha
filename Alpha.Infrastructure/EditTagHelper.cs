@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System;
+using System.Linq;
 
 namespace Alpha.Infrastructure
 {
@@ -45,7 +45,7 @@ namespace Alpha.Infrastructure
             {
                 instance = _generator.GenerateTextBox(ViewContext, aspFor.ModelExplorer, propName, propValue, propEditFormatString, new { @class = "form-control" });
             }
- 
+
             TagBuilder validation = _generator.GenerateValidationMessage(
                 ViewContext,
                 modelExProp, //Microsoft.AspNetCore.Mvc.ViewFeatures.ModelExplorer

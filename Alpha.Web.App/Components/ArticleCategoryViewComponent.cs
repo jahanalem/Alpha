@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
-using Alpha.Infrastructure;
-using Alpha.Models;
+﻿using Alpha.Models;
 using Alpha.Services.Interfaces;
-using Alpha.Web.App.Resources.Constants;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Components
 {

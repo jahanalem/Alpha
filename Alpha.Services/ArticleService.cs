@@ -1,36 +1,18 @@
-﻿using Alpha.Models;
+﻿using Alpha.DataAccess.Interfaces;
+using Alpha.DataAccess.UnitOfWork;
+using Alpha.Infrastructure.Convertors;
+using Alpha.Infrastructure.LinqUtility;
+using Alpha.Infrastructure.PaginationUtility;
+using Alpha.Models;
+using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
+using Alpha.ViewModels.Searches;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security.Policy;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
-using Alpha.DataAccess.UnitOfWork;
-using Alpha.Infrastructure.LinqUtility;
-using Alpha.Infrastructure.PaginationUtility;
-using Alpha.Models.Identity;
-using Alpha.Services.Interfaces;
-using Alpha.ViewModels.Searches;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Storage;
-using Microsoft.VisualBasic;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using Microsoft.Extensions.Options;
-
-using HtmlAgilityPack;
-using System.Web;
-using System.Text.RegularExpressions;
-using Alpha.Infrastructure.Convertors;
-using Alpha.Services.Extensions;
 
 namespace Alpha.Services
 {

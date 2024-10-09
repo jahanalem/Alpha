@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Alpha.Infrastructure.PaginationUtility
+﻿namespace Alpha.Infrastructure.PaginationUtility
 {
     public static class QueryStringParameters
     {

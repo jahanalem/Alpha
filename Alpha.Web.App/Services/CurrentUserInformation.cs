@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Alpha.Infrastructure;
+﻿using Alpha.Infrastructure;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Alpha.Web.App.Services
 {
     public class CurrentUserInformation : ICurrentUserInformation
     {
         private IHttpContextAccessor _httpContext;
-        
+
         public CurrentUserInformation(IHttpContextAccessor httpContextAccessor)
         {
             _httpContext = httpContextAccessor;

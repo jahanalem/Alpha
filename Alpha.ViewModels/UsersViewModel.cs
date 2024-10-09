@@ -1,7 +1,5 @@
-﻿using System;
+﻿using Alpha.Infrastructure.PaginationUtility;
 using System.Collections.Generic;
-using System.Text;
-using Alpha.Infrastructure.PaginationUtility;
 
 namespace Alpha.ViewModels
 {

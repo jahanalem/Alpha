@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Alpha.Infrastructure.Captcha;
-using Alpha.Infrastructure.Email;
-using Alpha.Models;
+﻿using Alpha.Infrastructure.Email;
 using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
-using Alpha.ViewModels.Interfaces;
+using Alpha.Web.App.Resources.AppSettingsFileModel;
+using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Alpha.Web.App.Resources.Constants;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
-using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -70,9 +63,9 @@ namespace Alpha.Web.App.Controllers
                         senderName = $"{senderName} {contactObject.LastName.Trim()}";
 
                     var fullName = $"{contactObject.FirstName} {contactObject.LastName}";
-                    var sentResult= _emailSender.ForwardIncomingMessageToAdmin(contactObject.Email,
-                        fullName, 
-                        contactObject.Title, 
+                    var sentResult = _emailSender.ForwardIncomingMessageToAdmin(contactObject.Email,
+                        fullName,
+                        contactObject.Title,
                         contactObject.Description);
 
                     if (!sentResult.IsCompletedSuccessfully)

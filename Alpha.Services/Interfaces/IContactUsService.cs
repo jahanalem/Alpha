@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Alpha.Models;
+﻿using Alpha.Models;
 using Alpha.ViewModels;
+using System.Threading.Tasks;
 
 namespace Alpha.Services.Interfaces
 {
