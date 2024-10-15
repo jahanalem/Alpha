@@ -219,30 +219,19 @@ namespace Alpha.Web.App
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
-            IWebHostEnvironment env,
-            IServiceProvider serviceProvider,
-            ILoggerManager logger)
+                                IWebHostEnvironment env,
+                                IServiceProvider serviceProvider,
+                                ILoggerManager logger)
         {
-            app.UseDeveloperExceptionPage();
-            app.UseStatusCodePages();
-            app.UseAuthentication();
-
-            var provider = new FileExtensionContentTypeProvider();
-            provider.Mappings[".less"] = "plain/text";
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                ContentTypeProvider = provider
-            });
-
-            ApplicationDbContext.CreateAdminAccount(serviceProvider, Configuration).Wait();//app.ApplicationServices
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+
                 app.Use(async (context, next) =>
                 {
                     await next();
@@ -252,48 +241,40 @@ namespace Alpha.Web.App
                         await next();
                     }
                 });
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
             }
-            //app.ConfigureExceptionHandler(logger);
-            app.ConfigureCustomExceptionMiddleware();
 
+            // Core middleware setup
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = new FileExtensionContentTypeProvider
+                {
+                    Mappings = { [".less"] = "plain/text" }
+                }
+            });
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseCors("CorsPolicy");
-
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
 
-            app.UseRouting();
+            // Custom exception handling
+            app.ConfigureCustomExceptionMiddleware();
 
-            app.UseAuthorization();
+            // Create admin account and seed data
+            ApplicationDbContext.CreateAdminAccount(serviceProvider, Configuration).Wait();
+            SeedData.EnsurePopulated(app);
 
+            // Endpoint routing
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute("areasDefault", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(name: "areas", pattern: "{area:exists}/{controller}/{action}/{id?}");
-
-
-                //endpoints.MapControllerRoute(name: "article tag", pattern: "{controller=Article}/{action}/tagId/{tagId?}/pageNumber/{pageNumber}");
-                //endpoints.MapControllerRoute(name: "article cat without page", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}");
-                //endpoints.MapControllerRoute(name: "article cat", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}/pageNumber/{pageNumber}");
-                //endpoints.MapControllerRoute(name: "article cat and tag", pattern: "{controller=Article}/{action}/artCatId/{artCatId?}/tagId/{tagId?}/pageNumber/{pageNumber}");
-
-
-                endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{tagId?}/{artCatId?}/{pageNumber?}");
-
-                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(name: "normal", pattern: "{controller}/{action}/{id?}");
-                //endpoints.MapAreaControllerRoute("areasDefault","Admin", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("defaultRoute", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("fallbackRoute", "{controller}/{action}/{id?}");
             });
-            SeedData.EnsurePopulated(app);
         }
     }
 }

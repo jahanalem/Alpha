@@ -27,7 +27,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_name">Firstname *</label>
-                            <input asp-for="@Model.FirstName" type="text" name="FirstName"
+                            <input asp-for="FirstName" type="text" name="FirstName"
                                    maxlength="25" required class="form-control" placeholder="Please enter your firstname">
                             <div class="help-block with-errors"></div>
                         </div>
@@ -35,7 +35,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_lastname">Lastname *</label>
-                            <input asp-for="@Model.LastName" type="text" name="LastName"
+                            <input asp-for="LastName" type="text" name="LastName"
                                    maxlength="25" required class="form-control" placeholder="Please enter your lastname">
                             <div class="help-block with-errors"></div>
                         </div>
@@ -45,7 +45,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="form_email">Email *</label>
-                            <input asp-for="@Model.Email" type="email" name="Email"
+                            <input asp-for="Email" type="email" name="Email"
                                    class="form-control" placeholder="Please enter your email *"
                                    required data-error="Valid email is required.">
                             <div class="help-block with-errors"></div>
@@ -61,7 +61,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label> Title*</label>
-                            <input asp-for="@Model.Title" type="text" name="Title" required maxlength="50" class="form-control" placeholder="title *" />
+                            <input asp-for="Title" type="text" name="Title" required maxlength="50" class="form-control" placeholder="title *" />
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="form_message">Message *</label>
-                            <textarea asp-for="@Model.Description" name="Description"
+                            <textarea asp-for="Description" name="Description"
                                       class="form-control" placeholder="Message for me *" rows="4"
                                       required maxlength="1024" data-error="Please, leave us a message."></textarea>
                             <div class="help-block with-errors"></div>
@@ -82,8 +82,8 @@
                                 var firstNumber = new Random(DateTime.Now.Millisecond).Next(1, 10);
                                 var secondNumber = new Random(DateTime.Now.Millisecond / 2).Next(1, 20);
 
-                                <input name="FirstNumber" asp-for="@Model.FirstNumber" value="@firstNumber" type="hidden" />
-                                <input asp-for="@Model.SecondNumber" value="@secondNumber" type="hidden" />
+                                <input name="FirstNumber" asp-for="FirstNumber" value="@firstNumber" type="hidden" />
+                                <input asp-for="SecondNumber" value="@secondNumber" type="hidden" />
                                 <label>@firstNumber <span>+</span> @secondNumber<span>=</span></label>
                             }
                             <br />
