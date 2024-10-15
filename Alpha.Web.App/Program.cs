@@ -13,16 +13,15 @@ namespace Alpha.Web.App
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+               .ConfigureLogging(logging =>
+               {
+                   logging.ClearProviders();
+                   logging.AddConsole();
+                   logging.AddAzureWebAppDiagnostics();
+               })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                    .ConfigureLogging(logging =>
-                    {
-                        // https://ardalis.com/configuring-logging-in-azure-app-services
-                        logging.ClearProviders();
-                        logging.AddConsole();
-                        logging.AddAzureWebAppDiagnostics();
-                    });
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }
