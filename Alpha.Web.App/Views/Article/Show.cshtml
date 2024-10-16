@@ -1,4 +1,5 @@
 ﻿@using Alpha.Web.App.Services
+@using Alpha.Infrastructure.Convertors
 
 @model Alpha.Models.Article
 
@@ -20,7 +21,7 @@
             <hr>
 
             <!-- Date/Time -->
-            <LocalDate utc="@Model.CreatedDate"></LocalDate>
+            <LocalDate utc="@Model.CreatedDate.ToLocalDateTime()"></LocalDate>
 
             <hr>
             <div>

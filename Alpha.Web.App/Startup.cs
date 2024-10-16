@@ -66,26 +66,15 @@ namespace Alpha.Web.App
             services.AddScoped<ApplicationDbContext>();
 
             // Register repositories and services
-            services.AddTransient<IAboutUsRepository, AboutUsRepository>();
-            services.AddTransient<IAboutUsService, AboutUsService>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            services.AddTransient<IArticleRepository, ArticleRepository>();
-            services.AddTransient<IArticleService, ArticleService>();
-
-            services.AddTransient<ITagRepository, TagRepository>();
-            services.AddTransient<ITagService, TagService>();
-
-            services.AddTransient<IArticleTagRepository, ArticleTagRepository>();
-            services.AddTransient<IArticleTagService, ArticleTagService>();
-
-            services.AddTransient<ICommentRepository, CommentRepository>();
-            services.AddTransient<ICommentService, CommentService>();
-
-            services.AddTransient<IContactUsRepository, ContactUsRepository>();
-            services.AddTransient<IContactUsService, ContactUsService>();
-
-            services.AddTransient<IArticleCategoryRepository, ArticleCategoryRepository>();
             services.AddTransient<IArticleCategoryService, ArticleCategoryService>();
+            services.AddTransient<IArticleTagService, ArticleTagService>();
+            services.AddTransient<IContactUsService, ContactUsService>();
+            services.AddTransient<IAboutUsService, AboutUsService>();
+            services.AddTransient<IArticleService, ArticleService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<ITagService, TagService>();
 
             #endregion
 
@@ -108,7 +97,7 @@ namespace Alpha.Web.App
                 opts.Password.RequireUppercase = false;
                 opts.Password.RequireDigit = false;
                 opts.User.RequireUniqueEmail = true;
-                opts.SignIn.RequireConfirmedAccount = true;
+                opts.SignIn.RequireConfirmedAccount = true; // Set to false to debug authentication issues
                 opts.Tokens.EmailConfirmationTokenProvider = "emailconfirmation";
             }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders()
@@ -167,17 +156,9 @@ namespace Alpha.Web.App
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
-
-                app.Use(async (context, next) =>
-                {
-                    await next();
-                    if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
-                    {
-                        context.Request.Path = "/index.html";
-                        await next();
-                    }
-                });
             }
+
+            logger.LogInfo("Starting Configure method in Startup.");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles(new StaticFileOptions
@@ -187,25 +168,37 @@ namespace Alpha.Web.App
                     Mappings = { [".less"] = "text/plain" }
                 }
             });
+
             app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseCors("CorsPolicy");
+
+            logger.LogInfo("Before Forwarded Headers");
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
+
+            logger.LogInfo("Before CORS Policy");
+            app.UseCors("CorsPolicy");
+
+            logger.LogInfo("Before Authentication");
+            app.UseAuthentication(); // Authentication must be before Authorization
+            app.UseAuthorization();
+
+            logger.LogInfo("Before Custom Exception Middleware");
             app.ConfigureCustomExceptionMiddleware();
 
             ApplicationDbContext.CreateAdminAccount(serviceProvider, Configuration).Wait();
             SeedData.EnsurePopulated(app);
 
+            logger.LogInfo("Adding Endpoints");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("defaultRoute", "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute("fallbackRoute", "{controller}/{action}/{id?}");
             });
+
+            logger.LogInfo("Configure method in Startup completed.");
         }
     }
 }

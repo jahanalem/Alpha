@@ -1,7 +1,6 @@
 ﻿using Alpha.Models;
 using Alpha.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,7 +17,7 @@ namespace Alpha.Web.App.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            List<ArticleCategory> catList = await _articleCategoryService.GetByCriteria(c => c.IsActive).ToListAsync();
+            List<ArticleCategory> catList = await _articleCategoryService.GetByIsActiveAsync(true);
             return View(catList);
         }
     }

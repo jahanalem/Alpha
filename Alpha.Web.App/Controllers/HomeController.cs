@@ -1,12 +1,10 @@
 ﻿using Alpha.Infrastructure.Email;
 using Alpha.LoggerService;
-//using Microsoft.Extensions.Logging;
 using Alpha.Web.App.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Globalization;
-
-//using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Alpha.Web.App.Controllers
 {
@@ -36,10 +34,20 @@ namespace Alpha.Web.App.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult Error(string requestId, string timeOfError)
         {
-            var t = DateTime.ParseExact(timeOfError, "yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture);
-            return View(new ErrorViewModel { RequestId = requestId, TimeOfError = t });
+            _logger.LogInfo($"Error page accessed with RequestId: {requestId} at {timeOfError}");
+            try
+            {
+                var t = DateTime.ParseExact(timeOfError, "yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture);
+                return View(new ErrorViewModel { RequestId = requestId, TimeOfError = t });
+            }
+            catch (FormatException ex)
+            {
+                _logger.LogError($"Error parsing timeOfError: {ex.Message}");
+                return View(new ErrorViewModel { RequestId = requestId, TimeOfError = DateTime.UtcNow });
+            }
         }
 
         public IActionResult SendReportError(ErrorViewModel errorViewModel)
@@ -63,11 +71,7 @@ namespace Alpha.Web.App.Controllers
                     return RedirectToAction("MailSentFailed", "Home");
                 }
             }
-            return View();
+            return View(errorViewModel);
         }
-        //public IActionResult Privacy()
-        //{
-        //    return View();
-        //}
     }
 }

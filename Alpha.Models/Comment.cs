@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alpha.Models
 {
-    public class Comment : Entity
+    public class Comment : BaseEntity
     {
         public Comment()
         {

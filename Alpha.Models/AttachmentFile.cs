@@ -2,7 +2,7 @@
 
 namespace Alpha.Models
 {
-    public class AttachmentFile : Entity
+    public class AttachmentFile : BaseEntity
     {
         public virtual int? ArticleId { get; set; }
         public virtual int? ProjectId { get; set; }

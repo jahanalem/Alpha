@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Alpha.Models
 {
-    public class Project : Entity
+    public class Project : BaseEntity
     {
         public Project()
         {

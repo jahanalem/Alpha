@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Alpha.Models
 {
-    public class Tag : Entity
+    public class Tag : BaseEntity
     {
         [Range(1, 10)]
         public virtual int Size { get; set; }

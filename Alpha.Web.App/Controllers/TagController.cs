@@ -1,27 +1,23 @@
-﻿using Alpha.DataAccess.Interfaces;
-using Alpha.Models;
+﻿using Alpha.Models;
+using Alpha.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {
     public class TagController : BaseController
     {
-        //private readonly ApplicationDbContext _context;
-        private readonly ITagRepository _tagRepository;
-        public TagController(ITagRepository tagRepository)
+        private readonly ITagService _tagService;
+        public TagController(ITagService tagService)
         {
-            _tagRepository = tagRepository;
+            _tagService = tagService;
         }
 
         // GET: Tag
         public async Task<IActionResult> Index()
         {
-            return View(await _tagRepository.FetchByCriteria(null).ToListAsync());
+            return View(await _tagService.GetAllAsync());
         }
-
-
 
         #region Details of Tag
 
@@ -34,7 +30,7 @@ namespace Alpha.Web.App.Controllers
             }
             if (id is int idValue)
             {
-                Tag tag = await _tagRepository.FindByIdAsync(idValue);
+                Tag tag = await _tagService.GetByIdAsync(idValue);
                 if (tag == null)
                 {
                     return NotFound();

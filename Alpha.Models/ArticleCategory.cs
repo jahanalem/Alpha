@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Alpha.Models
 {
-    public class ArticleCategory : Entity
+    public class ArticleCategory : BaseEntity
     {
         [Required]
         [StringLength(26)]

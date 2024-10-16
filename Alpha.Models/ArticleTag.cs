@@ -2,7 +2,7 @@
 
 namespace Alpha.Models
 {
-    public class ArticleTag : Entity
+    public class ArticleTag : BaseEntity
     {
         //[Key, Column(Order = 0)]
         [ForeignKey("Tag")]

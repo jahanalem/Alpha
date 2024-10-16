@@ -14,24 +14,15 @@ namespace Alpha.Web.App.Controllers
     public class BaseController : Controller
     {
         public CurrentUser CurrentUser;
-        //private readonly IHttpContextAccessor _httpContextAccessor;
         public BaseController() : base()
         {
-            //x = _configuration.GetValue<string>("appSettings:DefaultItemsPerPage");
-            //ViewBag.CurrentUser = CurrentUserInfo;
         }
-
-        //public override void OnActionExecuting(ActionExecutingContext context)
-        //{
-        //    base.OnActionExecuting(context);
-        //}
 
         protected CurrentUser GetCurrentUserInfo()
         {
             var uId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            int? userId = null;
-            if (uId != null)
-                userId = int.Parse(uId);
+            int userId;
+            int.TryParse(uId, out userId);
 
             CurrentUser cUser = new CurrentUser
             {
@@ -50,12 +41,7 @@ namespace Alpha.Web.App.Controllers
 
         protected string GetClientIpAddress()
         {
-            string ip = string.Empty;
-            if (HttpContext != null &&
-                HttpContext.Connection != null &&
-                HttpContext.Connection.RemoteIpAddress != null)
-                ip = HttpContext.Connection.RemoteIpAddress.ToString();
-            return ip;
+            return HttpContext?.Connection?.RemoteIpAddress?.ToString();
         }
         protected void AddErrorsFromResult(IdentityResult result)
         {

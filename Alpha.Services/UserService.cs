@@ -57,7 +57,6 @@ namespace Alpha.Services
                 if (!validEmail.Succeeded)
                 {
                     errors.Add(validEmail.Errors);
-                    //AddErrorsFromResult(validEmail);
                 }
                 IdentityResult validPass = null;
                 if (!string.IsNullOrEmpty(userObj.Password))
@@ -70,7 +69,6 @@ namespace Alpha.Services
                     else
                     {
                         errors.Add(validPass.Errors);
-                        //AddErrorsFromResult(validPass);
                     }
                     if ((validEmail.Succeeded && validPass == null) || (validEmail.Succeeded && userObj.Password != string.Empty && validPass.Succeeded))
                     {
@@ -78,24 +76,11 @@ namespace Alpha.Services
                         if (!result.Succeeded)
                         {
                             errors.Add(result.Errors);
-                            //AddErrorsFromResult(result);
                         }
                     }
                 }
-                {
-                    //user.IsActive = userViewModel.IsActive;
-                    //user.UserName = userViewModel.UserName.Trim();
-                    //user.Email = userViewModel.Email.Trim();
-                    //user.PhoneNumber = userViewModel.PhoneNumber.Trim();
-                    //user.BirthDate = userViewModel.BirthDate;
-                    //user.FirstName = userViewModel.FirstName.Trim();
-                    //user.LastName = userViewModel.LastName.Trim();
-                    //user.PhotoFileName = userViewModel.PhotoFileName.Trim();
-                    //user.IsEmailPublic = userViewModel.IsEmailPublic;
-                    //user.Location = userViewModel.Location.Trim();
-                    //result = await _userManager.UpdateAsync(user);
-                }
             }
+
             return errors.Count == 0 ? IdentityResult.Success : IdentityResult.Failed(errors.ToArray());
         }
         public IEnumerable<User> ListUsers()

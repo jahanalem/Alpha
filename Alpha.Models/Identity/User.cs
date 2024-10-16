@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Alpha.Models.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alpha.Models.Identity
 {
-    public class User : IdentityUser<int>
+    public class User : IdentityUser<int>, IBaseEntity
     {
         [StringLength(450)]
         [Required]

@@ -7,9 +7,7 @@ using Alpha.Web.App.Resources.AppSettingsFileModel;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Areas.Admin.Controllers
@@ -32,19 +30,17 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 var viewModel = new ContactUsListViewModel();
                 if (TempData.Peek("TotalItems") == null)
                 {
-                    TempData["TotalItems"] = await _contactUsService.GetByCriteria().CountAsync();
+                    TempData["TotalItems"] = await _contactUsService.GetCountAsync();
                 }
 
-                viewModel.ContactUsList = await _contactUsService
-                    .GetByCriteria(_appSettings.Value.DefaultItemsPerPage, pageNumber.Value, null)
-                    .OrderByDescending(c => c.CreatedDate).ToListAsync();
+                viewModel.ContactUsList = await _contactUsService.GetByCriteria(_appSettings.Value.DefaultItemsPerPage, pageNumber.Value);
 
                 viewModel.Pagination.Init(new Pagination
                 {
                     PagingInfo = new PagingInfo
                     {
                         TotalItems = int.Parse(TempData.Peek("TotalItems").ToString()),
-                        ItemsPerPage = _appSettings.Value.DefaultItemsPerPage,// PagingInfo.DefaultItemsPerPage,
+                        ItemsPerPage = _appSettings.Value.DefaultItemsPerPage,
                         CurrentPage = pageNumber.Value
                     },
                     Url = Url.Action(action: "Index", controller: "ContactUs", new { area = "Admin", pageNumber = pageNumber })
@@ -56,35 +52,17 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             return View();
         }
 
-        //public async Task<ActionResult> ContactUsList(int? pageNumber = null)
-        //{
-        //    if (pageNumber.HasValue)
-        //    {
-        //        var viewModel = new ContactUsListViewModel();
-        //        viewModel.ContactUsList = await _contactUsService
-        //            .FindAll(3, 1, null)
-        //            .OrderByDescending(c => c.CreatedDate).ToListAsync();
-        //        viewModel.PagingInfo = new PagingInfo
-        //        {
-        //            CurrentPage = pageNumber.Value,
-        //            ItemsPerPage = 3,
-        //            TotalItems = (int)TempData.Peek("TotalItems")
-        //        };
-        //        viewModel.TargetController = "ContactUs";
-        //        viewModel.TargetAction = "ContactUsList";
-        //        return View(viewModel);
-        //    }
-        //}
-
         #region Read
 
         public async Task<IActionResult> Details(int id)
         {
             if (ModelState.IsValid)
             {
-                ContactUs contact = await _contactUsService.FindByIdAsync(id);
+                ContactUs contact = await _contactUsService.GetByIdAsync(id);
+
                 return View(contact);
             }
+
             return View();
         }
 

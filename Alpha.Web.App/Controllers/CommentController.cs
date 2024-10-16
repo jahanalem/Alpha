@@ -1,8 +1,8 @@
 ﻿using Alpha.DataAccess;
-using Alpha.DataAccess.Interfaces;
 using Alpha.Infrastructure;
 using Alpha.Models;
 using Alpha.Models.Identity;
+using Alpha.Services.Interfaces;
 using Alpha.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,11 +21,11 @@ namespace Alpha.Web.App.Controllers
     public class CommentController : BaseController
     {
         private readonly ApplicationDbContext _context;
-        private readonly ICommentRepository _commentRepository;
+        private readonly ICommentService _commentService;
         private UserManager<User> _userManager;
-        public CommentController(ICommentRepository commentRepository, UserManager<User> userManager)
+        public CommentController(ICommentService commentService, UserManager<User> userManager)
         {
-            _commentRepository = commentRepository;
+            _commentService = commentService;
             _userManager = userManager;
         }
 
@@ -81,7 +81,7 @@ namespace Alpha.Web.App.Controllers
             {
                 var userInfo = GetCurrentUserInfo();
                 comment.UserId = userInfo.UserId;
-                await _commentRepository.AddOrUpdateAsync(comment);
+                await _commentService.AddOrUpdateAsync(comment);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -99,14 +99,14 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
-                Comment cmmt = await _commentRepository.FindByIdAsync(obj.CommentId);
+                Comment cmmt = await _commentService.FindByIdAsync(obj.CommentId);
                 cmmt.Description = obj.Dsc;
                 cmmt.ModifiedDate = DateTime.UtcNow;
 
-                var id = await _commentRepository.AddOrUpdateAsync(cmmt);
+                var comment = await _commentService.AddOrUpdateAsync(cmmt);
                 if (Request.IsAjaxRequest())
                 {
-                    return Json(id);
+                    return Json(comment.Id);
                 }
             }
             return Json(new { code = 0 });
@@ -152,12 +152,11 @@ namespace Alpha.Web.App.Controllers
         {
             if (ModelState.IsValid)
             {
-                var comment = await _commentRepository.FetchByCriteria(m => m.Id == obj.CommentId).SingleOrDefaultAsync();
+                var comment = await _commentService.GetCommentById(obj.CommentId);
                 if (comment != null)
                 {
                     await RemoveChildren(comment.Id);
-                    _commentRepository.Remove(comment);
-                    await _commentRepository.SaveChangesAsync();
+                    await _commentService.RemoveCommentAsync(comment);
                 }
                 if (Request.IsAjaxRequest())
                 {
@@ -169,18 +168,17 @@ namespace Alpha.Web.App.Controllers
 
         async Task RemoveChildren(int i)
         {
-            var children = _commentRepository.FetchByCriteria(c => c.ParentId == i).ToList();
+            var children = await _commentService.GetCommentsByParentId(i);
             foreach (var child in children)
             {
                 await RemoveChildren(child.Id);
-                _commentRepository.Remove(child);
+                await _commentService.RemoveCommentAsync(child);
             }
         }
 
         #endregion
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task<JsonResult> Save(SendCommentViewModel obj)
         {
             if (ModelState.IsValid)
@@ -197,7 +195,7 @@ namespace Alpha.Web.App.Controllers
                     ParentId = obj.ParentId,
                     UserId = CurrentUserInfo.UserId
                 };
-                var commentId = await _commentRepository.AddOrUpdateAsync(comment);
+                var commentId = await _commentService.AddOrUpdateAsync(comment);
                 var user = HttpContext.User.Identity.Name;
 
                 if (Request.IsAjaxRequest())
@@ -207,8 +205,8 @@ namespace Alpha.Web.App.Controllers
                     return Json(dataObj);
                 }
             }
+
             return Json(new { code = 0 });
-            //return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });//Ok(obj.Dsc);
         }
 
         [HttpPost]
@@ -225,7 +223,7 @@ namespace Alpha.Web.App.Controllers
                     ParentId = obj.ParentId,
                     UserId = userInfo.UserId
                 };
-                var id = await _commentRepository.AddOrUpdateAsync(comment);
+                var id = await _commentService.AddOrUpdateAsync(comment);
             }
             return RedirectToAction("Show", "Article", new { Id = obj.ArticleId });
         }

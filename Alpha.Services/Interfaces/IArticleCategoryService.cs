@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 
 namespace Alpha.Services.Interfaces
 {
-    public interface IArticleCategoryService : IBaseService<ArticleCategory>
+    public interface IArticleCategoryService
     {
-        Task<int> CreateOrUpdateAsync(ArticleCategoryViewModel model);
-
+        Task<ArticleCategory> CreateOrUpdateAsync(ArticleCategoryViewModel model);
         Task<List<ArticleCategory>> GetSelfAndDescendants(int id);
+        Task<List<ArticleCategory>> GetAllAsync();
+        Task<ArticleCategory> GetByIdAsync(int id);
+        Task<List<ArticleCategory>> GetByIsActiveAsync(bool isActive);
+        Task DeleteAsync(ArticleCategory articleCategory);
     }
 }

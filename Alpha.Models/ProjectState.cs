@@ -2,7 +2,7 @@
 
 namespace Alpha.Models
 {
-    public class ProjectState : Entity
+    public class ProjectState : BaseEntity
     {
         public ProjectState()
         {

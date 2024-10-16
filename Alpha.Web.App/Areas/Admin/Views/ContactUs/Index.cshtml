@@ -1,4 +1,5 @@
 ﻿@using Alpha.ViewModels
+@using Alpha.Infrastructure.Convertors
 @model ContactUsListViewModel
 @{
     ViewData["Title"] = "Contact Us";
@@ -40,7 +41,7 @@
                         @Html.DisplayFor(modelItem => item.Title)
                     </td>
                     <td>
-                        <LocalDate utc="@item.CreatedDate"></LocalDate>
+                        <LocalDate utc="@item.CreatedDate.ToLocalDateTime()"></LocalDate>
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

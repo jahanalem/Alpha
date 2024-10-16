@@ -2,7 +2,7 @@
 
 namespace Alpha.Models
 {
-    public class CommentLike : Entity
+    public class CommentLike : BaseEntity
     {
         public virtual int? CommentId { get; set; }
         public virtual int? UserId { get; set; }

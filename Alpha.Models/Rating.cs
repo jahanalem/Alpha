@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alpha.Models
 {
-    public class Rating : Entity
+    public class Rating : BaseEntity
     {
         public virtual int? UserId { get; set; }
         public virtual int? ArticleId { get; set; }

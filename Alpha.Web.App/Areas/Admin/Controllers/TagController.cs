@@ -21,7 +21,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var tagList = await _tagService.GetByCriteria(null, null).ToListAsync();
+            var tagList = await _tagService.GetAllAsync();
             return View(tagList);
         }
 
@@ -42,10 +42,10 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _tagService.AddOrUpdateAsync(tag);
-                await _tagService.SaveChangesAsync();
+                await _tagService.CreateAsync(tag);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(tag);
         }
 
@@ -63,7 +63,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
             if (id is int idValue)
             {
-                Tag tag = await _tagService.FindByIdAsync(idValue);
+                Tag tag = await _tagService.GetByIdAsync(idValue);
                 if (tag == null)
                 {
                     return NotFound();
@@ -90,8 +90,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             {
                 try
                 {
-                    _tagService.Update(tag);
-                    await _tagService.SaveChangesAsync();
+                    await _tagService.UpdateAsync(tag);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -123,7 +122,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
             if (id is int idValue)
             {
-                var tag = await _tagService.FindByIdAsync(idValue);
+                var tag = await _tagService.GetByIdAsync(idValue);
                 if (tag == null)
                 {
                     return NotFound();
@@ -141,13 +140,12 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         {
             if (id is int idValue)
             {
-                var tag = await _tagService.FindByIdAsync(idValue);
+                var tag = await _tagService.GetByIdAsync(idValue);
                 if (tag == null)
                 {
                     return NotFound();
                 }
-                _tagService.Delete(tag);
-                await _tagService.SaveChangesAsync();
+                await _tagService.DeleteAsync(tag);
             }
 
             return RedirectToAction(nameof(Index));
@@ -155,7 +153,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         private async Task<bool> TagExists(int id)
         {
-            return await _tagService.ExistsAsync(id);// _context.Tags.Any(e => e.Id == id);
+            return await _tagService.ExistsAsync(id);
         }
         #endregion
     }

@@ -25,9 +25,10 @@ namespace Alpha.Web.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Show(int Id)
         {
-            var result = await _articleService.FindByIdAsync(Id);
-            ViewBag.TitleHtmlMetaTag = result.TitleHtmlMetaTag;
-            ViewBag.DescriptionHtmlMetaTag = result.DescriptionHtmlMetaTag;
+            var result = await _articleService.GetArticleByIdAsync(Id);
+            ViewBag.TitleHtmlMetaTag = result.Article.TitleHtmlMetaTag;
+            ViewBag.DescriptionHtmlMetaTag = result.Article.DescriptionHtmlMetaTag;
+
             return View(result);
         }
 
@@ -60,7 +61,7 @@ namespace Alpha.Web.App.Controllers
                 PagingInfo = new PagingInfo
                 {
                     TotalItems = int.Parse(TempData[key].ToString()),
-                    ItemsPerPage = _appSettings.Value.DefaultItemsPerPage, //PagingInfo.DefaultItemsPerPage,
+                    ItemsPerPage = _appSettings.Value.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
                 Url = url

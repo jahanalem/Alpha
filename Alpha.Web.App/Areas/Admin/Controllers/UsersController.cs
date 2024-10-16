@@ -24,8 +24,6 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         private IUserValidator<User> _userValidator;
         private IPasswordValidator<User> _passwordValidator;
         private IPasswordHasher<User> _passwordHasher;
-        //private RoleManager<Role> _roleManager;
-        //private IUserRoleStore<UserRole> _userRoleStore;
 
         private IUserService _userService;
         private IOptions<AppSettingsModel> _appSettings;
@@ -40,7 +38,6 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             _passwordValidator = passValid;
             _passwordHasher = passwordHash;
             _appSettings = appSettings;
-            //_roleManager = roleMgr;
             _userService = new UserService(this.ModelState, _userManager, _userValidator, _passwordValidator, _passwordHasher);
         }
         public async Task<IActionResult> Index(int pageNumber = 1)
@@ -78,13 +75,12 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            //List<string> propertyNames = DynamicOperation.GetNamesOfProperties(typeof(UserEditViewModel));
-            //ViewData["PropertyList"] = propertyNames;
             if (string.IsNullOrEmpty(id))
             {
                 return RedirectToAction("Index", "Users");
             }
             User user = _userManager.Users.FirstOrDefault(u => u.Id == int.Parse(id));
+
             return View(user);
         }
 
@@ -103,6 +99,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                     AddErrorsFromResult(consequence);
                 }
             }
+
             return View();
         }
 
@@ -115,7 +112,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(id))
             {
-                return Json(data: true);//RedirectToAction("Index", "Users");
+                return Json(data: true);
             }
             var result = _userService.DeleteAsync(id);
 
@@ -123,67 +120,10 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             {
                 return RedirectToAction("Index");
             }
+
             return Json(data: false);
         }
 
         #endregion
-
-        //public IActionResult LoadData()
-        //{
-
-        //    var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-        //    // Skiping number of Rows count
-        //    var start = Request.Form["start"].FirstOrDefault();
-        //    // Paging Length 10,20
-        //    var length = Request.Form["length"].FirstOrDefault();
-        //    // Sort Column Name
-        //    var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-        //    // Sort Column Direction ( asc ,desc)
-        //    var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-        //    // Search Value from (Search box)
-        //    var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
-        //    //Paging Size (10,20,50,100)
-        //    int pageSize = length != null ? Convert.ToInt32(length) : 0;
-        //    int skip = start != null ? Convert.ToInt32(start) : 0;
-        //    int recordsTotal = 0;
-        //    IQueryable<User> data = _userManager.Users;
-
-        //    //using (_context)
-        //    {
-        //        // Getting all Customer data
-        //        IQueryable<User> userData = data; //_context.CustomerTB.Select(tempcustomer => tempcustomer);
-
-        //        //Sorting
-        //        if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-        //        {
-        //            if (sortColumn == string.Empty) sortColumn = "Id";
-        //            var order = $"{sortColumn} {sortColumnDirection}";
-        //            userData = data.OrderBy(order);
-        //        }
-        //        //Search
-        //        if (!string.IsNullOrEmpty(searchValue))
-        //        {
-        //            userData = data.AsQueryable().Where(m => m.Email.ToLower().Contains(searchValue) || m.UserName.ToLower().Contains(searchValue));
-        //        }
-        //        data = userData.Skip(skip).Take(pageSize);
-        //        //total number of rows count 
-        //        recordsTotal = userData.Count();
-        //        //Paging 
-
-        //    }
-        //    var result = new List<UsersViewModel>();
-        //    foreach (User u in data.ToList())
-        //    {
-        //        List<string> rolesOfUser = _applicationDbContext.UserRoles.Where(c => c.User.Id == u.Id).Select(c => c.Role.Name).ToList();
-
-        //        var vm = new UsersViewModel { Id = u.Id, UserName = u.UserName, Email = u.Email, RoleNames = rolesOfUser };
-        //        result.Add(vm);
-        //    }
-
-        //    //Returning Json Data
-        //    JsonResult jsonResult = Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = result });
-        //    return jsonResult;
-        //}
     }
 }

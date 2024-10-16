@@ -10,7 +10,7 @@ namespace Alpha.DataAccess.Helper
     public static class RepositoryUtility
     {
         public static void AddOrUpdate<T>(this DbSet<T> dbSet, IEnumerable<T> records)
-        where T : Entity
+        where T : BaseEntity
         {
             foreach (var data in records)
             {
@@ -24,7 +24,7 @@ namespace Alpha.DataAccess.Helper
             }
         }
         public static EntityState AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity data)
-        where TEntity : Entity
+        where TEntity : BaseEntity
         {
             {
                 var exists = dbSet.AsNoTracking().Any(x => x.Id == data.Id);
@@ -53,7 +53,7 @@ namespace Alpha.DataAccess.Helper
         /// <returns></returns>
         public static EntityState AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity data,
             Expression<Func<TEntity, bool>> predicate)
-        where TEntity : Entity
+        where TEntity : BaseEntity
         {
             {
                 var exists = dbSet.Where(predicate).Any();

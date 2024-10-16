@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Alpha.DataAccess
@@ -23,7 +25,6 @@ namespace Alpha.DataAccess
         public virtual DbSet<AttachmentFile> AttachmentFiles { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<CommentLike> CommentLikes { get; set; }
-        //public virtual DbSet<CommentReply> CommentReplies { get; set; }
         public virtual DbSet<ContactUs> ContactUs { get; set; }
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<ProjectState> ProjectStates { get; set; }
@@ -126,6 +127,35 @@ namespace Alpha.DataAccess
                 if (result.IsCompletedSuccessfully)
                 {
                     await userManager.AddToRoleAsync(user, role);
+                }
+            }
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateTimestamps();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+        public override int SaveChanges()
+        {
+            UpdateTimestamps();
+            return base.SaveChanges();
+        }
+
+        private void UpdateTimestamps()
+        {
+            var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity &&
+                                (e.State == EntityState.Added || e.State == EntityState.Modified));
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    ((BaseEntity)entry.Entity).CreatedDate = DateTime.UtcNow;
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    ((BaseEntity)entry.Entity).ModifiedDate = DateTime.UtcNow;
                 }
             }
         }

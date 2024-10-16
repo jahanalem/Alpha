@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Alpha.Models.Tag>
+﻿@using Alpha.Infrastructure.Convertors
+@model IEnumerable<Alpha.Models.Tag>
 
 @{
     ViewData["Title"] = "Tags";
@@ -51,10 +52,10 @@
                     @Html.DisplayFor(modelItem => item.IsActive)
                 </td>
                 <td>
-                    <LocalDate utc="@item.CreatedDate"></LocalDate>
+                        <LocalDate utc="@item.CreatedDate.ToLocalDateTime()"></LocalDate>
                 </td>
                 <td>
-                    <LocalDate utc="@item.ModifiedDate"></LocalDate>
+                        <LocalDate utc="@item.ModifiedDate.ToLocalDateTime()"></LocalDate>
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

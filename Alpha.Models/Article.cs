@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alpha.Models
 {
-    public class Article : Entity, IHtmlMetaTags
+    public class Article : BaseEntity, IHtmlMetaTags
     {
         public Article()
         {

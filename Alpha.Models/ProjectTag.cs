@@ -1,6 +1,6 @@
 ﻿namespace Alpha.Models
 {
-    public class ProjectTag : Entity
+    public class ProjectTag : BaseEntity
     {
         //[Key, Column(Order = 0)]
         public int TagId { get; set; }

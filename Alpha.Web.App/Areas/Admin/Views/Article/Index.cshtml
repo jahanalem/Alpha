@@ -1,5 +1,6 @@
 ﻿@using Alpha.Models
 @using Alpha.ViewModels
+@using Alpha.Infrastructure.Convertors
 @model Alpha.ViewModels.ArticleTagListViewModel
 
 @{
@@ -67,10 +68,10 @@
                         @Html.DisplayFor(modelItem => item.Article.IsActiveNewComment)
                     </td>
                     <td>
-                        <LocalDate utc="@item.Article.CreatedDate"></LocalDate>
+                        <LocalDate utc="@item.Article.CreatedDate.ToLocalDateTime()"></LocalDate>
                     </td>
                     <td>
-                        <LocalDate utc="@item.Article.ModifiedDate"></LocalDate>
+                        <LocalDate utc="@item.Article.ModifiedDate.ToLocalDateTime()"></LocalDate>
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Article.Id">Edit</a> |

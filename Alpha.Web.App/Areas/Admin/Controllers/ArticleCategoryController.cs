@@ -4,7 +4,6 @@ using Alpha.Web.App.Controllers;
 using Alpha.Web.App.Resources.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,25 +22,28 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         // GET: ArticleCategory
         public async Task<ActionResult> Index()
         {
-            var list = await _articleCategoryService.GetByCriteria().ToListAsync();
+            var list = await _articleCategoryService.GetAllAsync();
+
             return View(list);
         }
 
         // GET: ArticleCategory/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var cat = await _articleCategoryService.GetByCriteria(c => c.Id == id).FirstOrDefaultAsync();
-            return View();
+            var cat = await _articleCategoryService.GetByIdAsync(id);
+
+            return View(cat);
         }
 
         // GET: ArticleCategory/Create
         public async Task<ActionResult> Create()
         {
-            List<Alpha.Models.ArticleCategory> list = await _articleCategoryService.GetByCriteria(c => c.IsActive == true).ToListAsync();
+            List<Alpha.Models.ArticleCategory> list = await _articleCategoryService.GetByIsActiveAsync(true);
             var model = new ArticleCategoryViewModel
             {
                 Parents = list
             };
+
             return View(model);
         }
 
@@ -64,12 +66,13 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         // GET: ArticleCategory/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var cat = await _articleCategoryService.FindByIdAsync(id);
+            var cat = await _articleCategoryService.GetByIdAsync(id);
             var model = new ArticleCategoryViewModel
             {
                 Category = cat,
-                Parents = await _articleCategoryService.GetByCriteria().ToListAsync()
+                Parents = await _articleCategoryService.GetAllAsync()
             };
+
             return View(model);
         }
 
@@ -93,12 +96,13 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         // GET: ArticleCategory/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            var cat = await _articleCategoryService.FindByIdAsync(id);
+            var cat = await _articleCategoryService.GetByIdAsync(id);
             var model = new ArticleCategoryViewModel
             {
                 Category = cat,
-                Parents = await _articleCategoryService.GetByCriteria().ToListAsync()
+                Parents = await _articleCategoryService.GetAllAsync()
             };
+
             return View(model);
         }
 
@@ -110,8 +114,8 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             try
             {
                 // TODO: Add delete logic here
-                _articleCategoryService.Delete(model.Category);
-                await _articleCategoryService.SaveChangesAsync();
+                await _articleCategoryService.DeleteAsync(model.Category);
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

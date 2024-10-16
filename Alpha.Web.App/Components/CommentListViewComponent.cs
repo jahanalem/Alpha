@@ -1,5 +1,4 @@
-﻿using Alpha.DataAccess.Interfaces;
-using Alpha.Services.Interfaces;
+﻿using Alpha.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,12 +9,10 @@ namespace Alpha.Web.App.Components
     public class CommentListViewComponent : ViewComponent
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICommentRepository _commentRepository;
-        private ICommentService _commentService;
+        private readonly ICommentService _commentService;
         private int _articleId;
-        public CommentListViewComponent(ICommentRepository commentRepository, IHttpContextAccessor httpContextAccessor, ICommentService commentService)
+        public CommentListViewComponent(IHttpContextAccessor httpContextAccessor, ICommentService commentService)
         {
-            _commentRepository = commentRepository;
             _httpContextAccessor = httpContextAccessor;
             _commentService = commentService;
             if (_httpContextAccessor != null && _httpContextAccessor.HttpContext != null)
@@ -31,7 +28,7 @@ namespace Alpha.Web.App.Components
         public async Task<IViewComponentResult> InvokeAsync(int Id)
         {
             var comments = await _commentService.GetComments(Id);
-            //var comments = await _commentRepository.FetchByCriteria(c => c.ArticleId == Id).ToListAsync();
+
             return View(comments);
         }
     }

@@ -18,24 +18,23 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
     [Area(AreaConstants.AdminArea)]
     public class ArticleController : BaseController
     {
-        private readonly IArticleService _articleService;
-        private readonly IArticleTagService _articleTagService;
-        private readonly ITagService _tagService;
         private readonly IArticleCategoryService _articleCategoryService;
+        private readonly IArticleTagService _articleTagService;
+        private readonly IArticleService _articleService;
+        private readonly ITagService _tagService;
         private IOptions<AppSettingsModel> _appSettings;
 
         public ArticleController(IArticleService articleService,
             IArticleTagService articleTagService,
             ITagService tagService,
             IOptions<AppSettingsModel> appSettings,
-            IArticleCategoryService articleCategoryService
-            )
+            IArticleCategoryService articleCategoryService)
         {
-            _articleService = articleService;
+            _articleCategoryService = articleCategoryService;
             _articleTagService = articleTagService;
+            _articleService = articleService;
             _tagService = tagService;
             _appSettings = appSettings;
-            _articleCategoryService = articleCategoryService;
         }
 
         [Route("Admin/Article/pageNumber/{pageNumber:int}")]
@@ -56,13 +55,12 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 PagingInfo = new PagingInfo
                 {
                     TotalItems = int.Parse(TempData[key].ToString()),
-                    ItemsPerPage = _appSettings.Value.DefaultItemsPerPage,// PagingInfo.DefaultItemsPerPage,
+                    ItemsPerPage = _appSettings.Value.DefaultItemsPerPage,
                     CurrentPage = pageNumber
                 },
                 Url = Url.Action(action: "Index", controller: "Article", new { area = "Admin", tagId = tagId, pageNumber = pageNumber })
             });
 
-            //TempData.Keep(key);
             return View(result);
         }
 
@@ -70,7 +68,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         //[HttpGet("Details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
-            var article = await _articleService.FindByIdAsync(id);
+            var article = await _articleService.GetArticleByIdAsync(id.Value);
             if (article == null)
                 return NotFound();
 
@@ -83,7 +81,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var tags = await _tagService.GetByCriteria(c => c.IsActive == true).ToListAsync();
+            var tags = await _tagService.GetTagsByIsActiveAsync(true);
             for (int i = 0; i < tags.Count; i++)
             {
                 tags[i].IsActive = false;
@@ -92,13 +90,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
             {
                 Article = new Article(),
                 AllTags = tags,
-                CategoryList = await _articleCategoryService.GetByCriteria(c => c.IsActive).ToListAsync()
+                CategoryList = await _articleCategoryService.GetByIsActiveAsync(true)
             };
-            //StringLengthAttribute strLenAttr = typeof(Article).GetProperty("Summary")?.GetCustomAttributes(typeof(StringLengthAttribute), false).Cast<StringLengthAttribute>().SingleOrDefault();
-            //if (strLenAttr != null)
-            //{
-            //    int maxLen = strLenAttr.MaximumLength;
-            //}
+
             return View(articleViewModel);
         }
 
@@ -136,7 +130,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            ArticleViewModel article = await _articleService.GetArticleById(id);
+            ArticleViewModel article = await _articleService.GetArticleByIdAsync(id);
 
             article.AllTags = await _articleService.SpecifyRelatedTagsInTheGeneralSet(article.Tags);
             return View(article);
@@ -183,7 +177,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var article = await _articleService.FindByIdAsync(id.Value);
+            var article = await _articleService.GetArticleByIdAsync(id.Value);
             if (article == null)
             {
                 return NotFound();
@@ -197,9 +191,9 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var article = await _articleService.GetByCriteria(m => m.Id == id).SingleOrDefaultAsync();
-            _articleService.Delete(article);
-            await _articleService.SaveChangesAsync();
+            var articleViewModel = await _articleService.GetArticleByIdAsync(id);
+            await _articleService.DeleteAsync(articleViewModel.Article);
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -207,7 +201,7 @@ namespace Alpha.Web.App.Areas.Admin.Controllers
 
         private async Task<bool> ArticleExists(int id)
         {
-            return await _articleService.ExistsAsync(id);
+            return await _articleService.ArticleExists(id);
         }
     }
 }

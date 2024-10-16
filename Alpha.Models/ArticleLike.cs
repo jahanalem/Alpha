@@ -2,7 +2,7 @@
 
 namespace Alpha.Models
 {
-    public class ArticleLike : Entity
+    public class ArticleLike : BaseEntity
     {
         /// <summary>
         /// 

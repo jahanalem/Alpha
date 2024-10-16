@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Alpha.Services.Interfaces
 {
-    public interface IBaseService<TEntity> where TEntity : Entity, new()
+    public interface IBaseService<TEntity> where TEntity : BaseEntity, new()
     {
         int Delete(TEntity entity);
 

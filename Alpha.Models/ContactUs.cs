@@ -1,6 +1,6 @@
 ﻿namespace Alpha.Models
 {
-    public class ContactUs : Entity
+    public class ContactUs : BaseEntity
     {
         /// <summary>
         /// FirstName: نام

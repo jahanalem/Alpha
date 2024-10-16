@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace Alpha.Web.App.Controllers
 {
-    //[ApiController]
-    //[Route("[controller]")]
     public class SearchController : BaseController
     {
         private IOptions<AppSettingsModel> _appSettings;
@@ -37,13 +35,13 @@ namespace Alpha.Web.App.Controllers
         {
             if (string.IsNullOrEmpty(find))
                 return View();
+
             var searchVal = find.Trim();
 
-            ViewModels.Searches.SearchResultsViewModel searchResult =
-                await _articleService.Search(searchVal);
+            ViewModels.Searches.SearchResultsViewModel searchResult = await _articleService.Search(searchVal);
             ViewBag.SearchTerm = searchVal;
-            //var x = Newtonsoft.Json.JsonConvert.SerializeObject(searchResult.Articles[0]);
             var y = Json(searchResult.Articles);
+
             return y;
         }
     }

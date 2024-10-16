@@ -1,5 +1,4 @@
-﻿using Alpha.DataAccess.Interfaces;
-using Alpha.DataAccess.UnitOfWork;
+﻿using Alpha.DataAccess.UnitOfWork;
 using Alpha.Infrastructure.Convertors;
 using Alpha.Infrastructure.LinqUtility;
 using Alpha.Infrastructure.PaginationUtility;
@@ -9,6 +8,7 @@ using Alpha.ViewModels;
 using Alpha.ViewModels.Searches;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,30 +16,20 @@ using System.Threading.Tasks;
 
 namespace Alpha.Services
 {
-    public class ArticleService : BaseService<IArticleRepository, Article>, IArticleService
+    public class ArticleService : BaseService<Article>, IArticleService
     {
-        private IArticleRepository _articleRepository;
-        private IArticleTagRepository _articleTagRepository;
         private IArticleTagService _articleTagService;
         private IArticleCategoryService _articleCategoryService;
-        private ITagRepository _tagRepository;
-        private IUnitOfWork _unitOfWork;
         private IUrlHelper _urlHelper;
 
-        public ArticleService(IUnitOfWork uow,
-            IArticleRepository articleRepository,
-            IArticleTagRepository articleTagRepository,
-            IArticleTagService articleTagService,
-            IArticleCategoryService articleCategoryService,
-            ITagRepository tagRepository, IUrlHelper urlHelper)
-            : base(articleRepository)
+        public ArticleService(IArticleCategoryService articleCategoryService,
+                              IArticleTagService articleTagService,
+                              IUrlHelper urlHelper,
+                              IUnitOfWork uow,
+                              ILogger<ArticleService> logger) : base(uow, logger)
         {
-            _articleRepository = articleRepository;
-            _articleTagRepository = articleTagRepository;
             _articleTagService = articleTagService;
-            _tagRepository = tagRepository;
             _articleCategoryService = articleCategoryService;
-            _unitOfWork = uow;
             _urlHelper = urlHelper;
         }
 
@@ -63,34 +53,11 @@ namespace Alpha.Services
             }
             else
             {
-                query = _articleRepository.FetchByCriteria(c => c.IsActive && c.IsPublished);
+                query = _unitOfWork.Repository<Article>().GetByCriteria(c => c.IsActive && c.IsPublished);
             }
-
 
             return query;
         }
-
-        //private ArticleTagListViewModel MapToViewModel(List<Article> articleList, int? tagId)
-        //{
-        //    var articleViewModelList = new List<ArticleViewModel>();
-        //    foreach (var article in articleList)
-        //    {
-        //        var tags = _articleTagService.GetTagsByArticleId(article.Id);
-        //        articleViewModelList.Add(new ArticleViewModel
-        //        {
-        //            Article = article,
-        //            Tags = tags,
-        //        });
-        //    }
-
-        //    var result = new ArticleTagListViewModel
-        //    {
-        //        ArticleViewModelList = articleViewModelList,
-        //        TagId = tagId
-        //    };
-
-        //    return result;
-        //}
 
         public async Task<IQueryable<Article>> FilterByCriteriaQueryableAsync(int tagId, int catId)
         {
@@ -98,7 +65,7 @@ namespace Alpha.Services
             IQueryable<Article> query1 = GetArticlesByCategories(selectedCategories);
             IQueryable<Article> query = query1
                .Where(c => c.IsActive && c.IsPublished)
-               .Join(_articleTagRepository.Instance().Where(x => x.TagId == tagId), a => a.Id, at => at.ArticleId,
+               .Join(_unitOfWork.Repository<ArticleTag>().GetByCriteria(x => x.TagId == tagId), a => a.Id, at => at.ArticleId,
                    (a, at) => a);
 
             return query;
@@ -119,28 +86,25 @@ namespace Alpha.Services
             IQueryable<Article> query = null;
             if (tagId != null)
             {
-                query = _articleRepository.Instance()
-                    .Where(c => c.IsActive && c.IsPublished)
-                    .Join(_articleTagRepository.Instance()
-                    .Where(x => x.TagId == tagId.Value), a => a.Id, at => at.ArticleId, (a, at) => a);
+                query = _unitOfWork.Repository<Article>()
+                    .GetByCriteria(c => c.IsActive && c.IsPublished)
+                    .Join(_unitOfWork.Repository<ArticleTag>()
+                                     .GetByCriteria(x => x.TagId == tagId.Value), a => a.Id, at => at.ArticleId, (a, at) => a);
             }
             else
             {
-                query = _articleRepository.FetchByCriteria(a => a.IsActive && a.IsPublished);
+                query = _unitOfWork.Repository<Article>().GetByCriteria(a => a.IsActive && a.IsPublished);
             }
             return query;
         }
 
-
         private IQueryable<Article> FilterByTag(IQueryable<Article> query, int tagId)
         {
-            query = query
-                .Join(_articleTagRepository.Instance()
-                .Where(x => x.TagId == tagId), a => a.Id, at => at.ArticleId, (a, at) => a);
+            query = query.Join(_unitOfWork.Repository<ArticleTag>()
+                .GetByCriteria(x => x.TagId == tagId), a => a.Id, at => at.ArticleId, (a, at) => a);
 
             return query;
         }
-
 
         public IQueryable<Article> GetArticlesByCategories(List<ArticleCategory> categories, bool isArticleActive = true, bool isArticlePublished = true)
         {
@@ -152,11 +116,10 @@ namespace Alpha.Services
             }
             pr = pr.And(a => a.IsActive == isArticleActive);
             pr = pr.And(a => a.IsPublished == isArticlePublished);
-            query = _articleRepository.FetchByCriteria(pr);
+            query = _unitOfWork.Repository<Article>().GetByCriteria(pr);
 
             return query;
         }
-
 
         public async Task<ArticleTagListViewModel> FilterByTagAsync(int? tagId, int pageNumber = 1, int items = 10)
         {
@@ -229,13 +192,13 @@ namespace Alpha.Services
             return _articleTagService.GetTagsByArticleId(articleId);
         }
 
-        public virtual async Task<ArticleViewModel> GetArticleById(int articleId)
+        public virtual async Task<ArticleViewModel> GetArticleByIdAsync(int articleId)
         {
             var vm = new ArticleViewModel();
-            vm.Article = await FindByIdAsync(articleId);
+            vm.Article = await _unitOfWork.Repository<Article>().GetByIdAsync(articleId);
             vm.Tags = GetTagsByArticleId(articleId);
-            vm.CategoryList = await _articleCategoryService.GetByCriteria(c => c.IsActive).ToListAsync();
-            //vm.AllOfTags = _tagRepository.GetAll().Where(c => c.IsActive == true).ToList();
+            vm.CategoryList = await _unitOfWork.Repository<ArticleCategory>().GetByCriteria(c => c.IsActive).ToListAsync();
+
             return vm;
         }
 
@@ -246,7 +209,7 @@ namespace Alpha.Services
         /// <returns></returns>
         public virtual async Task<List<Tag>> SpecifyRelatedTagsInTheGeneralSet(List<Tag> tagList)
         {
-            List<Tag> allAvailableTags = await _tagRepository.FetchByCriteria(c => c.IsActive).ToListAsync();
+            List<Tag> allAvailableTags = await _unitOfWork.Repository<Tag>().GetByCriteria(c => c.IsActive).ToListAsync();
             for (int t = 0; t < allAvailableTags.Count; t++)
             {
                 allAvailableTags[t].IsActive = false;
@@ -267,12 +230,12 @@ namespace Alpha.Services
         public virtual async Task<List<ArticleViewModel>> GetAllOfArticleViewModel()
         {
             var result = new List<ArticleViewModel>();
-            List<int> articleIds = await _articleTagService.GetByCriteria(null, null)
+            List<int> articleIds = await _unitOfWork.Repository<ArticleTag>().GetByCriteria(null, null)
                 .Select(p => p.ArticleId)
                 .Distinct().ToListAsync();
             foreach (var id in articleIds)
             {
-                result.Add(await GetArticleById(id));
+                result.Add(await GetArticleByIdAsync(id));
             }
             return result;
         }
@@ -284,10 +247,9 @@ namespace Alpha.Services
         /// <returns>It returns Id from new Article. If operation was not successfully it returns -1.</returns>
         public virtual async Task<int> InsertAsync(ArticleViewModel viewModel)
         {
-            var oldTags = await _articleTagRepository
-                .FetchByCriteria(c => c.ArticleId == viewModel.Article.Id)
-                .Select(t => t.Tag)
-                .ToListAsync();
+            var oldTags = await _unitOfWork.Repository<ArticleTag>().GetByCriteria(c => c.ArticleId == viewModel.Article.Id)
+                                                                    .Select(t => t.Tag)
+                                                                    .ToListAsync();
 
             var newTags = viewModel.AllTags.Where(c => c.IsActive).ToList();
             List<Tag> addedList = new List<Tag>();
@@ -311,33 +273,33 @@ namespace Alpha.Services
                 }
             }
             addedList = newTags;
-            using (var transaction = _unitOfWork.BeginTransactionAsync())
+
+            await _unitOfWork.BeginTransactionAsync();
+            try
             {
-                try
-                {
-                    viewModel.Article.DescriptionAsPlainText = viewModel.Article.Description.ToPlainText();
-                    var articleId = await _unitOfWork.Article.AddOrUpdateAsync(viewModel.Article);
+                viewModel.Article.DescriptionAsPlainText = viewModel.Article.Description.ToPlainText();
+                var article = await _unitOfWork.Repository<Article>().AddOrUpdateAsync(viewModel.Article);
 
-                    foreach (var tag in deletedList)
-                    {
-                        await _unitOfWork.ArticleTag.Remove(c => c.ArticleId == articleId && c.TagId == tag.Id);
-                    }
-                    foreach (var tag in addedList)
-                    {
-                        var addArticleTag = new ArticleTag() { ArticleId = articleId, TagId = tag.Id };
-                        await _unitOfWork.ArticleTag.InsertAsync(addArticleTag);
-                    }
-                    await _unitOfWork.ArticleTag.SaveChangesAsync();
-
-                    await transaction.Result.CommitAsync();
-                    return articleId;
-                }
-                catch (Exception ex)
+                foreach (var tag in deletedList)
                 {
-                    await transaction.Result.RollbackAsync();
-                    throw new Exception(ex.Message);
+                    await _unitOfWork.Repository<ArticleTag>().DeleteByCriteriaAsync(c => c.ArticleId == article.Id && c.TagId == tag.Id);
                 }
+                foreach (var tag in addedList)
+                {
+                    var addArticleTag = new ArticleTag() { ArticleId = article.Id, TagId = tag.Id };
+                    await _unitOfWork.Repository<ArticleTag>().AddAsync(addArticleTag);
+                }
+                await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return article.Id;
             }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+                throw new Exception(ex.Message);
+            }
+
         }
 
         public virtual async Task<SearchResultsViewModel> Search(string searchTerm, int? pageNumber = 1, int? itemsNum = 10)
@@ -366,7 +328,7 @@ namespace Alpha.Services
             pr = pr.And(a => a.IsActive);
             pr = pr.And(a => a.IsPublished);
 
-            var query = _articleRepository.Instance().AsQueryable().Where(pr).OrderByDescending(o => o.CreatedDate);
+            var query = _unitOfWork.Repository<Article>().GetByCriteria(pr).OrderByDescending(o => o.CreatedDate);
             // EF.Functions.Like(a.Title.ToLower(), $"%{searchValue}%"))
             var totalItems = await query.CountAsync();
 
@@ -438,5 +400,15 @@ namespace Alpha.Services
             return await Search(searchTerm, null, null);
         }
 
+        public async Task DeleteAsync(Article article)
+        {
+            await _unitOfWork.Repository<Article>().DeleteAsync(article);
+            await _unitOfWork.CompleteAsync();
+        }
+
+        public async Task<bool> ArticleExists(int id)
+        {
+            return await _unitOfWork.Repository<Article>().ExistsAsync(id);
+        }
     }
 }

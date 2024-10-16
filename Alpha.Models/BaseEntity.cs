@@ -1,19 +1,20 @@
-﻿using System;
+﻿using Alpha.Models.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Alpha.Models
 {
-    public class BaseEntity<TId>
+    public class BaseEntity : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual TId Id { get; set; }
+        public virtual int Id { get; set; }
 
         [Display(Name = "Created Date")]
-        public virtual DateTime? CreatedDate { get; set; }
+        public virtual DateTimeOffset? CreatedDate { get; set; }
 
         [Display(Name = "Modified Date")]
-        public virtual DateTime? ModifiedDate { get; set; }
+        public virtual DateTimeOffset? ModifiedDate { get; set; }
     }
 }

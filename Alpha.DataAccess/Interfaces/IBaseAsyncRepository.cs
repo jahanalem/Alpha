@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace Alpha.DataAccess.Interfaces
 {
-    public interface IBaseAsyncRepository<TEntity, TId> where TEntity : Entity
+    public interface IBaseAsyncRepository<TEntity, TId> where TEntity : BaseEntity
     {
         TEntity FindByIdAsync(TId id, params Expression<Func<TEntity, object>>[] includeProperties);
         IQueryable<TEntity> FindAllAsync(params Expression<Func<TEntity, object>>[] includeProperties);

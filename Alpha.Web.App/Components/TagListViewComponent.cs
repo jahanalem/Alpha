@@ -1,8 +1,7 @@
-﻿using Alpha.DataAccess.Interfaces;
-using Alpha.Models;
+﻿using Alpha.Models;
+using Alpha.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,17 +9,17 @@ namespace Alpha.Web.App.Components
 {
     public class TagListViewComponent : ViewComponent
     {
-        private readonly ITagRepository _tagRepository;
+        private readonly ITagService _tagService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public TagListViewComponent(ITagRepository tagRepository, IHttpContextAccessor httpContextAccessor)
+        public TagListViewComponent(ITagService tagService, IHttpContextAccessor httpContextAccessor)
         {
-            _tagRepository = tagRepository;
+            _tagService = tagService;
             _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            List<Tag> result = await _tagRepository.FetchByCriteria(p => p.IsActive == true).ToListAsync();
+            List<Tag> result = await _tagService.GetTagsByIsActiveAsync(true);
             return View(result);
         }
     }

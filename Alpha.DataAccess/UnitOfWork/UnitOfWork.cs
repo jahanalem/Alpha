@@ -1,4 +1,5 @@
 ﻿using Alpha.DataAccess.Interfaces;
+using Alpha.Models.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -8,211 +9,160 @@ namespace Alpha.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public ApplicationDbContext Context { get; }
-        private readonly Dictionary<Type, object> _repositories;
+        private readonly ApplicationDbContext _context;
+        private IDbContextTransaction _transaction;
+        private Dictionary<string, object> _repositories;
         public UnitOfWork(ApplicationDbContext context)
         {
-            Context = context;
-            _repositories = new Dictionary<Type, object>();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-
-        #region Model Repository
-
-        private IAboutUsRepository _aboutUs;
-        public IAboutUsRepository AboutUs
+        public virtual IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class, IBaseEntity
         {
-            get
-            {
-                if (_aboutUs == null) { this._aboutUs = new AboutUsRepository(Context); }
+            _repositories ??= new Dictionary<string, object>();
 
-                return _aboutUs;
+            var typeName = typeof(TEntity).Name;
+
+            if (!_repositories.ContainsKey(typeName))
+            {
+                var repositoryType = typeof(GenericRepository<>);
+                var repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), _context);
+
+                _repositories[typeName] = repositoryInstance;
+            }
+
+            return (IGenericRepository<TEntity>)_repositories[typeName];
+        }
+
+        public virtual async Task<int> CompleteAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+        public int Complete()
+        {
+            return _context.SaveChanges();
+        }
+
+        public async Task BeginTransactionAsync()
+        {
+            if (_transaction != null)
+            {
+                throw new InvalidOperationException("A transaction is already in progress.");
+            }
+
+            _transaction = await _context.Database.BeginTransactionAsync();
+        }
+
+        public void BeginTransaction()
+        {
+            if (_transaction != null)
+            {
+                throw new InvalidOperationException("A transaction is already in progress.");
+            }
+
+            _transaction = _context.Database.BeginTransaction();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            try
+            {
+                await _transaction.CommitAsync();
+            }
+            catch
+            {
+                await RollbackTransactionAsync();
+                throw;
+            }
+            finally
+            {
+                await DisposeTransactionAsync();
             }
         }
 
-        private IArticleRepository _article;
-        public IArticleRepository Article
+        public void CommitTransaction()
         {
-            get
+            try
             {
-                if (_article == null) { this._article = new ArticleRepository(Context); }
-
-                return _article;
+                _transaction.Commit();
+            }
+            catch
+            {
+                RollbackTransaction();
+                throw;
+            }
+            finally
+            {
+                DisposeTransaction();
             }
         }
 
-        private IArticleLikeRepository _articleLike;
-        public IArticleLikeRepository ArticleLike
+        public async Task RollbackTransactionAsync()
         {
-            get
+            try
             {
-                if (_articleLike == null) { this._articleLike = new ArticleLikeRepository(Context); }
-
-                return _articleLike;
+                await _transaction.RollbackAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred during transaction rollback.", ex);
+            }
+            finally
+            {
+                await DisposeTransactionAsync();
             }
         }
 
-        private IArticleTagRepository _articleTag;
-        public IArticleTagRepository ArticleTag
+        public void RollbackTransaction()
         {
-            get
+            try
             {
-                if (_articleTag == null) { this._articleTag = new ArticleTagRepository(Context); }
-
-                return _articleTag;
+                _transaction.Rollback();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred during transaction rollback.", ex);
+            }
+            finally
+            {
+                DisposeTransaction();
             }
         }
 
-        private IAttachmentFileRepository _attachmentFile;
-        public IAttachmentFileRepository AttachmentFile
+        public async ValueTask DisposeAsync()
         {
-            get
+            if (_transaction != null)
             {
-                if (_attachmentFile == null) { this._attachmentFile = new AttachmentFileRepository(Context); }
+                await _transaction.DisposeAsync();
+            }
 
-                return _attachmentFile;
+            if (_context != null)
+            {
+                await _context.DisposeAsync();
             }
         }
-
-        private ICommentRepository _comment;
-        public ICommentRepository Comment
-        {
-            get
-            {
-                if (_comment == null) { this._comment = new CommentRepository(Context); }
-
-                return _comment;
-            }
-        }
-
-        private ICommentLikeRepository _commentLike;
-        public ICommentLikeRepository CommentLike
-        {
-            get
-            {
-                if (_commentLike == null) { this._commentLike = new CommentLikeRepository(Context); }
-
-                return _commentLike;
-            }
-        }
-
-        private IProjectRepository _project;
-        public IProjectRepository Project
-        {
-            get
-            {
-                if (_project == null) { this._project = new ProjectRepository(Context); }
-
-                return _project;
-            }
-        }
-
-        private IProjectStateRepository _projectState;
-        public IProjectStateRepository ProjectState
-        {
-            get
-            {
-                if (_projectState == null) { this._projectState = new ProjectStateRepository(Context); }
-
-                return _projectState;
-            }
-        }
-
-        private IProjectTagRepository _projectTag;
-        public IProjectTagRepository ProjectTag
-        {
-            get
-            {
-                if (_projectTag == null) { this._projectTag = new ProjectTagRepository(Context); }
-
-                return _projectTag;
-            }
-        }
-
-        private IRatingRepository _rating;
-        public IRatingRepository Rating
-        {
-            get
-            {
-                if (_rating == null) { this._rating = new RatingRepository(Context); }
-
-                return _rating;
-            }
-        }
-
-
-        private ITagRepository _tag;
-        public ITagRepository Tag
-        {
-            get
-            {
-                if (_tag == null) { this._tag = new TagRepository(Context); }
-
-                return _tag;
-            }
-        }
-
-        #endregion
 
         public void Dispose()
         {
-            Context.Dispose();
-            GC.SuppressFinalize(this); //https://stackoverflow.com/questions/151051/when-should-i-use-gc-suppressfinalize
+            _transaction?.Dispose();
+            _context.Dispose();
         }
 
-        public async void DisposeAsync()
+        private async Task DisposeTransactionAsync()
         {
-            await Context.DisposeAsync();
-            GC.SuppressFinalize(this);
-        }
-
-        public int Commit() => Context.SaveChanges();
-
-        public async Task<int> CommitAsync() => await Context.SaveChangesAsync();
-
-        public async Task<IDbContextTransaction> BeginTransactionAsync()
-        {
-            return await Context.Database.BeginTransactionAsync();
-        }
-        public IDbContextTransaction BeginTransaction()
-        {
-            return Context.Database.BeginTransaction();
-        }
-        /*private IRepository<TEntity> GetRepository<TEntity>() where TEntity : Entity
-        {
-            // Checks if the Dictionary Key contains the Model class
-            if (_repositories.Keys.Contains(typeof(TEntity)))
+            if (_transaction != null)
             {
-                // Return the repository for that Model class
-                return _repositories[typeof(TEntity)] as IRepository<TEntity>;
+                await _transaction.DisposeAsync();
+                _transaction = null;
             }
-
-            // If the repository for that Model class doesn't exist, create it
-            Repository<TEntity> repository = new Repository<TEntity>(Context);
-
-            // Add it to the dictionary
-            _repositories.Add(typeof(TEntity), repository);
-
-            return repository;
-        }*/
-
-        //public TRepository RepositoryFactory<TRepository, TEntity>() where TRepository : Repository<TEntity> where TEntity : Entity
-        //{
-        //    // Checks if the Dictionary Key contains the Model class
-        //    if (_repositories.Keys.Contains(typeof(TRepository)))
-        //    {
-        //        // Return the repository for that Model class
-        //        return _repositories[typeof(TRepository)] as TRepository;
-        //    }
-
-        //    // If the repository for that Model class doesn't exist, create it
-        //    Object[] args = { Context };
-        //    var repository = Activator.CreateInstance(typeof(TRepository), args) as TRepository;
-
-        //    // Add it to the dictionary
-        //    _repositories.Add(typeof(TRepository), repository);
-
-        //    return repository;
-        //}
+        }
+        private void DisposeTransaction()
+        {
+            if (_transaction != null)
+            {
+                _transaction.Dispose();
+                _transaction = null;
+            }
+        }
     }
 }
